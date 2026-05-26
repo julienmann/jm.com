@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; connect-src https://www.strava.com https://api.anthropic.com; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src * data:;">
+<title>Julien's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --orange:#FC4C02;
+  --orange-dim:rgba(252,76,2,.1);
+  --bg:#F5F5F5;
+  --card:#FFFFFF;
+  --fg:#242428;
+  --mid:#6D6D6D;
+  --border:#E8E8E8;
+  --blue:#4A90D9;
+  --blue-dim:rgba(74,144,217,.1);
+  --teal:#00B4D8;
+  --teal-dim:rgba(0,180,216,.1);
+  --purple:#8B5CF6;
+  --purple-dim:rgba(139,92,246,.1);
+  --green:#27AE60;
+  --green-dim:rgba(39,174,96,.1);
+  --red:#C0392B;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --radius:10px;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::selection{background:var(--orange);color:#fff;}
+a{color:inherit;text-decoration:none;}
+button{font-family:var(--sans);cursor:pointer;border:none;background:none;}
+
+/* ── TOPNAV ── */
+.topnav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+.topnav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:48px;gap:1rem;}
+.topnav-back{font-size:.75rem;font-weight:500;color:var(--mid);display:flex;align-items:center;gap:.3rem;transition:color .15s;flex-shrink:0;}
+.topnav-back:hover{color:var(--fg);}
+.topnav-links{display:flex;gap:.15rem;flex-shrink:0;}
+.topnav-link{font-size:.75rem;font-weight:500;color:var(--mid);padding:.28rem .6rem;border-radius:5px;transition:color .15s,background .15s;white-space:nowrap;}
+.topnav-link:hover{color:var(--fg);background:var(--bg);}
+.topnav-race{font-size:.72rem;font-weight:700;color:var(--orange);letter-spacing:.015em;}
+.topnav-right{display:flex;align-items:center;gap:.75rem;flex-shrink:0;}
+.topnav-alltime{font-size:.7rem;color:var(--mid);white-space:nowrap;}
+
+/* ── PAGE ── */
+.page{max-width:1100px;margin:0 auto;padding:0 2rem;}
+
+/* ── HIDDEN ── */
+.hidden{display:none!important;}
+
+/* ══════════════════════════════════════════
+   TRAINING SECTION
+══════════════════════════════════════════ */
+.training-page{padding-top:1.5rem;padding-bottom:3rem;}
+
+/* ── RACE HEADER ── */
+.race-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0 1.1rem;flex-wrap:wrap;gap:.6rem;}
+.race-hdr-left{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.race-name{font-size:.95rem;font-weight:700;}
+.phase-pill{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:.22rem .7rem;border-radius:99px;white-space:nowrap;}
+.race-hdr-right{font-size:.72rem;color:var(--mid);}
+
+/* ── PROGRESS ── */
+.prog-wrap{height:3px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:1.5rem;}
+.prog-fill{height:100%;background:var(--orange);border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+
+/* ── HERO ── */
+.hero{margin-bottom:1.25rem;}
+
+.pretrain-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-md);
+  padding:2.25rem 2.5rem;display:grid;grid-template-columns:200px 1fr;gap:0;align-items:stretch;
+  overflow:hidden;
+}
+.pretrain-left{padding-right:2.5rem;border-right:1px solid var(--border);}
+.pretrain-eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.5rem;}
+.pretrain-num{font-size:8rem;font-weight:800;color:var(--orange);letter-spacing:-.05em;line-height:.85;display:block;}
+.pretrain-unit{font-size:1rem;font-weight:700;color:var(--fg);margin-top:.5rem;display:block;}
+.pretrain-date{font-size:.78rem;color:var(--mid);margin-top:.3rem;}
+.pretrain-right{padding-left:2.5rem;display:flex;flex-direction:column;justify-content:space-between;gap:1.25rem;}
+.pretrain-phase-name{font-size:1rem;font-weight:700;margin-bottom:.15rem;}
+.pretrain-phase-sub{font-size:.75rem;color:var(--mid);line-height:1.6;}
+.pretrain-week-preview{display:flex;flex-direction:column;gap:.38rem;}
+.preview-row{display:flex;align-items:center;gap:.7rem;}
+.preview-day{font-size:.65rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--mid);width:2.2rem;flex-shrink:0;}
+.preview-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.preview-label{font-size:.72rem;color:var(--fg);}
+.preview-dur{font-size:.65rem;color:var(--mid);margin-left:auto;}
+
+.active-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-md);
+  padding:2rem 2.5rem;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;
+}
+.active-eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.6rem;}
+.active-badge{display:inline-block;font-size:2.75rem;font-weight:800;letter-spacing:-.02em;line-height:1;padding:.2rem .5rem;border-radius:6px;margin-bottom:.7rem;}
+.active-session{font-size:1.1rem;font-weight:600;margin-bottom:.35rem;}
+.active-meta{font-size:.75rem;color:var(--mid);}
+.active-meta span+span::before{content:'·';margin:0 .4rem;}
+.active-right{text-align:right;}
+.active-duration{font-size:2.8rem;font-weight:800;letter-spacing:-.03em;line-height:1;}
+.active-dur-label{font-size:.65rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--mid);margin-top:.2rem;}
+
+/* ── PHASE TIMELINE ── */
+.timeline-wrap{margin-bottom:1.25rem;}
+.timeline-label-row{display:grid;grid-template-columns:10fr 12fr 12fr 12fr 6fr 3fr;margin-bottom:.25rem;}
+.timeline-seg-label{font-size:.58rem;font-weight:600;color:var(--mid);text-align:center;letter-spacing:.03em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 2px;}
+.timeline-bar{display:grid;grid-template-columns:10fr 12fr 12fr 12fr 6fr 3fr;border-radius:6px;overflow:hidden;height:8px;}
+.tseg{transition:filter .15s;}
+.tseg.t-active{filter:brightness(1.15);}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.sec-title{font-size:.8rem;font-weight:700;}
+.sec-meta{font-size:.7rem;color:var(--mid);}
+
+/* ── WEEK STRIP ── */
+.week-section{margin-bottom:1.25rem;}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem;}
+.day-cell{
+  background:var(--card);border-radius:8px;box-shadow:var(--shadow);
+  padding:.7rem .4rem .6rem;text-align:center;display:flex;flex-direction:column;
+  align-items:center;gap:.28rem;border:2px solid transparent;transition:border-color .15s;
+}
+.day-cell.is-today{border-color:var(--orange);}
+.day-cell.is-past{opacity:.4;}
+.day-cell.pretrain-day{opacity:.35;}
+.day-name-lbl{font-size:.58rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mid);}
+.day-num-lbl{font-size:.75rem;font-weight:600;color:var(--fg);}
+.day-sport-badge{font-size:.56rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.16em .48em;border-radius:3px;white-space:nowrap;}
+.day-session-lbl{font-size:.6rem;color:var(--mid);max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;}
+
+/* ── CALENDAR ── */
+.cal-section{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;}
+.cal-month-name{font-size:.88rem;font-weight:700;}
+.cal-nav-btns{display:flex;gap:.3rem;}
+.cal-nav-btn{
+  width:28px;height:28px;border:1.5px solid var(--border);color:var(--mid);
+  border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;transition:all .15s;
+}
+.cal-nav-btn:hover{border-color:var(--fg);color:var(--fg);}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:.4rem;}
+.cal-dow{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);text-align:center;padding:.3rem 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-day{
+  min-height:54px;border-radius:5px;padding:.4rem .3rem .35rem;
+  position:relative;cursor:default;transition:background .1s;
+}
+.cal-day.has-act{cursor:pointer;}
+.cal-day.has-act:hover{background:var(--bg);}
+.cal-day.other-mo .cal-day-num{color:var(--border);}
+.cal-day.other-mo .cal-dot{opacity:.3;}
+.cal-day.is-today{outline:2px solid var(--orange);outline-offset:-2px;border-radius:5px;}
+.cal-day.is-pretrain{opacity:.5;}
+.cal-day-num{font-size:.68rem;font-weight:600;display:block;margin-bottom:.2rem;line-height:1;}
+.cal-dot{width:7px;height:7px;border-radius:50%;margin:0 auto 2px;}
+.cal-dur{font-size:.55rem;color:var(--mid);text-align:center;display:block;line-height:1.3;}
+.cal-flag{position:absolute;top:2px;right:3px;font-size:.6rem;line-height:1;}
+.cal-tip{
+  position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);
+  background:var(--fg);color:#fff;font-size:.65rem;font-weight:500;
+  padding:.35rem .6rem;border-radius:4px;white-space:nowrap;z-index:50;
+  pointer-events:none;opacity:0;transition:opacity .12s;
+}
+.cal-day:hover .cal-tip{opacity:1;}
+.cal-legend{display:flex;gap:1.25rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:.35rem;font-size:.65rem;color:var(--mid);}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.day-status{font-size:.55rem;font-weight:700;line-height:1;}
+.day-status.done{color:#22C55E;}
+.day-status.missed{color:#EF4444;}
+.cal-check{font-size:.52rem;font-weight:700;display:block;text-align:center;line-height:1;margin-top:1px;}
+.cal-check.done{color:#22C55E;}
+.cal-check.missed{color:#EF4444;}
+
+/* ── AI coaching panel ── */
+.ai-panel{margin-bottom:1.25rem;}
+.ai-panel-inner{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.ai-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.25rem;cursor:pointer;user-select:none;}
+.ai-panel-title-row{display:flex;align-items:center;gap:.55rem;}
+.ai-panel-icon{color:#D97706;font-style:normal;font-size:.85rem;}
+.ai-panel-title{font-size:.8rem;font-weight:700;color:var(--fg);}
+.ai-panel-meta{font-size:.7rem;color:var(--mid);}
+.ai-panel-toggle{font-size:.72rem;color:var(--mid);padding:.2rem .4rem;border-radius:4px;transition:background .1s;}
+.ai-panel-toggle:hover{background:var(--bg);}
+.ai-panel-summary{font-size:.78rem;color:var(--mid);line-height:1.65;padding:0 1.25rem .9rem;border-bottom:1px solid var(--border);}
+.ai-panel-changes{padding:.75rem 1.25rem 1rem;display:flex;flex-direction:column;gap:.6rem;}
+.ai-change-item{display:grid;grid-template-columns:6rem auto 1fr;align-items:baseline;gap:.55rem;}
+.ai-change-date{font-size:.7rem;color:var(--mid);white-space:nowrap;}
+.ai-change-badge{font-size:.55rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.15em .4em;border-radius:3px;white-space:nowrap;}
+.ai-change-label{font-size:.78rem;font-weight:500;color:var(--fg);}
+.ai-change-reason{grid-column:1/-1;font-size:.7rem;color:var(--mid);padding-left:6.55rem;line-height:1.5;}
+.ai-reset-btn{margin-top:.4rem;font-size:.7rem;color:var(--mid);padding:.3rem .7rem;border:1.5px solid var(--border);border-radius:5px;align-self:flex-start;transition:all .15s;}
+.ai-reset-btn:hover{border-color:var(--fg);color:var(--fg);}
+.ai-panel-loading{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;font-size:.76rem;font-weight:600;color:var(--mid);}
+.ai-loading-bar-wrap{width:80px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.ai-loading-bar{height:100%;width:40%;background:#D97706;border-radius:99px;animation:loadbar 1s ease-in-out infinite alternate;}
+.ai-panel-error{padding:1rem 1.25rem;font-size:.76rem;color:#D93025;font-weight:500;}
+.ai-panel-setup{padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.65rem;}
+.ai-panel-setup-hdr{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:.45rem;}
+.ai-panel-setup-sub{font-size:.75rem;color:var(--mid);line-height:1.6;}
+.ai-key-row{display:flex;gap:.5rem;}
+.ai-key-input{flex:1;border:1.5px solid var(--border);border-radius:6px;background:var(--card);color:var(--fg);font-family:var(--sans);font-size:.82rem;padding:.45rem .7rem;outline:none;transition:border-color .15s;}
+.ai-key-input:focus{border-color:#D97706;}
+.ai-key-btn{padding:.45rem .9rem;background:#D97706;color:#fff;font-weight:700;font-size:.8rem;border-radius:6px;white-space:nowrap;transition:opacity .15s;}
+.ai-key-btn:hover{opacity:.88;}
+.ai-key-error{font-size:.72rem;color:#D93025;font-weight:500;min-height:1em;}
+.day-adapt-ai{color:#D97706;background:rgba(217,119,6,.1);}
+.cal-adapt-ai{color:#D97706;}
+
+/* ── Adaptation badges ── */
+.day-adapt{font-size:.5rem;font-weight:700;padding:.1em .32em;border-radius:3px;letter-spacing:.02em;line-height:1.4;}
+.day-adapt-moved_from{color:#9CA3AF;background:rgba(156,163,175,.12);}
+.day-adapt-moved_here{color:#D97706;background:rgba(217,119,6,.1);}
+.day-adapt-makeup    {color:#8B5CF6;background:rgba(139,92,246,.1);}
+.day-adapt-reduced   {color:#4A90D9;background:rgba(74,144,217,.1);}
+.cal-adapt{font-size:.5rem;font-weight:700;display:inline-block;line-height:1;margin-left:1px;}
+.cal-adapt-moved_from{color:#9CA3AF;}
+.cal-adapt-moved_here{color:#D97706;}
+.cal-adapt-makeup    {color:#8B5CF6;}
+.cal-adapt-reduced   {color:#4A90D9;}
+
+/* ── Recent activities (training section) ── */
+.recent-acts-section{margin-bottom:1.25rem;}
+.recent-acts-footer{display:flex;justify-content:center;padding:.85rem 1.5rem;border-top:1px solid var(--border);}
+.acts-expand-btn{font-size:.72rem;font-weight:600;color:var(--mid);padding:.32rem .85rem;border:1.5px solid var(--border);border-radius:5px;background:none;cursor:pointer;transition:all .15s;}
+.acts-expand-btn:hover{border-color:var(--fg);color:var(--fg);}
+
+/* ══════════════════════════════════════════
+   SECTION DIVIDER
+══════════════════════════════════════════ */
+.section-divider{border-top:1px solid var(--border);}
+.section-sep{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0 .5rem;}
+.section-sep-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);}
+.strava-disconnect{font-size:.73rem;font-weight:500;color:var(--mid);padding:.28rem .65rem;border:1.5px solid var(--border);border-radius:5px;transition:all .15s;}
+.strava-disconnect:hover{border-color:var(--fg);color:var(--fg);}
+
+/* ══════════════════════════════════════════
+   STRAVA CONNECT CARD
+══════════════════════════════════════════ */
+.connect-wrap{padding:1rem 0 4rem;}
+.connect-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2.25rem;max-width:440px;}
+.connect-logo{display:flex;align-items:center;gap:.55rem;margin-bottom:1.4rem;}
+.connect-logo-icon{width:30px;height:30px;background:var(--orange);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.connect-logo-icon svg{width:17px;height:17px;fill:#fff;}
+.connect-logo-text{font-size:1.05rem;font-weight:800;color:var(--orange);letter-spacing:-.01em;}
+.connect-heading{font-size:.95rem;font-weight:700;margin-bottom:.25rem;}
+.connect-sub{font-size:.8rem;color:var(--mid);margin-bottom:1.1rem;line-height:1.6;}
+.connect-note{font-size:.76rem;color:var(--mid);line-height:1.7;margin-bottom:1.1rem;background:var(--bg);border-radius:6px;padding:.8rem .9rem;border:1px solid var(--border);}
+.connect-note a{color:var(--orange);font-weight:500;}
+.connect-note a:hover{text-decoration:underline;}
+.connect-note code{font-size:.73rem;background:#fff;border:1px solid var(--border);padding:.1em .35em;border-radius:3px;font-family:ui-monospace,monospace;}
+.form-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem;}
+.form-label{font-size:.68rem;font-weight:600;color:var(--fg);letter-spacing:.01em;}
+.form-input{border:1.5px solid var(--border);border-radius:6px;background:var(--card);color:var(--fg);font-family:var(--sans);font-size:.86rem;padding:.52rem .72rem;outline:none;transition:border-color .15s;width:100%;}
+.form-input:focus{border-color:var(--orange);}
+.connect-btn{width:100%;padding:.68rem;background:var(--orange);color:#fff;font-weight:700;font-size:.86rem;border:none;border-radius:6px;transition:opacity .15s;margin-top:.2rem;}
+.connect-btn:hover{opacity:.88;}
+.connect-error{font-size:.73rem;color:#D93025;margin-top:.55rem;min-height:1em;font-weight:500;}
+
+/* ── STRAVA INLINE LOADING ── */
+.strava-loading-wrap{padding:2rem 0 3.5rem;display:flex;align-items:center;gap:1rem;}
+.loading-label{font-size:.76rem;font-weight:600;color:var(--mid);letter-spacing:.02em;}
+.loading-bar-wrap{width:130px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.loading-bar{height:100%;width:40%;background:var(--orange);border-radius:99px;animation:loadbar 1s ease-in-out infinite alternate;}
+@keyframes loadbar{0%{transform:translateX(-100%);}100%{transform:translateX(350%);}}
+
+/* ══════════════════════════════════════════
+   ACTIVITIES SECTION
+══════════════════════════════════════════ */
+.activities-page{padding-top:1.5rem;padding-bottom:4rem;}
+
+/* ── PERIOD BAR ── */
+.period-bar{padding:.75rem 0 .5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.period-bar-left{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;}
+.period-title{font-size:1rem;font-weight:700;color:var(--fg);}
+.period-sub{font-size:.78rem;color:var(--mid);}
+.period-seg{display:flex;background:var(--bg);border:1.5px solid var(--border);border-radius:99px;padding:2px;gap:1px;flex-shrink:0;}
+.period-btn{padding:.25rem .7rem;font-size:.68rem;font-weight:600;background:transparent;border:none;color:var(--mid);cursor:pointer;transition:all .15s;border-radius:99px;white-space:nowrap;}
+.period-btn:hover{color:var(--fg);}
+.period-btn.active{background:var(--orange);color:#fff;}
+
+/* ── SPORT TABS ── */
+.sport-tabs{display:flex;gap:.4rem;padding-bottom:1rem;overflow-x:auto;}
+.sport-tab{
+  padding:.4rem 1rem;border-radius:99px;font-size:.76rem;font-weight:600;
+  border:1.5px solid var(--border);background:var(--card);color:var(--mid);
+  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+}
+.sport-tab:hover{border-color:var(--orange);color:var(--orange);}
+.sport-tab.active{background:var(--orange);color:#fff;border-color:var(--orange);}
+
+/* ── STAT CARDS ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem;}
+.stat-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.1rem 1.25rem;}
+.stat-card-num{font-size:2rem;font-weight:800;color:var(--orange);letter-spacing:-.03em;line-height:1;margin-bottom:.35rem;}
+.stat-card-label{font-size:.68rem;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;}
+
+/* ── MID GRID ── */
+.mid-grid{display:grid;grid-template-columns:260px 1fr;gap:1rem;margin-bottom:1rem;}
+.countdown-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem 1.75rem;display:flex;flex-direction:column;justify-content:center;}
+.countdown-eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.4rem;}
+.countdown-num{font-size:7rem;font-weight:800;color:var(--orange);letter-spacing:-.05em;line-height:.85;margin:.1rem 0 .5rem;}
+.countdown-unit{font-size:1.1rem;font-weight:700;color:var(--fg);}
+.countdown-date{font-size:.78rem;color:var(--mid);margin-top:.35rem;}
+
+/* ── CHART CARD ── */
+.chart-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem;}
+.chart-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;}
+.chart-card-title{font-size:.82rem;font-weight:700;color:var(--fg);}
+.chart-card-legend{font-size:.68rem;color:var(--mid);}
+.chart-bars{display:flex;flex-direction:column;gap:.5rem;}
+.bar-row{display:flex;align-items:center;gap:.75rem;}
+.bar-week{font-size:.66rem;color:var(--mid);font-weight:500;width:3rem;flex-shrink:0;text-align:right;}
+.bar-track{flex:1;height:12px;background:var(--bg);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--orange);border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1);opacity:.75;}
+.bar-fill.is-current{opacity:1;}
+.bar-km{font-size:.68rem;color:var(--mid);width:4rem;flex-shrink:0;}
+.bar-km.has-val{color:var(--fg);font-weight:600;}
+
+/* ── ACTIVITIES CARD ── */
+.activities-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;}
+.activities-card-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);}
+.activities-card-title{font-size:.82rem;font-weight:700;color:var(--fg);}
+.activities-card-meta{font-size:.7rem;color:var(--mid);}
+.table-wrap{overflow-x:auto;}
+.activities-table{width:100%;border-collapse:collapse;min-width:620px;}
+.activities-table th{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--mid);padding:.7rem .9rem;text-align:left;border-bottom:1px solid var(--border);background:var(--bg);white-space:nowrap;}
+.activities-table th:first-child{padding-left:1.5rem;}
+.activities-table th:last-child{padding-right:1.5rem;}
+.activities-table td{padding:.75rem .9rem;border-bottom:1px solid var(--border);font-size:.8rem;vertical-align:middle;}
+.activities-table td:first-child{padding-left:1.5rem;}
+.activities-table td:last-child{padding-right:1.5rem;}
+.activities-table tbody tr.data-row:last-of-type td{border-bottom:none;}
+
+.data-row{cursor:pointer;transition:background .1s;}
+.data-row:hover td{background:#FAFAFA;}
+.data-row.is-open td{background:rgba(252,76,2,.04);}
+.data-row.is-open td:first-child{border-left:3px solid var(--orange);padding-left:calc(1.5rem - 3px);}
+
+.detail-tr td{padding:0;border-bottom:1px solid var(--border);background:#FAFAFA;}
+.detail-content{overflow:hidden;max-height:0;transition:max-height .35s ease;}
+.detail-content.open{max-height:900px;}
+.detail-inner{padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.detail-chips{display:flex;gap:.5rem;flex-wrap:wrap;}
+.detail-chip{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.5rem .75rem;min-width:76px;}
+.detail-chip .dc-val{font-size:.9rem;font-weight:700;color:var(--fg);display:block;line-height:1.2;}
+.detail-chip .dc-label{font-size:.6rem;color:var(--mid);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-top:.1rem;}
+.detail-two-col{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;}
+.detail-ai-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem;}
+.detail-ai-label{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mid);margin-bottom:.55rem;display:flex;align-items:center;gap:.3rem;}
+.detail-ai-label .ai-icon{color:var(--orange);font-style:normal;}
+.detail-ai-text{font-size:.8rem;color:var(--fg);line-height:1.7;}
+.detail-splits-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin-bottom:.35rem;}
+.splits-table{border-collapse:collapse;min-width:300px;}
+.splits-table th{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--mid);padding:.32rem .7rem;text-align:left;border-bottom:1px solid var(--border);background:var(--card);}
+.splits-table td{font-size:.76rem;padding:.35rem .7rem;border-bottom:1px solid var(--border);color:var(--fg);}
+.splits-table tbody tr:last-child td{border-bottom:none;}
+.split-pace{font-weight:700;color:var(--orange);}
+.split-elev{font-size:.7rem;}
+.split-elev.up{color:var(--red);}
+.split-elev.down{color:var(--green);}
+.detail-loading{font-size:.76rem;color:var(--mid);}
+.detail-error{font-size:.76rem;color:#D93025;font-weight:500;}
+.no-data-row td{padding:1.75rem 1.5rem;font-size:.8rem;color:var(--mid);}
+
+.td-index{color:var(--border);font-size:.72rem;font-weight:500;width:1.5rem;}
+.type-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.22em .5em;border-radius:4px;white-space:nowrap;}
+.type-badge.t-run{background:var(--orange-dim);color:var(--orange);}
+.type-badge.t-ride{background:var(--blue-dim);color:var(--blue);}
+.type-badge.t-swim{background:var(--teal-dim);color:var(--teal);}
+.type-badge.t-other{background:var(--bg);color:var(--mid);}
+.td-name{font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.td-date{color:var(--mid);font-size:.76rem;white-space:nowrap;}
+.td-dist{font-weight:600;white-space:nowrap;}
+.td-time{color:var(--mid);white-space:nowrap;}
+.td-pace{font-size:.76rem;color:var(--mid);white-space:nowrap;}
+.td-pace.t-run{color:var(--orange);font-weight:600;}
+.td-elev{color:var(--mid);white-space:nowrap;}
+.expand-icon{float:right;color:var(--border);font-size:.68rem;transition:transform .2s;}
+.data-row.is-open .expand-icon{transform:rotate(180deg);color:var(--orange);}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);background:var(--card);}
+.footer-inner{max-width:1100px;margin:0 auto;padding:1.1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:.7rem;color:var(--mid);}
+.footer-links{display:flex;gap:1.25rem;list-style:none;}
+.footer-links a{font-size:.7rem;color:var(--mid);transition:color .15s;}
+.footer-links a:hover{color:var(--orange);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .mid-grid{grid-template-columns:1fr;}
+}
+@media(max-width:760px){
+  .page{padding:0 1rem;}
+  .topnav-inner{padding:0 1rem;}
+  .week-grid{gap:.3rem;}
+  .day-session-lbl{display:none;}
+  .timeline-label-row,.timeline-bar{display:none;}
+  .training-page{padding-top:1rem;padding-bottom:2rem;}
+}
+@media(max-width:700px){
+  .detail-two-col{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .pretrain-card{grid-template-columns:1fr;}
+  .pretrain-left{padding-right:0;border-right:none;border-bottom:1px solid var(--border);padding-bottom:1.5rem;margin-bottom:1.5rem;}
+  .pretrain-right{padding-left:0;}
+  .pretrain-num{font-size:5rem;}
+  .active-card{grid-template-columns:1fr;gap:1rem;}
+  .active-right{text-align:left;}
+  .stat-grid{gap:.6rem;}
+  .stat-card{padding:.9rem 1rem;}
+  .stat-card-num{font-size:1.6rem;}
+  .footer-inner{flex-direction:column;gap:.7rem;text-align:center;}
+}
+@media(max-width:480px){
+  .race-hdr-right{display:none;}
+  .topnav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     NAV (shared)
+══════════════════════════════════════════ -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="../" class="topnav-back">← julienmann.ca</a>
+    <div class="topnav-links">
+      <a href="#activities" class="topnav-link">Activities</a>
+      <a href="#training" class="topnav-link">Training</a>
+    </div>
+    <div class="topnav-right">
+      <span class="topnav-alltime hidden" id="topnav-alltime"></span>
+      <span class="topnav-race" id="nav-race"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     STRAVA / ACTIVITIES
+══════════════════════════════════════════ -->
+<div id="activities"></div>
+
+<!-- ── STRAVA: not connected ── -->
+<div id="strava-setup" class="page hidden" style="padding-top:1.5rem;">
+  <div class="connect-wrap">
+    <div class="connect-card">
+      <div class="connect-logo">
+        <div class="connect-logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+        </div>
+        <span class="connect-logo-text">Strava</span>
+      </div>
+      <div class="connect-heading">Connect your account</div>
+      <p class="connect-sub">Link Strava to see your runs, rides, and swims alongside your training plan.</p>
+      <div class="connect-note">
+        Create an API app at <a href="https://www.strava.com/settings/api" target="_blank" rel="noopener">strava.com/settings/api</a>.
+        Set the <strong>Authorization Callback Domain</strong> to <code id="callback-domain"></code>.
+        Your Client ID and Secret are on that page.
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="input-client-id">Client ID</label>
+        <input class="form-input" type="text" id="input-client-id" placeholder="e.g. 123456" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="input-client-secret">Client Secret</label>
+        <input class="form-input" type="password" id="input-client-secret" placeholder="40-character hex string" autocomplete="off" spellcheck="false">
+      </div>
+      <button class="connect-btn" id="setup-btn">Connect to Strava</button>
+      <div class="connect-error" id="setup-error" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STRAVA: loading ── -->
+<div id="strava-loading" class="page hidden">
+  <div class="strava-loading-wrap">
+    <div class="loading-label">Loading activities…</div>
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+  </div>
+</div>
+
+<!-- ── STRAVA: dashboard content ── -->
+<div id="strava-content" class="page activities-page hidden">
+
+  <div class="period-bar">
+    <div class="period-bar-left">
+      <span class="period-title"><span id="period-sport">Running</span> —</span>
+      <div class="period-seg">
+        <button class="period-btn" data-period="wtd">Week</button>
+        <button class="period-btn" data-period="mtd">Month</button>
+        <button class="period-btn active" data-period="ytd">Year</button>
+      </div>
+      <span class="period-sub" id="current-year"></span>
+    </div>
+    <div id="strava-topbar"></div>
+  </div>
+
+  <div class="sport-tabs">
+    <button class="sport-tab active" data-sport="run">Running</button>
+    <button class="sport-tab" data-sport="ride">Cycling</button>
+    <button class="sport-tab" data-sport="swim">Swimming</button>
+    <button class="sport-tab" data-sport="hike">Hiking</button>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-card-num" id="stat-runs">—</div>
+      <div class="stat-card-label" id="stat-count-label">Activities</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-num" id="stat-distance">—</div>
+      <div class="stat-card-label">Kilometres</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-num" id="stat-elevation">—</div>
+      <div class="stat-card-label">Elevation (m)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-num" id="stat-hours">—</div>
+      <div class="stat-card-label">Hours</div>
+    </div>
+  </div>
+
+  <div class="mid-grid">
+    <div class="countdown-card" id="countdown-card">
+      <div class="countdown-eyebrow" id="countdown-eyebrow"></div>
+      <div class="countdown-num" id="countdown-num">—</div>
+      <div class="countdown-unit" id="countdown-unit">Days</div>
+      <div class="countdown-date" id="countdown-date"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-title" id="chart-title">Weekly Running Distance</div>
+        <div class="chart-card-legend" id="chart-legend">Last 8 weeks · km</div>
+      </div>
+      <div class="chart-bars" id="chart-bars"></div>
+    </div>
+  </div>
+
+
+</div><!-- /strava-content -->
+
+<!-- ══════════════════════════════════════════
+     SECTION DIVIDER
+══════════════════════════════════════════ -->
+<div class="section-divider">
+  <div class="page">
+    <div class="section-sep">
+      <span class="section-sep-label">Training</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TRAINING SECTION
+══════════════════════════════════════════ -->
+<main id="training" class="page training-page">
+
+  <div class="race-hdr">
+    <div class="race-hdr-left">
+      <span class="race-name">70.3 Half-Ironman</span>
+      <span class="phase-pill" id="phase-pill"></span>
+    </div>
+    <span class="race-hdr-right" id="race-hdr-right"></span>
+  </div>
+
+  <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <section class="hero" id="hero"></section>
+
+  <div class="timeline-wrap" id="timeline-wrap"></div>
+
+  <section class="week-section">
+    <div class="sec-hdr">
+      <span class="sec-title" id="week-title">This Week</span>
+      <span class="sec-meta" id="week-meta"></span>
+    </div>
+    <div class="week-grid" id="week-grid"></div>
+  </section>
+
+  <div id="ai-panel" class="ai-panel hidden"></div>
+
+  <section class="recent-acts-section hidden" id="recent-acts-section">
+    <div class="sec-hdr">
+      <span class="sec-title">Recent Activities</span>
+      <span class="sec-meta" id="recent-acts-meta"></span>
+    </div>
+    <div class="activities-card">
+      <div class="table-wrap">
+        <table class="activities-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Sport</th>
+              <th>Activity</th>
+              <th>Date</th>
+              <th>Distance</th>
+              <th>Time</th>
+              <th>Pace / Speed</th>
+              <th>Elevation</th>
+            </tr>
+          </thead>
+          <tbody id="recent-acts-tbody"></tbody>
+        </table>
+      </div>
+      <div id="recent-acts-footer"></div>
+    </div>
+  </section>
+
+  <section class="cal-section">
+    <div class="cal-hdr">
+      <span class="cal-month-name" id="cal-month-name"></span>
+      <div class="cal-nav-btns">
+        <button class="cal-nav-btn" id="cal-prev" aria-label="Previous month">‹</button>
+        <button class="cal-nav-btn" id="cal-next" aria-label="Next month">›</button>
+      </div>
+    </div>
+    <div class="cal-dow-row">
+      <div class="cal-dow">Mon</div><div class="cal-dow">Tue</div>
+      <div class="cal-dow">Wed</div><div class="cal-dow">Thu</div>
+      <div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-dow">Sun</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend" id="cal-legend"></div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© <span id="footer-year"></span> Julien Mann</span>
+    <ul class="footer-links">
+      <li><a href="https://www.strava.com" target="_blank" rel="noopener">strava.com</a></li>
+      <li><a href="../">← julienmann.ca</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════
+//  TRAINING PLAN
+// ════════════════════════════════════════════
+
+const TRAIN_START = new Date('2026-06-12T00:00:00');
+const RACE_DATE   = new Date('2027-07-05T00:00:00');
+
+const PHASES = [
+  { id:1, name:'Foundation',    start:'2026-06-12', end:'2026-08-20', color:'#FC4C02', hrs:'5–7 hrs/wk' },
+  { id:2, name:'Base Building', start:'2026-08-21', end:'2026-11-12', color:'#E97316', hrs:'7–9 hrs/wk' },
+  { id:3, name:'Build I',       start:'2026-11-13', end:'2027-02-04', color:'#D97706', hrs:'8–10 hrs/wk' },
+  { id:4, name:'Build II',      start:'2027-02-05', end:'2027-04-29', color:'#B45309', hrs:'9–11 hrs/wk' },
+  { id:5, name:'Peak',          start:'2027-04-30', end:'2027-06-10', color:'#92400E', hrs:'9–10 hrs/wk' },
+  { id:6, name:'Taper',         start:'2027-06-11', end:'2027-07-05', color:'#78350F', hrs:'3–7 hrs/wk' },
+];
+
+const RACE_EVENTS = {
+  '2026-10-17': { type:'race', label:'Sprint Triathlon',  duration:90 },
+  '2027-04-12': { type:'race', label:'Olympic Triathlon', duration:150 },
+  '2027-07-05': { type:'race', label:'70.3 Half-Ironman', duration:360 },
+};
+
+const PRE_RACE_WEEK = {
+  0: ['swim', 'Easy swim + drills', 30],
+  1: ['brick','Opener brick', 45],
+  2: ['swim', 'Activation swim', 20],
+  3: ['run',  'Easy jog + strides', 20],
+  4: ['rest', 'Rest — prep gear', 0],
+  5: ['rest', 'Rest — visualize', 0],
+  6: ['rest', 'Rest Day', 0],
+};
+
+const SPRINT_TRI_WEEK_MON  = new Date('2026-10-12T00:00:00');
+const OLYMPIC_TRI_WEEK_MON = new Date('2027-04-07T00:00:00');
+const PRE_RACE_WEEK_MON    = new Date('2027-06-30T00:00:00');
+
+const SPORT_CFG = {
+  rest:  { color:'#9CA3AF', dim:'rgba(156,163,175,.13)', label:'Rest',  badge:'REST'  },
+  swim:  { color:'#00B4D8', dim:'rgba(0,180,216,.12)',   label:'Swim',  badge:'SWIM'  },
+  run:   { color:'#FC4C02', dim:'rgba(252,76,2,.12)',    label:'Run',   badge:'RUN'   },
+  bike:  { color:'#4A90D9', dim:'rgba(74,144,217,.12)',  label:'Bike',  badge:'BIKE'  },
+  brick: { color:'#8B5CF6', dim:'rgba(139,92,246,.12)', label:'Brick', badge:'BRICK' },
+  race:  { color:'#FC4C02', dim:'rgba(252,76,2,.18)',    label:'Race',  badge:'RACE'  },
+};
+
+const SPRINT_TRI_TMPL = [
+  ['rest','Rest Day',0],['swim','Easy swim',30],['bike','Easy spin',30],
+  ['run','Easy run + strides',25],['rest','Rest Day',0],['race','Sprint Triathlon',90],['rest','Recovery',0],
+];
+const OLYMPIC_TRI_TMPL = [
+  ['rest','Rest Day',0],['swim','Easy swim',30],['bike','Easy spin',30],
+  ['run','Easy run + strides',20],['rest','Rest Day',0],['race','Olympic Triathlon',150],['rest','Recovery',0],
+];
+
+// ── HTML escape helper (prevents XSS in innerHTML interpolation) ─
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Training date utilities ──────────────────────────────────────
+function trnDateStr(d) { return d.toISOString().slice(0,10); }
+function startOfDay(d) { const x=new Date(d); x.setHours(0,0,0,0); return x; }
+function addDays(d,n)  { const x=startOfDay(d); x.setDate(x.getDate()+n); return x; }
+function mondayOf(d)   { const x=startOfDay(d); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); return x; }
+function dayOfWeek(d)  { return (startOfDay(d).getDay()+6)%7; }
+
+function getPhaseForDate(d) {
+  const ds = trnDateStr(d);
+  for (const p of PHASES) if (ds >= p.start && ds <= p.end) return p;
+  return null;
+}
+
+function getWeekInPhase(d, phase) {
+  const psMon = mondayOf(startOfDay(new Date(phase.start)));
+  return Math.floor((startOfDay(d) - psMon) / (7*86400000)) + 1;
+}
+
+function weekTemplate(phaseId, weekInPhase, isRecovery) {
+  const alt = weekInPhase % 2 === 0;
+  if (phaseId === 1) {
+    if (isRecovery) return [
+      ['rest','Rest Day',0],['swim','Easy swim',30],['run','Easy run',30],
+      ['rest','Rest Day',0],['bike','Easy spin',35],
+      alt ? ['run','Easy long run',55] : ['bike','Easy ride',60],['rest','Rest Day',0],
+    ];
+    return [
+      ['rest','Rest Day',0],['swim','Technique swim',45],['run','Easy run',40],
+      ['swim','Endurance swim',45],['bike','Easy spin',50],
+      alt ? ['run','Long run',75] : ['bike','Long ride',80],
+      alt ? ['bike','Easy spin',35] : ['run','Recovery run',35],
+    ];
+  }
+  if (phaseId === 2) {
+    if (isRecovery) return [
+      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',35],
+      ['rest','Rest Day',0],['bike','Easy spin',40],['bike','Moderate ride',75],['run','Short run',30],
+    ];
+    return [
+      ['rest','Rest Day',0],['swim','CSS intervals',55],['run','Tempo run',50],
+      ['swim','Swim + easy bike',75],['run','Easy run',40],
+      ['bike','Long ride', alt ? 130 : 110],['brick','Bike + Run brick',90],
+    ];
+  }
+  if (phaseId === 3) {
+    if (isRecovery) return [
+      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',40],
+      ['swim','CSS intervals',55],['rest','Rest Day',0],
+      ['bike','Easy ride',90],['run','Easy long run',70],
+    ];
+    return [
+      ['rest','Rest Day',0],['bike','Sweet spot intervals',70],['run','Tempo + strength',60],
+      ['swim','CSS intervals',60],['run','Easy run',40],['bike','Long ride',160],
+      alt ? ['brick','Long brick',110] : ['run','Long run 18km',110],
+    ];
+  }
+  if (phaseId === 4) {
+    if (isRecovery) return [
+      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',40],
+      ['rest','Rest Day',0],['swim','Easy swim',40],['bike','Easy ride',90],['run','Easy run',50],
+    ];
+    return [
+      ['rest','Rest Day',0],['brick','Bike intervals + short run',85],['swim','Race-pace swim',80],
+      ['run','Race-pace run',60],['swim','Easy technique swim',50],['bike','Long race-pace ride',180],
+      alt ? ['brick','Race-sim brick',130] : ['run','Long run 20km',120],
+    ];
+  }
+  if (phaseId === 5) {
+    if (isRecovery) return [
+      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',35],
+      ['swim','Easy swim',40],['rest','Rest Day',0],['bike','Easy ride',75],['run','Easy run',40],
+    ];
+    return [
+      ['rest','Rest Day',0],['swim','Race-pace swim',55],['bike','Quality ride',75],
+      ['run','Race-pace run',60],['swim','Easy swim',45],
+      ['bike', weekInPhase <= 3 ? 'Long ride 90km' : 'Moderate ride', weekInPhase <= 3 ? 150 : 90],
+      alt ? ['brick','Confidence brick',110] : ['run','Long run',100],
+    ];
+  }
+  // Phase 6 Taper
+  if (weekInPhase <= 1) return [
+    ['rest','Rest Day',0],['swim','Taper swim 2000m',50],['bike','Easy spin',45],
+    ['run','Easy run 12km',70],['swim','Easy swim',40],['run','Moderate run 8km',50],['run','Easy run 5km',30],
+  ];
+  if (weekInPhase <= 2) return [
+    ['rest','Rest Day',0],['swim','Short swim 1800m',45],['bike','Easy ride',60],
+    ['run','Easy run 10km',60],['swim','Easy swim',35],['bike','Easy spin',30],['run','Short run 6km',40],
+  ];
+  return Array(7).fill(['rest','Rest Day',0]);
+}
+
+function getBaseActivity(d) {
+  const dd = startOfDay(d);
+  const ds = trnDateStr(dd);
+  if (dd < TRAIN_START) return null;
+  if (dd > RACE_DATE)   return null;
+  if (RACE_EVENTS[ds]) {
+    const e = RACE_EVENTS[ds];
+    return { type:e.type, label:e.label, duration:e.duration };
+  }
+  const preRaceMon = startOfDay(PRE_RACE_WEEK_MON);
+  if (dd >= preRaceMon && dd < RACE_DATE) {
+    const dow = dayOfWeek(dd);
+    const [type,label,duration] = PRE_RACE_WEEK[dow] || ['rest','Rest Day',0];
+    return { type, label, duration };
+  }
+  const stMon = startOfDay(SPRINT_TRI_WEEK_MON);
+  if (dd >= stMon && dd < addDays(stMon,7)) {
+    const [type,label,duration] = SPRINT_TRI_TMPL[dayOfWeek(dd)];
+    return { type, label, duration };
+  }
+  const otMon = startOfDay(OLYMPIC_TRI_WEEK_MON);
+  if (dd >= otMon && dd < addDays(otMon,7)) {
+    const [type,label,duration] = OLYMPIC_TRI_TMPL[dayOfWeek(dd)];
+    return { type, label, duration };
+  }
+  const phase = getPhaseForDate(dd);
+  if (!phase) return null;
+  const wip  = getWeekInPhase(dd, phase);
+  const isRec = (wip % 4 === 0);
+  const dow  = dayOfWeek(dd);
+  const tmpl = weekTemplate(phase.id, wip, isRec);
+  const [type,label,duration] = tmpl[dow] || ['rest','Rest Day',0];
+  return { type, label, duration };
+}
+
+// Returns the plan session for d: AI overrides → rule overrides → base template
+function getActivity(d) {
+  const ds = trnDateStr(startOfDay(d));
+  if (gAiOverrides[ds]) return gAiOverrides[ds].session;
+  if (gOverrides[ds])   return gOverrides[ds].session;
+  return getBaseActivity(d);
+}
+
+// Training formatters
+function fmtTrnDur(min) {
+  if (!min || min <= 0) return null;
+  const h=Math.floor(min/60), m=min%60;
+  if (h>0&&m>0) return `${h}h ${m}m`;
+  if (h>0) return `${h}h`;
+  return `${m} min`;
+}
+
+function fmtTrnDate(d, opts={month:'short',day:'numeric'}) {
+  return d.toLocaleDateString('en-CA', opts);
+}
+
+function fmtMonthYear(d) {
+  return d.toLocaleDateString('en-CA', {month:'long', year:'numeric'});
+}
+
+function daysUntil(target) {
+  return Math.ceil((startOfDay(target) - startOfDay(new Date())) / 86400000);
+}
+
+function sportStyle(type) {
+  return SPORT_CFG[type] || SPORT_CFG.rest;
+}
+
+// ── Adaptation constants ─────────────────────────────────────────
+const ADAPT_LOOKBACK_DAYS   = 28;   // days back to scan for misses / hard efforts
+const ADAPT_FUTURE_DAYS     = 28;   // days forward to find next same-sport session
+const AI_WINDOW_DAYS        = 14;   // AI prompt context window (past + upcoming)
+const HARD_PACE_THRESHOLD   = 0.10; // >10 % below recent avg speed → harder effort
+const HARD_HR_THRESHOLD     = 1.10; // >10 % above recent avg HR   → harder effort
+const EASY_REDUCTION_FACTOR = 0.8;  // next session reduced to 80 % of planned
+const MIN_SESSION_MIN       = 20;   // floor for reduced sessions (minutes)
+
+// ── Shared Strava type arrays — single source of truth ───────────
+const STRAVA_TYPES = {
+  run:  ['Run','TrailRun'],
+  ride: ['Ride','VirtualRide','EBikeRide','GravelRide','MountainBikeRide'],
+  swim: ['Swim'],
+  hike: ['Hike','Walk'],
+};
+
+// ── Completion tracking ──────────────────────────────────────────
+const SPORT_MATCH_TYPES = {
+  run:   STRAVA_TYPES.run,
+  swim:  STRAVA_TYPES.swim,
+  bike:  STRAVA_TYPES.ride,
+  brick: [...STRAVA_TYPES.run, ...STRAVA_TYPES.ride, ...STRAVA_TYPES.swim],
+  race:  [...STRAVA_TYPES.run, ...STRAVA_TYPES.ride, ...STRAVA_TYPES.swim],
+};
+
+function getStravaActsForDate(d) {
+  if (!gActivities) return [];
+  const ds = trnDateStr(startOfDay(d));
+  return gActivities.filter(a => (a.start_date_local || a.start_date).slice(0,10) === ds);
+}
+
+// getCompletionStatus(d, useBase=false)
+// useBase=true → reads raw base plan (used by adaptPlan to avoid reading its own output).
+// Always matches against the *base* sport type so AI type-changes don't cause false "missed".
+function getCompletionStatus(d, useBase = false) {
+  if (!gActivities) return null;
+  if (startOfDay(d) >= today) return null;
+  if (startOfDay(d) < TRAIN_START) return null;
+  const planned = useBase ? getBaseActivity(d) : getActivity(d);
+  if (!planned || planned.type === 'rest') return null;
+  const base       = useBase ? planned : (getBaseActivity(d) || planned);
+  const matchTypes = SPORT_MATCH_TYPES[base.type] || [];
+  return getStravaActsForDate(d).some(a => matchTypes.includes(a.type)) ? 'done' : 'missed';
+}
+
+// Thin wrapper used by adaptPlan so it reads raw misses, not its own output
+function getCompletionStatus_base(d) { return getCompletionStatus(d, true); }
+
+// Returns true when the recorded activity was meaningfully harder than recent norms
+function wasHarderThanExpected(d) {
+  const planned = getBaseActivity(d);
+  if (!planned || planned.type === 'rest') return false;
+  const matchTypes = SPORT_MATCH_TYPES[planned.type] || [];
+  const acts = getStravaActsForDate(d);
+  const act  = acts.find(a => matchTypes.includes(a.type));
+  if (!act || !act.average_speed || act.average_speed <= 0) return false;
+
+  const actDate  = new Date(d);
+  const cutoff   = new Date(actDate); cutoff.setDate(cutoff.getDate() - ADAPT_LOOKBACK_DAYS);
+  const peers    = gActivities.filter(a =>
+    a.id !== act.id && matchTypes.includes(a.type) && a.average_speed > 0 &&
+    new Date(a.start_date) >= cutoff && new Date(a.start_date) < actDate
+  );
+  if (peers.length < 2) return false;
+
+  const avgSpeed = peers.reduce((s,a) => s + a.average_speed, 0) / peers.length;
+  const pctSpd   = (act.average_speed - avgSpeed) / avgSpeed; // negative = slower than avg
+
+  // Pace more than threshold below recent avg signals higher exertion
+  if (pctSpd < -HARD_PACE_THRESHOLD) return true;
+
+  // HR above threshold of recent avg for this sport (when data exists)
+  if (act.average_heartrate > 0) {
+    const peersHR = peers.filter(p => p.average_heartrate > 0);
+    if (peersHR.length >= 2) {
+      const avgHR = peersHR.reduce((s,a) => s + a.average_heartrate, 0) / peersHR.length;
+      if (act.average_heartrate > avgHR * HARD_HR_THRESHOLD) return true;
+    }
+  }
+  return false;
+}
+
+// Rebuild gOverrides from Strava data — called after every Strava load
+function adaptPlan() {
+  const tmp = {};
+
+  // Helper: get effective session from tmp (not gOverrides — we're building fresh)
+  function eff(d) {
+    const ds = trnDateStr(d);
+    return tmp[ds] ? tmp[ds].session : getBaseActivity(d);
+  }
+
+  // Scan the past N days for misses and hard efforts
+  for (let i = ADAPT_LOOKBACK_DAYS; i >= 1; i--) {
+    const d  = addDays(today, -i);
+    const ds = trnDateStr(d);
+    if (startOfDay(d) < TRAIN_START) continue;
+
+    const base   = getBaseActivity(d);
+    const status = getCompletionStatus_base(d);
+
+    // ── Missed workout → reschedule ────────────────────────────
+    if (status === 'missed' && !tmp[ds]) {
+      const dMon = mondayOf(d);
+      let placed = false;
+
+      // 1. Try same week, days after the miss, from today onwards
+      for (let j = 1; j <= 6 && !placed; j++) {
+        const c  = addDays(dMon, j);
+        const cs = trnDateStr(c);
+        if (startOfDay(c) <= startOfDay(d)) continue;   // must be after missed day
+        if (startOfDay(c) < today)          continue;   // must be today or future
+        const slot = eff(c);
+        if (!slot || slot.type === 'rest') {
+          tmp[ds] = { type:'moved_from', session:{type:'rest',label:'Rest Day',duration:0}, reason:`Rescheduled to ${cs}` };
+          tmp[cs] = { type:'moved_here',  session:{...base, label:base.label + ' (rescheduled)'}, reason:`Missed on ${ds}` };
+          placed = true;
+        }
+      }
+
+      // 2. No slot this week → try next week's first available rest day
+      if (!placed) {
+        const nextMon = addDays(dMon, 7);
+        for (let j = 0; j < 7 && !placed; j++) {
+          const c  = addDays(nextMon, j);
+          const cs = trnDateStr(c);
+          if (startOfDay(c) < today) continue;
+          const slot = eff(c);
+          if (!slot || slot.type === 'rest') {
+            tmp[cs] = { type:'makeup', session:{...base, label:base.label + ' (makeup)'}, reason:`Missed on ${ds}` };
+            placed = true;
+          }
+        }
+      }
+    }
+
+    // ── Harder than expected → ease next same-sport session ───
+    if (base && base.type !== 'rest' && wasHarderThanExpected(d)) {
+      const sport      = base.type;
+      const sportTypes = SPORT_MATCH_TYPES[sport] || [];
+      // Find the next future session of the same sport (up to N days ahead)
+      for (let j = 1; j <= ADAPT_FUTURE_DAYS; j++) {
+        const c  = addDays(d, j);
+        const cs = trnDateStr(c);
+        if (startOfDay(c) < today) continue;
+        const slot = eff(c);
+        if (!slot || slot.type === 'rest') continue;
+        const sameKind = slot.type === sport ||
+          (sport !== 'rest' && sportTypes.some(t => SPORT_MATCH_TYPES[slot.type]?.includes(t)));
+        if (sameKind && !tmp[cs]?.type?.includes('reduced')) {
+          const reduced = Math.max(MIN_SESSION_MIN, Math.round(slot.duration * EASY_REDUCTION_FACTOR));
+          tmp[cs] = { type:'reduced', session:{...slot, duration:reduced, label:'Easy ' + slot.label}, reason:`Hard effort on ${ds}` };
+          break;
+        }
+      }
+    }
+  }
+
+  gOverrides = tmp;
+}
+
+// ════════════════════════════════════════════
+//  AI PLAN OPTIMIZATION
+// ════════════════════════════════════════════
+
+const CLAUDE_KEY  = 'jm_claude_v1';
+const AI_OPT_KEY  = 'jm_ai_opt_v1';
+
+function getClaudeApiKey()   { return localStorage.getItem(CLAUDE_KEY) || ''; }
+function saveClaudeApiKey(k) { localStorage.setItem(CLAUDE_KEY, k); }
+
+function getCachedOpt() {
+  try { return JSON.parse(localStorage.getItem(AI_OPT_KEY)); } catch { return null; }
+}
+function saveCachedOpt(data) { localStorage.setItem(AI_OPT_KEY, JSON.stringify(data)); }
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function applyAiResult(result) {
+  gAiOverrides = {};
+  gAiSummary   = Array.isArray(result.changes) ? result.changes : [];
+  for (const c of gAiSummary) {
+    if (!c.date || !DATE_RE.test(c.date)) continue; // reject malformed dates
+    gAiOverrides[c.date] = {
+      type: 'ai',
+      session: { type: c.type || 'rest', label: c.label || 'Rest Day', duration: c.duration || 0 },
+      reason: c.reason || '',
+    };
+  }
+}
+
+// Build a compact plain-text context block for the Claude prompt
+function buildPlanContext() {
+  const lines = [];
+  const phase = getPhaseForDate(today);
+  lines.push(`Today: ${trnDateStr(today)}`);
+  lines.push(`Race:  ${trnDateStr(RACE_DATE)} (${daysUntil(RACE_DATE)} days away)`);
+  if (phase) {
+    const wip = getWeekInPhase(today, phase);
+    lines.push(`Phase: ${phase.name} (${phase.id}/6), week ${wip}, load target ${phase.hrs}/wk`);
+  } else if (today < TRAIN_START) {
+    lines.push(`Phase: pre-training (starts ${trnDateStr(TRAIN_START)})`);
+  }
+
+  lines.push(`\n-- PAST ${AI_WINDOW_DAYS} DAYS --`);
+  for (let i = AI_WINDOW_DAYS; i >= 1; i--) {
+    const d   = addDays(today, -i);
+    const ds  = trnDateStr(d);
+    const pl  = getBaseActivity(d);
+    if (!pl) continue;
+    const acts      = getStravaActsForDate(d);
+    const mTypes    = pl.type !== 'rest' ? (SPORT_MATCH_TYPES[pl.type] || []) : [];
+    const done      = acts.find(a => mTypes.includes(a.type));
+    if (pl.type === 'rest' && !done) { lines.push(`${ds}: rest`); continue; }
+    let row = `${ds}: planned ${pl.type} ${pl.duration}min "${pl.label}"`;
+    if (done) {
+      const km   = (done.distance / 1000).toFixed(1);
+      const dur  = fmtActDur(done.moving_time);
+      const pace = done.average_speed > 0 ? ' ' + fmtPace(done.average_speed, done.type) : '';
+      const hr   = done.average_heartrate ? ` HR ${Math.round(done.average_heartrate)}` : '';
+      const w    = done.average_watts     ? ` ${Math.round(done.average_watts)}W`        : '';
+      row += ` → DONE ${km}km ${dur}${pace}${hr}${w}`;
+    } else {
+      row += ' → MISSED';
+    }
+    lines.push(row);
+  }
+
+  lines.push(`\n-- UPCOMING ${AI_WINDOW_DAYS} DAYS (base plan) --`);
+  for (let i = 0; i < AI_WINDOW_DAYS; i++) {
+    const d  = addDays(today, i);
+    const ds = trnDateStr(d);
+    const pl = getBaseActivity(d);
+    if (!pl) continue;
+    lines.push(pl.type === 'rest'
+      ? `${ds}: rest`
+      : `${ds}: ${pl.type} ${pl.duration}min "${pl.label}"`);
+  }
+  return lines.join('\n');
+}
+
+const CLAUDE_MODEL_KEY = 'jm_claude_model_v1';
+function getSavedModel()    { return localStorage.getItem(CLAUDE_MODEL_KEY) || ''; }
+function saveModel(m)        { localStorage.setItem(CLAUDE_MODEL_KEY, m); }
+
+const ANTHROPIC_HEADERS = (apiKey) => ({
+  'x-api-key': apiKey,
+  'anthropic-version': '2023-06-01',
+  'content-type': 'application/json',
+  'anthropic-dangerous-direct-browser-access': 'true',
+});
+
+// Fetch the list of models available to this API key
+async function fetchAvailableModels(apiKey) {
+  const res = await fetch('https://api.anthropic.com/v1/models', {
+    headers: ANTHROPIC_HEADERS(apiKey),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  // data.data is an array of { id, ... }; prefer claude-3-5 and claude-3 models
+  return (data.data || []).map(m => m.id);
+}
+
+async function aiOptimizePlan() {
+  const apiKey  = getClaudeApiKey();
+  const panelEl = document.getElementById('ai-panel');
+  if (!panelEl) return;
+
+  if (!apiKey) { renderAiKeyPrompt(); return; }
+
+  const lastAct = gActivities?.[0];
+  if (!lastAct) return;
+
+  // Serve from cache if the last activity hasn't changed
+  const cached = getCachedOpt();
+  if (cached?.activityId === lastAct.id) {
+    // stravaRender may have already pre-applied this cache; only apply + re-render if needed
+    if (!gAiSummary.length) {
+      applyAiResult(cached);
+      renderWeekStrip();
+      renderCalendar();
+    }
+    renderAiPanel(cached.summary);
+    return;
+  }
+
+  panelEl.classList.remove('hidden');
+  panelEl.innerHTML = `<div class="ai-panel-inner"><div class="ai-panel-loading"><em class="ai-panel-icon">✦</em> Analyzing your workout…<div class="ai-loading-bar-wrap"><div class="ai-loading-bar"></div></div></div></div>`;
+
+  const systemPrompt =
+`You are an expert triathlon coach. Analyze the athlete's recent training and propose concrete adjustments to their upcoming sessions.
+
+Rules:
+- Only propose changes to sessions in UPCOMING 14 DAYS
+- Propose 2–5 changes maximum; skip rest days unless a forced rest is warranted
+- Prioritise recovery if you see fatigue signals (pace notably slower than recent, HR notably higher)
+- Add load if fitness signals are strong (pace improving, HR controlled)
+- Keep race events (type "race") unchanged
+- Keep changes realistic: don't increase any single session by more than 20%
+
+Respond ONLY with a valid JSON object — no markdown, no explanation outside the JSON:
+{"summary":"1–2 sentence coaching note","changes":[{"date":"YYYY-MM-DD","type":"run|swim|bike|brick|rest","label":"session name","duration":minutes,"reason":"why"}]}`;
+
+  try {
+    // Resolve model: saved preference → probe /v1/models → hardcoded fallbacks
+    let model = getSavedModel();
+    if (!model) {
+      const available = await fetchAvailableModels(apiKey);
+      if (available && available.length > 0) {
+        // Pick the best available: prefer claude-3-5-sonnet, then any claude-3-5, then any claude-3
+        model = available.find(id => id.includes('claude-3-5-sonnet'))
+             || available.find(id => id.includes('claude-3-5'))
+             || available.find(id => id.includes('claude-3'))
+             || available[0];
+        saveModel(model);
+      }
+    }
+
+    const FALLBACKS = [
+      'claude-3-5-sonnet-20241022',
+      'claude-3-5-haiku-20241022',
+      'claude-3-haiku-20240307',
+      'claude-3-sonnet-20240229',
+      'claude-3-opus-20240229',
+    ];
+    const candidates = model ? [model, ...FALLBACKS.filter(m => m !== model)] : FALLBACKS;
+
+    const planContext = buildPlanContext(); // hoist outside loop — same data for all retries
+    let res = { ok: false }, lastErr;
+    for (const candidate of candidates) {
+      res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: ANTHROPIC_HEADERS(apiKey),
+        body: JSON.stringify({
+          model:    candidate,
+          max_tokens: 1024,
+          system:   systemPrompt,
+          messages: [{ role: 'user', content: planContext }],
+        }),
+      });
+      if (res.ok) { if (candidate !== getSavedModel()) saveModel(candidate); break; }
+      const errBody = await res.json().catch(() => ({}));
+      if (res.status === 401) { localStorage.removeItem(CLAUDE_KEY); renderAiKeyPrompt(); return; }
+      lastErr = `HTTP ${res.status}: ${errBody.error?.message || JSON.stringify(errBody)}`;
+      console.warn(`Model ${candidate} failed:`, lastErr);
+      if (res.status !== 404) break; // non-404 is not a model issue — stop trying
+    }
+
+    if (!res.ok) {
+      // All candidates failed — show error with hint and link to console
+      throw new Error(lastErr + ' — check available models at console.anthropic.com/settings/limits');
+    }
+
+    const data   = await res.json();
+    const text   = data.content?.[0]?.text || '';
+    const jsonStr = text.match(/\{[\s\S]*\}/)?.[0];
+    if (!jsonStr) throw new Error('No JSON in response');
+    const result = JSON.parse(jsonStr);
+
+    const toCache = { activityId: lastAct.id, timestamp: Date.now(), ...result };
+    saveCachedOpt(toCache);
+    applyAiResult(result);
+    renderAiPanel(result.summary);
+    renderWeekStrip();
+    renderCalendar();
+
+  } catch (e) {
+    console.error('AI optimization:', e);
+    panelEl.innerHTML = `<div class="ai-panel-inner"><div class="ai-panel-error">
+      <div>✦ AI coaching unavailable</div>
+      <div style="font-size:.7rem;margin-top:.35rem;font-weight:400;">${esc(e.message)}</div>
+      <button id="ai-change-key" style="margin-top:.6rem;font-size:.7rem;color:var(--orange);font-weight:600;text-decoration:underline;background:none;border:none;cursor:pointer;padding:0;">Change API key / model</button>
+    </div></div>`;
+    document.getElementById('ai-change-key')?.addEventListener('click', () => {
+      localStorage.removeItem(CLAUDE_KEY);
+      localStorage.removeItem(CLAUDE_MODEL_KEY);
+      localStorage.removeItem(AI_OPT_KEY);
+      renderAiKeyPrompt();
+    });
+  }
+}
+
+function renderAiKeyPrompt() {
+  const panelEl = document.getElementById('ai-panel');
+  if (!panelEl) return;
+  panelEl.classList.remove('hidden');
+  panelEl.innerHTML = `<div class="ai-panel-inner ai-panel-setup">
+    <div class="ai-panel-setup-hdr"><em class="ai-panel-icon">✦</em> AI Coaching</div>
+    <p class="ai-panel-setup-sub">Enter your Anthropic API key and Claude will rebalance your plan after each workout.</p>
+    <div class="ai-key-row">
+      <input class="ai-key-input" type="password" id="ai-key-input" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false">
+      <button class="ai-key-btn" id="ai-key-btn">Enable</button>
+    </div>
+    <div class="ai-key-error" id="ai-key-error"></div>
+  </div>`;
+  document.getElementById('ai-key-btn').addEventListener('click', () => {
+    const val = document.getElementById('ai-key-input').value.trim();
+    if (val.length < 20) { document.getElementById('ai-key-error').textContent = 'Key looks too short.'; return; }
+    localStorage.removeItem(CLAUDE_MODEL_KEY); // clear any cached bad model
+    localStorage.removeItem(AI_OPT_KEY);
+    saveClaudeApiKey(val);
+    aiOptimizePlan();
+  });
+}
+
+function renderAiPanel(summary) {
+  const panelEl = document.getElementById('ai-panel');
+  if (!panelEl) return;
+  if (!gAiSummary.length) { panelEl.classList.add('hidden'); return; }
+  panelEl.classList.remove('hidden');
+
+  const items = gAiSummary.map(c => {
+    const sc  = sportStyle(c.type);
+    const dur = fmtTrnDur(c.duration);
+    const dateLabel = fmtTrnDate(new Date(c.date + 'T00:00:00'), {weekday:'short', month:'short', day:'numeric'});
+    return `<div class="ai-change-item">
+      <span class="ai-change-date">${dateLabel}</span>
+      <span class="ai-change-badge" style="color:${sc.color};background:${sc.dim};">${sc.badge}</span>
+      <span class="ai-change-label">${esc(c.label)}${dur ? ' · ' + dur : ''}</span>
+      <span class="ai-change-reason">${esc(c.reason)}</span>
+    </div>`;
+  }).join('');
+
+  panelEl.innerHTML = `<div class="ai-panel-inner">
+    <div class="ai-panel-hdr" id="ai-panel-hdr">
+      <div class="ai-panel-title-row">
+        <em class="ai-panel-icon">✦</em>
+        <span class="ai-panel-title">AI Coaching</span>
+        <span class="ai-panel-meta">${gAiSummary.length} change${gAiSummary.length !== 1 ? 's' : ''} applied to your plan</span>
+      </div>
+      <button class="ai-panel-toggle" id="ai-panel-toggle">▾</button>
+    </div>
+    ${summary ? `<div class="ai-panel-summary">${esc(summary)}</div>` : ''}
+    <div class="ai-panel-changes hidden" id="ai-panel-changes">
+      ${items}
+      <button class="ai-reset-btn" id="ai-reset-btn">Reset AI changes</button>
+    </div>
+  </div>`;
+
+  document.getElementById('ai-panel-toggle').addEventListener('click', () => {
+    const body = document.getElementById('ai-panel-changes');
+    const open = body.classList.toggle('hidden');
+    document.getElementById('ai-panel-toggle').textContent = open ? '▾' : '▴';
+  });
+
+  document.getElementById('ai-reset-btn').addEventListener('click', () => {
+    localStorage.removeItem(AI_OPT_KEY);
+    gAiOverrides = {};
+    gAiSummary   = [];
+    panelEl.classList.add('hidden');
+    renderWeekStrip();
+    renderCalendar();
+  });
+}
+
+// ── Training state ───────────────────────────────────────────────
+const today = startOfDay(new Date());
+let calYear    = today.getFullYear();
+let calMonth   = today.getMonth();
+let gOverrides   = {}; // rule-based — built by adaptPlan()
+let gAiOverrides = {}; // ai-based — built by aiOptimizePlan()
+let gAiSummary   = []; // coaching notes for the panel
+
+// ── Training render ──────────────────────────────────────────────
+function renderNav() {
+  const d = daysUntil(RACE_DATE);
+  document.getElementById('nav-race').textContent =
+    d > 0 ? `🏁 Race in ${d} days` : d === 0 ? '🏁 RACE DAY' : '🏁 Race complete';
+}
+
+function renderRaceHeader() {
+  const phase = getPhaseForDate(today);
+  const pill  = document.getElementById('phase-pill');
+  const right = document.getElementById('race-hdr-right');
+  if (today < TRAIN_START) {
+    pill.textContent = 'Pre-Training';
+    pill.style.background = 'rgba(156,163,175,.15)';
+    pill.style.color = '#6D6D6D';
+    right.textContent = `Training starts ${fmtTrnDate(TRAIN_START, {month:'long',day:'numeric',year:'numeric'})}`;
+  } else if (phase) {
+    pill.textContent = `Phase ${phase.id}: ${phase.name}`;
+    pill.style.background = `${phase.color}18`;
+    pill.style.color = phase.color;
+    const overallWeek = Math.floor((today - mondayOf(TRAIN_START)) / (7*86400000)) + 1;
+    right.textContent = `Week ${Math.min(overallWeek,55)} of 55 · ${phase.hrs}`;
+  } else if (today >= RACE_DATE) {
+    pill.textContent = 'Race Complete!';
+    pill.style.background = 'rgba(252,76,2,.12)';
+    pill.style.color = '#FC4C02';
+  }
+}
+
+function renderProgress() {
+  const total = RACE_DATE - TRAIN_START;
+  const elapsed = Math.min(Math.max(today - TRAIN_START, 0), total);
+  document.getElementById('prog-fill').style.width = (elapsed / total * 100).toFixed(2) + '%';
+}
+
+function renderHero() {
+  const el = document.getElementById('hero');
+
+  if (today < TRAIN_START) {
+    const days = daysUntil(TRAIN_START);
+    const w1Mon = mondayOf(TRAIN_START);
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let previewRows = '';
+    for (let i=0; i<7; i++) {
+      const d = addDays(w1Mon, i);
+      const act = getActivity(d);
+      if (!act) {
+        previewRows += `<div class="preview-row"><span class="preview-day">${dayNames[i]}</span><span class="preview-dot" style="background:var(--border)"></span><span class="preview-label" style="color:var(--mid)">Pre-training</span></div>`;
+        continue;
+      }
+      const sc = sportStyle(act.type);
+      const dur = fmtTrnDur(act.duration);
+      previewRows += `<div class="preview-row">
+        <span class="preview-day">${dayNames[i]}</span>
+        <span class="preview-dot" style="background:${sc.color}"></span>
+        <span class="preview-label">${act.label}</span>
+        ${dur ? `<span class="preview-dur">${dur}</span>` : ''}
+      </div>`;
+    }
+    el.innerHTML = `
+      <div class="pretrain-card">
+        <div class="pretrain-left">
+          <div class="pretrain-eyebrow">Training begins in</div>
+          <span class="pretrain-num">${days}</span>
+          <span class="pretrain-unit">${days === 1 ? 'Day' : 'Days'}</span>
+          <div class="pretrain-date">${fmtTrnDate(TRAIN_START, {weekday:'long',month:'long',day:'numeric',year:'numeric'})}</div>
+        </div>
+        <div class="pretrain-right">
+          <div>
+            <div class="pretrain-phase-name">Phase 1: Foundation</div>
+            <div class="pretrain-phase-sub">5–7 hrs/wk · June 12 – August 20, 2026<br>Swim 3× / Bike 2× / Run 2× · Establish the base</div>
+          </div>
+          <div>
+            <div style="font-size:.62rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mid);margin-bottom:.5rem;">Week 1 Preview</div>
+            <div class="pretrain-week-preview">${previewRows}</div>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (trnDateStr(today) === trnDateStr(RACE_DATE)) {
+    el.innerHTML = `<div class="active-card" style="border:2px solid var(--orange);">
+      <div>
+        <div class="active-eyebrow">Today</div>
+        <div class="active-badge" style="color:var(--orange);background:var(--orange-dim);">RACE DAY</div>
+        <div class="active-session">70.3 Half-Ironman</div>
+        <div class="active-meta"><span>1.9 km swim</span><span>90 km bike</span><span>21.1 km run</span></div>
+      </div>
+      <div class="active-right">
+        <div class="active-duration" style="color:var(--orange);">~6h</div>
+        <div class="active-dur-label">Target</div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  let actDate = today;
+  let act = getActivity(today);
+  let label = 'Today';
+  if (!act || act.type === 'rest') {
+    for (let i=1; i<=7; i++) {
+      const d = addDays(today, i);
+      const a = getActivity(d);
+      if (a && a.type !== 'rest') { act = a; actDate = d; label = i === 1 ? 'Tomorrow' : fmtTrnDate(d, {weekday:'long'}); break; }
+    }
+  }
+  if (!act) {
+    el.innerHTML = `<div class="active-card"><div><div class="active-eyebrow">Rest Week</div><div class="active-session">No training scheduled this period.</div></div></div>`;
+    return;
+  }
+  const sc = sportStyle(act.type);
+  const dur = fmtTrnDur(act.duration);
+  const phase = getPhaseForDate(actDate);
+  const phaseName = phase ? `Phase ${phase.id}: ${phase.name}` : '';
+  const todayIsRest = (() => { const a = getActivity(today); return !a || a.type === 'rest'; })();
+  el.innerHTML = `
+    <div class="active-card">
+      <div>
+        <div class="active-eyebrow">${label}${todayIsRest && label !== 'Today' ? ' · Today is rest' : ''}</div>
+        <div class="active-badge" style="color:${sc.color};background:${sc.dim};">${sc.badge}</div>
+        <div class="active-session">${act.label}</div>
+        <div class="active-meta">
+          ${dur ? `<span>${dur}</span>` : ''}
+          ${phaseName ? `<span>${phaseName}</span>` : ''}
+        </div>
+      </div>
+      ${dur ? `<div class="active-right"><div class="active-duration">${dur}</div><div class="active-dur-label">Duration</div></div>` : ''}
+    </div>`;
+}
+
+function renderTimeline() {
+  const wrap = document.getElementById('timeline-wrap');
+  const totalMs = RACE_DATE - TRAIN_START;
+  const segments = PHASES.map(p => {
+    const ms = startOfDay(new Date(p.end)) - startOfDay(new Date(p.start));
+    return { ...p, pct: (ms/totalMs*100).toFixed(1) };
+  });
+  const activePhase = getPhaseForDate(today);
+  const labelRow = segments.map(s => `<div class="timeline-seg-label">${s.name}</div>`).join('');
+  const barRow   = segments.map(s =>
+    `<div class="tseg ${activePhase && activePhase.id===s.id?'t-active':''}" title="${s.name}" style="background:${s.color}${activePhase && activePhase.id===s.id?'':'80'};"></div>`
+  ).join('');
+  wrap.innerHTML = `<div class="timeline-label-row">${labelRow}</div><div class="timeline-bar">${barRow}</div>`;
+}
+
+function renderWeekStrip() {
+  const mon = mondayOf(today);
+  const grid = document.getElementById('week-grid');
+  const fullNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let html = '', totalMin = 0;
+  for (let i=0; i<7; i++) {
+    const d = addDays(mon, i);
+    const isToday    = trnDateStr(d) === trnDateStr(today);
+    const isPast     = d < today && !isToday;
+    const isPreTrain = d < TRAIN_START;
+    const act = getActivity(d);
+    let cls = 'day-cell';
+    if (isToday)    cls += ' is-today';
+    if (isPast)     cls += ' is-past';
+    if (isPreTrain) cls += ' pretrain-day';
+    let badgeHtml = '', sessionHtml = '';
+    if (act && !isPreTrain) {
+      const sc = sportStyle(act.type);
+      badgeHtml   = `<span class="day-sport-badge" style="color:${sc.color};background:${sc.dim};">${sc.badge}</span>`;
+      sessionHtml = `<span class="day-session-lbl">${act.label}</span>`;
+      if (act.duration) totalMin += act.duration;
+    } else if (isPreTrain) {
+      badgeHtml = `<span class="day-sport-badge" style="color:var(--mid);background:var(--bg);">—</span>`;
+    } else {
+      badgeHtml = `<span class="day-sport-badge" style="color:var(--border);background:var(--bg);">—</span>`;
+    }
+    const status   = getCompletionStatus(d);
+    const statusHtml = status ? `<span class="day-status ${status}">${status === 'done' ? '✓' : '✗'}</span>` : '';
+    const aiOv  = gAiOverrides[trnDateStr(d)];
+    const rOv   = gOverrides[trnDateStr(d)];
+    const ov    = aiOv || rOv;
+    const adaptLbl = aiOv ? '✦ ai' : rOv ? { moved_from:'→ moved', moved_here:'↗ rescheduled', makeup:'+ makeup', reduced:'↓ easier' }[rOv.type] : null;
+    const adaptCls = aiOv ? 'ai' : ov?.type;
+    const adaptHtml = adaptLbl ? `<span class="day-adapt day-adapt-${adaptCls}" title="${ov.reason}">${adaptLbl}</span>` : '';
+    html += `<div class="${cls}">
+      <span class="day-name-lbl">${fullNames[i]}</span>
+      <span class="day-num-lbl">${d.getDate()}</span>
+      ${badgeHtml}${sessionHtml}${statusHtml}${adaptHtml}
+    </div>`;
+  }
+  grid.innerHTML = html;
+  document.getElementById('week-title').textContent = `Week of ${fmtTrnDate(mon, {month:'short',day:'numeric'})}`;
+  const meta = document.getElementById('week-meta');
+  if (gActivities && today >= TRAIN_START) {
+    let planned = 0, done = 0;
+    for (let i = 0; i < 7; i++) {
+      const di = addDays(mon, i);
+      if (startOfDay(di) >= today) break;
+      const act = getActivity(di);
+      if (act && act.type !== 'rest') { planned++; if (getCompletionStatus(di) === 'done') done++; }
+    }
+    if (planned > 0) meta.textContent = `${done}/${planned} done this week`;
+    else if (totalMin > 0) meta.textContent = fmtTrnDur(totalMin) + ' total';
+    else meta.textContent = '';
+  } else if (totalMin > 0) {
+    meta.textContent = fmtTrnDur(totalMin) + ' total';
+  } else if (today < TRAIN_START) {
+    meta.textContent = 'Pre-training';
+  } else {
+    meta.textContent = '';
+  }
+}
+
+function renderCalendar() {
+  const firstOfMonth = new Date(calYear, calMonth, 1);
+  const firstMon = mondayOf(firstOfMonth);
+  document.getElementById('cal-month-name').textContent = fmtMonthYear(firstOfMonth);
+  let html = '';
+  let d = startOfDay(firstMon);
+  const typesInMonth = new Set();
+  for (let w=0; w<6; w++) {
+    for (let i=0; i<7; i++) {
+      const isCurrentMonth = d.getMonth() === calMonth && d.getFullYear() === calYear;
+      const isToday    = trnDateStr(d) === trnDateStr(today);
+      const isPreTrain = d < TRAIN_START;
+      const isFuture   = d > RACE_DATE;
+      const act = getActivity(d);
+      const ds  = trnDateStr(d);
+      const isRaceEvent = !!RACE_EVENTS[ds];
+      let cls = 'cal-day';
+      if (!isCurrentMonth) cls += ' other-mo';
+      if (isToday)  cls += ' is-today';
+      if ((isPreTrain || isFuture) && isCurrentMonth) cls += ' is-pretrain';
+      if (act) { cls += ' has-act'; typesInMonth.add(act.type); }
+      let dotHtml='', durHtml='', flagHtml='', tipHtml='', checkHtml='';
+      if (act && isCurrentMonth) {
+        const sc = sportStyle(act.type);
+        dotHtml = `<div class="cal-dot" style="background:${sc.color};"></div>`;
+        const dur = fmtTrnDur(act.duration);
+        if (dur) durHtml = `<span class="cal-dur">${dur}</span>`;
+        tipHtml = `<div class="cal-tip">${act.label}${dur ? ' · '+dur : ''}</div>`;
+        if (act.type !== 'rest') {
+          const status = getCompletionStatus(d);
+          if (status) checkHtml = `<span class="cal-check ${status}">${status === 'done' ? '✓' : '✗'}</span>`;
+        }
+        const aiOv2 = gAiOverrides[ds];
+        const rOv2  = gOverrides[ds];
+        const ov2   = aiOv2 || rOv2;
+        if (ov2) {
+          const lbl2 = aiOv2 ? '✦' : { moved_from:'→', moved_here:'↗', makeup:'+', reduced:'↓' }[ov2.type];
+          const cls2 = aiOv2 ? 'ai' : ov2.type;
+          if (lbl2) checkHtml += `<span class="cal-adapt cal-adapt-${cls2}" title="${ov2.reason}">${lbl2}</span>`;
+        }
+      }
+      if (isRaceEvent) flagHtml = `<div class="cal-flag">🏁</div>`;
+      html += `<div class="${cls}">${flagHtml}<span class="cal-day-num">${d.getDate()}</span>${dotHtml}${checkHtml}${durHtml}${tipHtml}</div>`;
+      d = addDays(d, 1);
+    }
+    if (d.getMonth() !== calMonth && d.getFullYear() === calYear + (calMonth===11?1:0) && w >= 4) break;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+  const sportOrder = ['run','swim','bike','brick','race','rest'];
+  let legHtml = '';
+  for (const t of sportOrder) {
+    if (typesInMonth.has(t) && t !== 'rest') {
+      const sc = sportStyle(t);
+      legHtml += `<div class="leg-item"><div class="leg-dot" style="background:${sc.color};"></div>${sc.label}</div>`;
+    }
+  }
+  if (typesInMonth.has('rest')) legHtml += `<div class="leg-item"><div class="leg-dot" style="background:#9CA3AF;"></div>Rest</div>`;
+  if (!legHtml) legHtml = `<div class="leg-item" style="font-style:italic;">No training this month</div>`;
+  document.getElementById('cal-legend').innerHTML = legHtml;
+}
+
+// ════════════════════════════════════════════
+//  STRAVA
+// ════════════════════════════════════════════
+
+const STORAGE_KEY = 'jm_strava_v1';
+let gAthlete, gStats, gActivities, gCfg;
+let gSport  = 'run';
+let gPeriod = 'ytd';
+const gDetailCache = {};
+
+const PERIODS = {
+  wtd: { label:'Week to Date' },
+  mtd: { label:'Month to Date' },
+  ytd: { label:'Year to Date' },
+};
+
+const SPORTS = {
+  run:  { types:STRAVA_TYPES.run,  label:'Running',  countLabel:'Runs',  longestLabel:'Longest Run',  ytdKey:'ytd_run_totals'  },
+  ride: { types:STRAVA_TYPES.ride, label:'Cycling',  countLabel:'Rides', longestLabel:'Longest Ride', ytdKey:'ytd_ride_totals' },
+  swim: { types:STRAVA_TYPES.swim, label:'Swimming', countLabel:'Swims', longestLabel:'Longest Swim', ytdKey:'ytd_swim_totals' },
+  hike: { types:STRAVA_TYPES.hike, label:'Hiking',   countLabel:'Hikes', longestLabel:'Longest Hike', ytdKey:null              },
+};
+
+// ── Strava config ────────────────────────────────────────────────
+function getCfg()   { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; } }
+function saveCfg(c) { localStorage.setItem(STORAGE_KEY, JSON.stringify(c)); }
+function clearCfg() { localStorage.removeItem(STORAGE_KEY); }
+
+// ── Strava UI states ─────────────────────────────────────────────
+function showStravaSetup() {
+  document.getElementById('strava-setup').classList.remove('hidden');
+  document.getElementById('strava-loading').classList.add('hidden');
+  document.getElementById('strava-content').classList.add('hidden');
+  document.getElementById('strava-topbar').innerHTML = '';
+  document.getElementById('callback-domain').textContent = window.location.hostname;
+}
+function showStravaLoading() {
+  document.getElementById('strava-setup').classList.add('hidden');
+  document.getElementById('strava-loading').classList.remove('hidden');
+  document.getElementById('strava-content').classList.add('hidden');
+  document.getElementById('strava-topbar').innerHTML = '';
+}
+function showStravaContent() {
+  document.getElementById('strava-setup').classList.add('hidden');
+  document.getElementById('strava-loading').classList.add('hidden');
+  document.getElementById('strava-content').classList.remove('hidden');
+  document.getElementById('strava-topbar').innerHTML =
+    `<button class="strava-disconnect" id="disconnect-btn">Disconnect</button>`;
+  document.getElementById('disconnect-btn').addEventListener('click', () => {
+    if (confirm('Disconnect Strava and clear saved tokens?')) { clearCfg(); window.location.replace(window.location.pathname); }
+  });
+}
+
+// ── OAuth ────────────────────────────────────────────────────────
+function redirectUri() { return window.location.origin + window.location.pathname; }
+
+function startOAuth(clientId) {
+  const p = new URLSearchParams({ client_id:clientId, response_type:'code', redirect_uri:redirectUri(), approval_prompt:'auto', scope:'activity:read_all,read' });
+  window.location.href = 'https://www.strava.com/oauth/authorize?' + p;
+}
+
+async function exchangeCode(cfg, code) {
+  const r = await fetch('https://www.strava.com/oauth/token', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams({ client_id:cfg.client_id, client_secret:cfg.client_secret, code, grant_type:'authorization_code' }) });
+  if (!r.ok) throw new Error('Token exchange failed — check your Client ID and Secret.');
+  return r.json();
+}
+
+async function refreshToken(cfg) {
+  const r = await fetch('https://www.strava.com/oauth/token', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams({ client_id:cfg.client_id, client_secret:cfg.client_secret, refresh_token:cfg.refresh_token, grant_type:'refresh_token' }) });
+  if (!r.ok) throw new Error('Token refresh failed.');
+  return r.json();
+}
+
+async function stravaApi(path, token) {
+  const r = await fetch('https://www.strava.com/api/v3' + path, { headers:{ Authorization:'Bearer ' + token } });
+  if (!r.ok) throw new Error('Strava API error ' + r.status);
+  return r.json();
+}
+
+// ── Strava formatters ────────────────────────────────────────────
+const fmtKm  = m => (m / 1000).toFixed(1);
+const fmtNum = n => Math.round(n).toLocaleString('en-CA');
+const fmtHrs = s => (s / 3600).toFixed(1);
+const fmtActDate = s => new Date(s).toLocaleDateString('en-CA', { month:'short', day:'numeric' });
+
+function fmtActDur(s) {
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m`;
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+
+function fmtPace(mps, type) {
+  if (!mps || mps <= 0) return '—';
+  const isRun  = ['Run','TrailRun','Walk','Hike'].includes(type);
+  const isRide = ['Ride','VirtualRide','EBikeRide','GravelRide','MountainBikeRide'].includes(type);
+  const isSwim = type === 'Swim';
+  if (isRun)  { const spk=1000/mps; let m=Math.floor(spk/60),s=Math.round(spk%60); if(s===60){m++;s=0;} return `${m}:${String(s).padStart(2,'0')}/km`; }
+  if (isRide) return `${(mps*3.6).toFixed(1)} km/h`;
+  if (isSwim) { const s100=100/mps; return `${Math.floor(s100/60)}:${String(Math.round(s100%60)).padStart(2,'0')}/100m`; }
+  return `${(mps*3.6).toFixed(1)} km/h`;
+}
+
+function typeClass(t) {
+  if (['Run','TrailRun'].includes(t)) return 't-run';
+  if (['Ride','VirtualRide','EBikeRide','GravelRide','MountainBikeRide'].includes(t)) return 't-ride';
+  if (t === 'Swim') return 't-swim';
+  return 't-other';
+}
+
+function typeLabel(t) {
+  const map = { Run:'Run',TrailRun:'Trail Run',Ride:'Ride',VirtualRide:'Virtual Ride',EBikeRide:'E-Bike',GravelRide:'Gravel',MountainBikeRide:'MTB',Swim:'Swim',Walk:'Walk',Hike:'Hike',Yoga:'Yoga',WeightTraining:'Weights',Workout:'Workout',Rowing:'Row',Crossfit:'CrossFit',AlpineSki:'Ski',NordicSki:'Nordic',Snowboard:'Snowboard',IceSkate:'Skate',Kayaking:'Kayak',StandUpPaddling:'SUP' };
+  return map[t] || t;
+}
+
+// ── Period helpers ───────────────────────────────────────────────
+function getPeriodRange(period) {
+  const now = new Date();
+  if (period === 'wtd') {
+    const dow = (now.getDay()+6)%7;
+    const start = new Date(now); start.setDate(start.getDate()-dow); start.setHours(0,0,0,0);
+    return {start, end:now};
+  }
+  if (period === 'mtd') return {start:new Date(now.getFullYear(),now.getMonth(),1), end:now};
+  return {start:new Date(now.getFullYear(),0,1), end:now};
+}
+
+function getPeriodSub(period) {
+  const now = new Date();
+  if (period === 'ytd') return String(now.getFullYear());
+  if (period === 'mtd') return now.toLocaleDateString('en-CA',{month:'long',year:'numeric'});
+  const dow = (now.getDay()+6)%7;
+  const mon = new Date(now); mon.setDate(mon.getDate()-dow); mon.setHours(0,0,0,0);
+  const sun = new Date(mon); sun.setDate(sun.getDate()+6);
+  const o = {month:'short',day:'numeric'};
+  return mon.toLocaleDateString('en-CA',o)+'–'+sun.toLocaleDateString('en-CA',o);
+}
+
+function getFilteredActs(sport, period) {
+  const {start, end} = getPeriodRange(period);
+  return gActivities.filter(a => SPORTS[sport].types.includes(a.type) && new Date(a.start_date) >= start && new Date(a.start_date) <= end);
+}
+
+function getPeriodStats(sport, period) {
+  if (period === 'ytd' && SPORTS[sport].ytdKey) return gStats[SPORTS[sport].ytdKey] || {};
+  const acts = getFilteredActs(sport, period);
+  return {
+    count:          acts.length,
+    distance:       acts.reduce((s,a) => s+a.distance, 0),
+    elevation_gain: acts.reduce((s,a) => s+(a.total_elevation_gain||0), 0),
+    moving_time:    acts.reduce((s,a) => s+a.moving_time, 0),
+  };
+}
+
+// ── Chart ────────────────────────────────────────────────────────
+function renderChart(sport, period) {
+  const types = SPORTS[sport].types;
+  const now = new Date();
+  let bars = [];
+
+  if (period === 'wtd') {
+    const dow = (now.getDay()+6)%7;
+    for (let i=0; i<=dow; i++) {
+      const d=new Date(now); d.setDate(d.getDate()-dow+i); d.setHours(0,0,0,0);
+      const next=new Date(d); next.setDate(next.getDate()+1);
+      bars.push({start:d,end:next,label:d.toLocaleDateString('en-CA',{weekday:'short'}),distance:0,isCurrent:i===dow});
+    }
+    document.getElementById('chart-title').textContent = `Daily ${SPORTS[sport].label} Distance`;
+    document.getElementById('chart-legend').textContent = 'This week · km';
+  } else if (period === 'mtd') {
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const dow = (monthStart.getDay()+6)%7;
+    let cursor = new Date(monthStart); cursor.setDate(cursor.getDate()-dow);
+    while (cursor <= now) {
+      const wStart=new Date(cursor), wEnd=new Date(cursor); wEnd.setDate(wEnd.getDate()+7);
+      bars.push({start:wStart,end:wEnd,label:wStart.toLocaleDateString('en-CA',{month:'short',day:'numeric'}),distance:0,isCurrent:wEnd>now});
+      cursor.setDate(cursor.getDate()+7);
+    }
+    document.getElementById('chart-title').textContent = `Weekly ${SPORTS[sport].label} Distance`;
+    document.getElementById('chart-legend').textContent = 'This month · km';
+  } else {
+    for (let i=0; i<8; i++) {
+      const start=new Date(now), dow=(start.getDay()+6)%7;
+      start.setDate(start.getDate()-dow-i*7); start.setHours(0,0,0,0);
+      const end=new Date(start); end.setDate(end.getDate()+7);
+      bars.push({start,end,label:start.toLocaleDateString('en-CA',{month:'short',day:'numeric'}),distance:0,isCurrent:i===0});
+    }
+    bars = [...bars].reverse();
+    document.getElementById('chart-title').textContent = `Weekly ${SPORTS[sport].label} Distance`;
+    document.getElementById('chart-legend').textContent = 'Last 8 weeks · km';
+  }
+
+  for (const a of gActivities) {
+    if (!types.includes(a.type)) continue;
+    const d = new Date(a.start_date);
+    for (const w of bars) { if (d >= w.start && d < w.end) { w.distance += a.distance; break; } }
+  }
+  const max = Math.max(...bars.map(w => w.distance), 1);
+  const container = document.getElementById('chart-bars');
+  container.innerHTML = '';
+  for (const w of bars) {
+    const pct = (w.distance/max*100).toFixed(1);
+    const km  = w.distance > 0 ? fmtKm(w.distance)+' km' : '—';
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `<div class="bar-week">${w.label}</div><div class="bar-track"><div class="bar-fill${w.isCurrent?' is-current':''}" style="width:0%" data-target="${pct}"></div></div><div class="bar-km${w.distance>0?' has-val':''}">${km}</div>`;
+    container.appendChild(row);
+  }
+  requestAnimationFrame(() => container.querySelectorAll('.bar-fill').forEach(el => { el.style.width = el.dataset.target+'%'; }));
+}
+
+// ── Activities table ─────────────────────────────────────────────
+function renderActivities(activities) {
+  const meta  = document.getElementById('activities-meta');
+  const tbody = document.getElementById('activities-tbody');
+  tbody.innerHTML = '';
+  if (activities.length === 0) {
+    meta.textContent = '';
+    tbody.innerHTML = `<tr class="no-data-row"><td colspan="8">No ${SPORTS[gSport].label.toLowerCase()} activities found.</td></tr>`;
+    return;
+  }
+  meta.textContent = `Last ${activities.length} activit${activities.length===1?'y':'ies'}`;
+  activities.forEach((a, i) => {
+    const tc = typeClass(a.type);
+    const tr = document.createElement('tr');
+    tr.className = 'data-row';
+    tr.dataset.id = a.id;
+    tr.dataset.type = a.type;
+    tr.innerHTML =
+      `<td class="td-index">${i+1}</td>` +
+      `<td><span class="type-badge ${tc}">${typeLabel(a.type)}</span></td>` +
+      `<td class="td-name" title="${esc(a.name)}">${esc(a.name)} <span class="expand-icon">▾</span></td>` +
+      `<td class="td-date">${fmtActDate(a.start_date)}</td>` +
+      `<td class="td-dist">${a.distance>0?fmtKm(a.distance)+' km':'—'}</td>` +
+      `<td class="td-time">${fmtActDur(a.moving_time)}</td>` +
+      `<td class="td-pace ${tc}">${fmtPace(a.average_speed, a.type)}</td>` +
+      `<td class="td-elev">${a.total_elevation_gain>0?Math.round(a.total_elevation_gain)+' m':'—'}</td>`;
+    tr.addEventListener('click', () => toggleDetail(a.id, a.type, tr));
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Comparison against recent efforts ────────────────────────────
+function getComparisonNote(detail, activityType) {
+  if (!gActivities || !detail.id) return '';
+
+  const runTypes  = ['Run','TrailRun'];
+  const rideTypes = ['Ride','VirtualRide','EBikeRide','GravelRide','MountainBikeRide'];
+  const swimTypes = ['Swim'];
+  const isRun  = runTypes.includes(activityType);
+  const isRide = rideTypes.includes(activityType);
+  const isSwim = swimTypes.includes(activityType);
+  const matchTypes = isRun ? runTypes : isRide ? rideTypes : isSwim ? swimTypes : [activityType];
+
+  // Use watts as the metric for powered rides, speed for everything else
+  const useWatts = isRide && detail.average_watts > 0;
+  const currVal  = useWatts ? detail.average_watts : detail.average_speed;
+  if (!currVal || currVal <= 0) return '';
+
+  const actDate = new Date(detail.start_date_local || detail.start_date);
+
+  // Build candidate pools: prefer 30-day window, widen to 90 if sparse
+  function pool(days) {
+    const cutoff = new Date(actDate);
+    cutoff.setDate(cutoff.getDate() - days);
+    return gActivities.filter(a =>
+      a.id !== detail.id &&
+      matchTypes.includes(a.type) &&
+      new Date(a.start_date) >= cutoff &&
+      new Date(a.start_date) <= actDate &&
+      (useWatts ? (a.average_watts > 0) : (a.average_speed > 0))
+    );
+  }
+
+  let peers  = pool(30);
+  let window = '30 days';
+  if (peers.length < 2) { peers = pool(90); window = '90 days'; }
+  if (peers.length === 0) return '';
+
+  const peerVals = peers.map(a => useWatts ? a.average_watts : a.average_speed);
+  const avgVal   = peerVals.reduce((s,v) => s+v, 0) / peerVals.length;
+  const pctDiff  = (currVal - avgVal) / avgVal * 100;
+
+  // Rank 1 = best (fastest / most powerful)
+  const allVals  = [...peerVals, currVal].sort((a,b) => b - a);
+  const rank     = allVals.indexOf(currVal) + 1;
+  const total    = allVals.length;
+
+  const sportName = isRun ? 'run' : isRide ? 'ride' : isSwim ? 'swim' : 'effort';
+  const metric    = useWatts ? 'power output' : 'pace';
+  const sign      = pctDiff >= 0 ? '+' : '';
+
+  // Natural language tiers
+  if (rank === 1) {
+    const margin = Math.abs(pctDiff);
+    const qualifier = margin > 8 ? 'Best' : margin > 3 ? 'Fastest' : 'Fastest';
+    return `${qualifier} ${sportName} in the last ${window} — #1 of ${total}.`;
+  }
+  if (rank === total) {
+    return `Slowest ${sportName} in the last ${window} (${sign}${pctDiff.toFixed(1)}% vs. recent avg) — likely a recovery session.`;
+  }
+  if (Math.abs(pctDiff) < 1.5) {
+    return `Right on par with your recent ${sportName}s (${sign}${pctDiff.toFixed(1)}% vs. ${window} avg), ranked #${rank} of ${total}.`;
+  }
+  const dir    = pctDiff > 0 ? 'above' : 'below';
+  const adverb = Math.abs(pctDiff) > 6 ? (pctDiff > 0 ? 'Significantly stronger' : 'Well below')
+               : Math.abs(pctDiff) > 3 ? (pctDiff > 0 ? 'Stronger' : 'Below')
+               : (pctDiff > 0 ? 'Slightly better' : 'Slightly off');
+  return `${adverb} than your ${window} avg ${metric} (${sign}${pctDiff.toFixed(1)}%), ranked #${rank} of ${total} ${sportName}s.`;
+}
+
+// ── Activity description generator ───────────────────────────────
+function generateActivityDescription(detail, activityType) {
+  const isRun  = ['Run','TrailRun'].includes(activityType);
+  const isRide = ['Ride','VirtualRide','EBikeRide','GravelRide','MountainBikeRide'].includes(activityType);
+  const isSwim = activityType === 'Swim';
+
+  const distKm    = detail.distance / 1000;
+  const avgHR     = detail.average_heartrate        ? Math.round(detail.average_heartrate)        : null;
+  const maxHR     = detail.max_heartrate            ? Math.round(detail.max_heartrate)            : null;
+  const avgWatts  = detail.average_watts            ? Math.round(detail.average_watts)            : null;
+  const normWatts = detail.weighted_average_watts   ? Math.round(detail.weighted_average_watts)   : null;
+  const elev      = detail.total_elevation_gain     ? Math.round(detail.total_elevation_gain)     : 0;
+  const cadence   = detail.average_cadence          ? Math.round(detail.average_cadence)          : null;
+  const splits    = (detail.splits_metric || []).filter(s => s.moving_time > 10);
+
+  // Effort from HR (rough zones — no LTHR known)
+  let effortAdj = 'moderate';
+  if (avgHR) {
+    if (avgHR < 125)      effortAdj = 'easy recovery';
+    else if (avgHR < 140) effortAdj = 'easy aerobic';
+    else if (avgHR < 155) effortAdj = 'steady aerobic';
+    else if (avgHR < 165) effortAdj = 'tempo';
+    else if (avgHR < 175) effortAdj = 'threshold';
+    else                  effortAdj = 'high-intensity';
+  } else if (avgWatts) {
+    if (avgWatts < 150)      effortAdj = 'easy recovery';
+    else if (avgWatts < 220) effortAdj = 'steady aerobic';
+    else if (avgWatts < 300) effortAdj = 'tempo';
+    else                     effortAdj = 'high-intensity';
+  }
+
+  // Split trend
+  let splitNote = '';
+  if (splits.length >= 3) {
+    const speeds = splits.map(s => s.distance / s.moving_time);
+    const half   = Math.floor(speeds.length / 2);
+    const firstAvg = speeds.slice(0, half).reduce((a,b)=>a+b,0) / half;
+    const lastAvg  = speeds.slice(Math.ceil(speeds.length/2)).reduce((a,b)=>a+b,0) / (speeds.length - Math.ceil(speeds.length/2));
+    const ratio = (lastAvg - firstAvg) / firstAvg;
+    if      (ratio >  0.04) splitNote = 'strong negative split — the back half was faster';
+    else if (ratio < -0.04) splitNote = 'pace faded in the second half';
+    else                    splitNote = 'very consistent pacing throughout';
+  }
+
+  const parts = [];
+
+  if (isRun) {
+    const pace     = fmtPace(detail.average_speed, activityType);
+    const elevNote = elev > 60 ? `, ${elev}m gain` : '';
+    parts.push(`A ${effortAdj} effort — ${distKm.toFixed(1)} km at ${pace}${elevNote}.`);
+    if (splitNote) parts.push(`Splits: ${splitNote}.`);
+    if (avgHR && maxHR) parts.push(`Heart rate averaged ${avgHR} bpm, peaked at ${maxHR}.`);
+    else if (avgHR)     parts.push(`Average heart rate: ${avgHR} bpm.`);
+    if (cadence && isRun) parts.push(`Cadence: ${cadence} spm.`);
+  } else if (isRide) {
+    const kmh      = (detail.average_speed * 3.6).toFixed(1);
+    const elevNote = elev > 150 ? `, ${elev}m climbed` : '';
+    parts.push(`A ${effortAdj} effort — ${distKm.toFixed(1)} km at ${kmh} km/h${elevNote}.`);
+    if (avgWatts && normWatts) {
+      const vi = normWatts / avgWatts;
+      const viNote = vi > 1.07 ? ' — variable effort with surges' : vi < 1.02 ? ' — very steady output' : '';
+      parts.push(`Power: ${avgWatts}W avg, ${normWatts}W normalized${viNote}.`);
+    } else if (avgWatts) {
+      parts.push(`Average power: ${avgWatts}W.`);
+    }
+    if (avgHR) parts.push(`Heart rate averaged ${avgHR} bpm${maxHR ? `, max ${maxHR}` : ''}.`);
+  } else if (isSwim) {
+    const pace100  = fmtPace(detail.average_speed, activityType);
+    parts.push(`A ${effortAdj} effort — ${distKm.toFixed(2)} km at ${pace100}.`);
+    if (avgHR)  parts.push(`Average HR: ${avgHR} bpm.`);
+  } else {
+    parts.push(`A ${effortAdj} effort — ${distKm.toFixed(1)} km.`);
+    if (avgHR) parts.push(`Average HR: ${avgHR} bpm.`);
+  }
+
+  const cmp = getComparisonNote(detail, activityType);
+  if (cmp) parts.push(cmp);
+
+  return parts.join(' ');
+}
+
+// ── Activity detail ──────────────────────────────────────────────
+async function toggleDetail(activityId, activityType, rowEl) {
+  const existingRow = document.getElementById(`detail-row-${activityId}`);
+  if (existingRow) {
+    const content = existingRow.querySelector('.detail-content');
+    const opening = !content.classList.contains('open');
+    content.classList.toggle('open', opening);
+    rowEl.classList.toggle('is-open', opening);
+    return;
+  }
+  rowEl.classList.add('is-open');
+  const detailTr = document.createElement('tr');
+  detailTr.className = 'detail-tr';
+  detailTr.id = `detail-row-${activityId}`;
+  detailTr.innerHTML = `<td colspan="8"><div class="detail-content" id="detail-content-${activityId}"><div class="detail-inner"><div class="detail-loading">Loading details…</div></div></div></td>`;
+  rowEl.after(detailTr);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    detailTr.querySelector('.detail-content').classList.add('open');
+  }));
+  await fetchDetail(activityId, activityType);
+}
+
+async function fetchDetail(activityId, activityType) {
+  const contentEl = document.getElementById(`detail-content-${activityId}`);
+  if (!contentEl) return;
+  if (gDetailCache[activityId]) { renderDetailContent(contentEl, gDetailCache[activityId], activityType); return; }
+  if (!gCfg || !gCfg.access_token) {
+    contentEl.querySelector('.detail-inner').innerHTML = '<div class="detail-loading">Connect to Strava to see full activity details.</div>';
+    return;
+  }
+  try {
+    const detail = await stravaApi(`/activities/${activityId}`, gCfg.access_token);
+    gDetailCache[activityId] = detail;
+    renderDetailContent(contentEl, detail, activityType);
+  } catch { contentEl.querySelector('.detail-inner').innerHTML = '<div class="detail-error">Could not load activity details.</div>'; }
+}
+
+function renderDetailContent(contentEl, detail, activityType) {
+  const chips = [];
+  if (detail.average_heartrate)      chips.push({ val:Math.round(detail.average_heartrate)+' bpm',     label:'Avg HR' });
+  if (detail.max_heartrate)          chips.push({ val:Math.round(detail.max_heartrate)+' bpm',         label:'Max HR' });
+  if (detail.average_cadence) {
+    const isRide = ['Ride','VirtualRide','EBikeRide','GravelRide','MountainBikeRide'].includes(activityType);
+    chips.push({ val:Math.round(detail.average_cadence)+(isRide?' rpm':' spm'), label:'Cadence' });
+  }
+  if (detail.average_watts)          chips.push({ val:Math.round(detail.average_watts)+' W',           label:'Avg Power' });
+  if (detail.weighted_average_watts) chips.push({ val:Math.round(detail.weighted_average_watts)+' W',  label:'Norm Power' });
+  if (detail.kudos_count > 0)        chips.push({ val:detail.kudos_count,                              label:'Kudos' });
+  if (detail.achievement_count > 0)  chips.push({ val:detail.achievement_count,                        label:'Achievements' });
+
+  // Build splits HTML
+  const splits     = detail.splits_metric;
+  const hasSplits  = splits && splits.length > 0;
+  let splitsHtml   = '';
+  if (hasSplits) {
+    splitsHtml = '<div><div class="detail-splits-label">Splits</div><table class="splits-table"><thead><tr><th>km</th><th>Time</th><th>Pace</th><th>Elev Δ</th></tr></thead><tbody>';
+    splits.forEach((split, i) => {
+      if (split.moving_time <= 0) return;
+      const pace = fmtPace(split.average_speed, activityType);
+      const elev = split.elevation_difference || 0;
+      const elevClass = elev > 0 ? 'up' : elev < 0 ? 'down' : '';
+      const elevStr = elev !== 0 ? `${elev>0?'+':''}${Math.round(elev)}m` : '—';
+      splitsHtml += `<tr><td>${i+1}</td><td>${fmtActDur(split.moving_time)}</td><td class="split-pace">${pace}</td><td class="split-elev ${elevClass}">${elevStr}</td></tr>`;
+    });
+    splitsHtml += '</tbody></table></div>';
+  }
+
+  // Description: prefer Strava's own (user content — must escape), fall back to generated
+  const isStravaDesc = !!detail.description;
+  const descText     = detail.description || generateActivityDescription(detail, activityType);
+  const descHtml     = `<div class="detail-ai-card">
+    <div class="detail-ai-label"><em class="ai-icon">✦</em>${isStravaDesc ? 'Description' : 'Summary'}</div>
+    <p class="detail-ai-text">${isStravaDesc ? esc(descText) : descText}</p>
+  </div>`;
+
+  let html = '<div class="detail-inner">';
+  if (chips.length > 0) html += '<div class="detail-chips">'+chips.map(c=>`<div class="detail-chip"><span class="dc-val">${c.val}</span><span class="dc-label">${c.label}</span></div>`).join('')+'</div>';
+
+  if (hasSplits) {
+    html += `<div class="detail-two-col">${splitsHtml}${descHtml}</div>`;
+  } else {
+    html += descHtml;
+  }
+
+  html += '</div>';
+  contentEl.innerHTML = html;
+}
+
+// ── setSport / setPeriod ─────────────────────────────────────────
+function setSport(sport) {
+  gSport = sport;
+  const cfg    = SPORTS[sport];
+  const pAbbr  = gPeriod.toUpperCase();
+  document.querySelectorAll('.sport-tab').forEach(b => b.classList.toggle('active', b.dataset.sport === sport));
+  document.getElementById('period-sport').textContent   = cfg.label;
+  document.getElementById('current-year').textContent   = getPeriodSub(gPeriod);
+  document.getElementById('stat-count-label').textContent = cfg.countLabel;
+  const stats = getPeriodStats(sport, gPeriod);
+  document.getElementById('stat-runs').textContent      = fmtNum(stats.count || 0);
+  document.getElementById('stat-distance').textContent  = fmtNum((stats.distance || 0) / 1000);
+  document.getElementById('stat-elevation').textContent = fmtNum(stats.elevation_gain || 0);
+  document.getElementById('stat-hours').textContent     = fmtHrs(stats.moving_time || 0);
+  renderChart(sport, gPeriod);
+}
+
+function setPeriod(period) {
+  gPeriod = period;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b.dataset.period === period));
+  setSport(gSport);
+}
+
+// ── Countdown card (days until training start or race) ───────────
+function renderCountdownCard() {
+  const eyebrowEl = document.getElementById('countdown-eyebrow');
+  const numEl     = document.getElementById('countdown-num');
+  const unitEl    = document.getElementById('countdown-unit');
+  const dateEl    = document.getElementById('countdown-date');
+  if (!eyebrowEl) return;
+  const dateOpts = { weekday:'long', month:'long', day:'numeric', year:'numeric' };
+  if (today < TRAIN_START) {
+    const d = daysUntil(TRAIN_START);
+    eyebrowEl.textContent = 'Training begins in';
+    numEl.textContent     = d;
+    unitEl.textContent    = d === 1 ? 'Day' : 'Days';
+    dateEl.textContent    = TRAIN_START.toLocaleDateString('en-CA', dateOpts);
+  } else if (today < RACE_DATE) {
+    const d = daysUntil(RACE_DATE);
+    eyebrowEl.textContent = 'Race in';
+    numEl.textContent     = d;
+    unitEl.textContent    = d === 1 ? 'Day' : 'Days';
+    dateEl.textContent    = RACE_DATE.toLocaleDateString('en-CA', dateOpts);
+  } else if (trnDateStr(today) === trnDateStr(RACE_DATE)) {
+    eyebrowEl.textContent = '';
+    numEl.textContent     = '🏁';
+    unitEl.textContent    = 'Race Day';
+    dateEl.textContent    = RACE_DATE.toLocaleDateString('en-CA', dateOpts);
+  } else {
+    eyebrowEl.textContent = '';
+    numEl.textContent     = '🏁';
+    unitEl.textContent    = 'Race Complete';
+    dateEl.textContent    = RACE_DATE.toLocaleDateString('en-CA', dateOpts);
+  }
+}
+
+// ── Recent activities (shown in training section) ────────────────
+const RECENT_ACTS_DEFAULT = 5;
+const RECENT_ACTS_MAX     = 50;
+
+function renderRecentActivities(expanded) {
+  const section = document.getElementById('recent-acts-section');
+  if (!section) return;
+  if (!gActivities || !gActivities.length) { section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+
+  const limit = expanded ? RECENT_ACTS_MAX : RECENT_ACTS_DEFAULT;
+  const acts  = gActivities.slice(0, limit);
+
+  document.getElementById('recent-acts-meta').textContent =
+    expanded ? `Showing ${acts.length}` : `Last ${RECENT_ACTS_DEFAULT}`;
+
+  const tbody = document.getElementById('recent-acts-tbody');
+  tbody.innerHTML = '';
+  acts.forEach((a, i) => {
+    const tc = typeClass(a.type);
+    const tr = document.createElement('tr');
+    tr.className = 'data-row';
+    tr.dataset.id   = a.id;
+    tr.dataset.type = a.type;
+    tr.innerHTML =
+      `<td class="td-index">${i+1}</td>` +
+      `<td><span class="type-badge ${tc}">${typeLabel(a.type)}</span></td>` +
+      `<td class="td-name" title="${esc(a.name)}">${esc(a.name)} <span class="expand-icon">▾</span></td>` +
+      `<td class="td-date">${fmtActDate(a.start_date)}</td>` +
+      `<td class="td-dist">${a.distance>0?fmtKm(a.distance)+' km':'—'}</td>` +
+      `<td class="td-time">${fmtActDur(a.moving_time)}</td>` +
+      `<td class="td-pace ${tc}">${fmtPace(a.average_speed, a.type)}</td>` +
+      `<td class="td-elev">${a.total_elevation_gain>0?Math.round(a.total_elevation_gain)+' m':'—'}</td>`;
+    tr.addEventListener('click', () => toggleDetail(a.id, a.type, tr));
+    tbody.appendChild(tr);
+  });
+
+  const footer = document.getElementById('recent-acts-footer');
+  if (gActivities.length > RECENT_ACTS_DEFAULT) {
+    const remaining = Math.min(gActivities.length, RECENT_ACTS_MAX) - RECENT_ACTS_DEFAULT;
+    const label = expanded
+      ? 'Show less'
+      : `Show ${remaining} more activit${remaining === 1 ? 'y' : 'ies'}`;
+    footer.innerHTML = `<button class="acts-expand-btn">${label}</button>`;
+    footer.querySelector('.acts-expand-btn').addEventListener('click', () => renderRecentActivities(!expanded));
+  } else {
+    footer.innerHTML = '';
+  }
+}
+
+// ── Main render (after data load) ────────────────────────────────
+function stravaRender(athlete, stats, activities, cfg) {
+  gAthlete = athlete; gStats = stats; gActivities = activities; gCfg = cfg || null;
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+  // All-time run stats → topnav
+  const atRun = stats.all_run_totals || {};
+  const runsStr = atRun.count    != null ? fmtNum(atRun.count)            + ' runs' : null;
+  const kmStr   = atRun.distance != null ? fmtNum(atRun.distance / 1000) + ' km'   : null;
+  const allTimeEl = document.getElementById('topnav-alltime');
+  if (allTimeEl && (runsStr || kmStr)) {
+    allTimeEl.textContent = [runsStr, kmStr].filter(Boolean).join(' · ');
+    allTimeEl.classList.remove('hidden');
+  }
+  renderCountdownCard();
+  document.querySelectorAll('.sport-tab').forEach(btn => btn.addEventListener('click', () => setSport(btn.dataset.sport)));
+  document.querySelectorAll('.period-btn').forEach(btn => btn.addEventListener('click', () => setPeriod(btn.dataset.period)));
+  setSport('run');
+  // Rule-based adaptations (sync)
+  adaptPlan();
+  renderRecentActivities(false);
+  // Pre-apply any warm AI cache so the initial render is correct (avoids double-render)
+  const latestAct = activities[0];
+  const aiCache   = latestAct ? getCachedOpt() : null;
+  if (aiCache?.activityId === latestAct?.id) {
+    applyAiResult(aiCache);
+  }
+  renderWeekStrip();
+  renderCalendar();
+  showStravaContent();
+  // AI optimization: renders panel immediately if cached, otherwise fires async fetch
+  aiOptimizePlan();
+}
+
+// ── Strava init ──────────────────────────────────────────────────
+async function stravaInit() {
+  const params   = new URLSearchParams(window.location.search);
+  const code     = params.get('code');
+  const errParam = params.get('error');
+  let cfg = getCfg();
+
+  if (errParam) { clearCfg(); showStravaSetup(); document.getElementById('setup-error').textContent = 'Authorization denied.'; return; }
+
+  if (code) {
+    if (!cfg) { showStravaSetup(); return; }
+    showStravaLoading();
+    window.history.replaceState({}, '', window.location.pathname);
+    try { const tokens = await exchangeCode(cfg, code); cfg = {...cfg,...tokens}; saveCfg(cfg); }
+    catch (e) { clearCfg(); showStravaSetup(); document.getElementById('setup-error').textContent = e.message; return; }
+  }
+
+  if (!cfg) { showStravaSetup(); return; }
+  // Credentials stored — auto-start OAuth if no valid token
+  if (!cfg.access_token) { startOAuth(cfg.client_id); return; }
+  showStravaLoading();
+
+  if (Date.now()/1000 >= (cfg.expires_at||0) - 60) {
+    try { const tokens = await refreshToken(cfg); cfg = {...cfg,...tokens}; saveCfg(cfg); }
+    catch { clearCfg(); showStravaSetup(); return; }
+  }
+
+  try {
+    const [athlete, activities] = await Promise.all([stravaApi('/athlete', cfg.access_token), stravaApi('/athlete/activities?per_page=60', cfg.access_token)]);
+    const stats = await stravaApi(`/athletes/${athlete.id}/stats`, cfg.access_token);
+    stravaRender(athlete, stats, activities, cfg);
+  } catch (e) {
+    console.error(e);
+    cfg.access_token = null; cfg.expires_at = 0; saveCfg(cfg);
+    startOAuth(cfg.client_id);
+  }
+}
+
+// ── Setup form ───────────────────────────────────────────────────
+document.getElementById('setup-btn').addEventListener('click', () => {
+  const id  = document.getElementById('input-client-id').value.trim();
+  const sec = document.getElementById('input-client-secret').value.trim();
+  const err = document.getElementById('setup-error');
+  if (!id || !sec)        { err.textContent = 'Both fields are required.'; return; }
+  if (!/^\d+$/.test(id)) { err.textContent = 'Client ID should be a number.'; return; }
+  saveCfg({ client_id:id, client_secret:sec });
+  startOAuth(id);
+});
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+
+// Training (sync, always visible)
+renderNav();
+renderRaceHeader();
+renderProgress();
+renderHero();
+renderTimeline();
+renderWeekStrip();
+renderCalendar();
+
+document.getElementById('cal-prev').addEventListener('click', () => {
+  calMonth--; if (calMonth < 0) { calMonth=11; calYear--; }
+  renderCalendar();
+});
+document.getElementById('cal-next').addEventListener('click', () => {
+  calMonth++; if (calMonth > 11) { calMonth=0; calYear++; }
+  renderCalendar();
+});
+
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+// Strava (async, may show connect card or content)
+stravaInit();
+</script>
+</body>
+</html>
