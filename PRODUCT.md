@@ -1,51 +1,20 @@
-# Julien Mann — Product Context
-
-## Overview
-Personal portfolio website showcasing photography, climbing adventures, and web development work. A single-page editorial design with modal contact form.
-
-## Users
-- Julien Mann (primary author, content creator)
-- Potential employers, clients, collaborators
-- Friends and family following his journeys
-
-## Brand & Tone
-- **Register:** Brand (personal portfolio — design IS the product)
-- **Tone:** Editorial, refined, adventurous, authentic
-- **Voice:** Quiet confidence, understated pride, curious observer
-- **Audience:** Creative professionals, outdoor enthusiasts, tech-savvy clients
+# Mann Dev — Product Context
 
 ## Product Purpose
-A personal editorial website that functions as both:
-1. **Identity piece** — establishes Julien as curious, resilient, observant
-2. **Portfolio showcase** — photography, climbing, development work
-3. **Contact gateway** — minimal friction to professional opportunities
+Personal portfolio and client acquisition site for Julien Mann, a solo web developer based in Montréal. The site has two main surfaces: a personal/about page (julienmann.ca) and a web development services page (manndev). The manndev page is the commercial face — it explains services, process, and drives enquiries.
 
-## Anti-Patterns to Avoid
-- Generic "about me" templates
-- Em-dashes (use commas, colons, parentheses)
-- Side-stripe borders as decorative elements
-- Gradient text effects
-- Hero-metric clichés
-- AI-generated "polished" generic design
-- References to current project in copy
+## Register
+brand
 
-## Strategic Principles
-1. **Authenticity over polish** — real adventures, honest storytelling
-2. **Less is more** — curated content, intentional whitespace
-3. **Visual hierarchy through typography** — Bebas Neue headlines, Playfair Display elegance
-4. **Editorial treatment** — photograph + caption, dinkus separators, long-form body text
-5. **Cue-based navigation** — contextual CTAs that reference what the user just read
+## Users
+Small business owners, creatives, and startups in Montréal and remotely, aged 30–55, looking for a solo developer who can handle design + code without agency overhead. They are discerning — they can tell quality from template work. They arrive via word of mouth or direct search.
 
-## Current State
-- Single HTML page with embedded styles/scripts
-- Custom cursor system (desktop only)
-- French/English i18n toggle
-- Animated "Qualities" word cloud
-- Contact modal with Web3Forms API
-- Noise texture overlay for film aesthetic
+## Brand & Tone
+Editorial, warm-dark, typographic. Inspired by newspaper layout and print design. Confident without being loud. The work speaks through craft, not superlatives. Anti-reference: generic SaaS landing pages, template builders, agency websites with stock photography.
 
-## Design Decisions Already Made
-- **Color:** Warm sepia-toned dark theme (`--bg: #0d0b09`, accent: `#c4922a`)
-- **Typography:** Bebas Neue (headers), Playfair Display (serif accents), IBM Plex Mono (body)
-- **Imagery:** Grayscale + sepia filter for nostalgic, timeless feel
-- **Layout:** Editorial 5fr/7fr grid — photo left, text right
+## Design Principles
+- Warm dark palette (#0d0b09 bg, #ede8d5 fg, #c4922a gold accent) — not pure black, not white
+- Bebas Neue for display/numbers, Playfair Display italic for editorial subheadings, IBM Plex Mono for body/UI
+- Gold accent used sparingly — rule lines, active states, numbers, CTAs
+- Editorial grid: content lives in the type, not in cards or boxes
+- No templates. No stock. No generic UI patterns.
