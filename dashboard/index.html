@@ -36,6 +36,11 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px
 ::selection{background:var(--orange);color:#fff;}
 a{color:inherit;text-decoration:none;}
 button{font-family:var(--sans);cursor:pointer;border:none;background:none;}
+h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px;border-radius:3px;}
+/* skip link */
+.skip-link{position:absolute;top:-100%;left:50%;transform:translateX(-50%);z-index:9999;padding:.5rem 1.25rem;background:var(--fg);color:#fff;font-size:.8rem;font-weight:700;border-radius:6px;white-space:nowrap;text-decoration:none;}
+.skip-link:focus{top:.75rem;}
 
 /* ── TOPNAV ── */
 .topnav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
@@ -178,7 +183,8 @@ button{font-family:var(--sans);cursor:pointer;border:none;background:none;}
   padding:.35rem .6rem;border-radius:4px;white-space:nowrap;z-index:50;
   pointer-events:none;opacity:0;transition:opacity .12s;
 }
-.cal-day:hover .cal-tip{opacity:1;}
+.cal-day:hover .cal-tip,.cal-day:focus .cal-tip{opacity:1;}
+.cal-day.has-act:focus-visible{outline:2px solid var(--orange);outline-offset:-2px;border-radius:5px;}
 .cal-legend{display:flex;gap:1.25rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);flex-wrap:wrap;}
 .leg-item{display:flex;align-items:center;gap:.35rem;font-size:.65rem;color:var(--mid);}
 .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
@@ -372,9 +378,9 @@ button{font-family:var(--sans);cursor:pointer;border:none;background:none;}
 .data-row.is-open td:first-child{border-left:3px solid var(--orange);padding-left:calc(1.5rem - 3px);}
 
 .detail-tr td{padding:0;border-bottom:1px solid var(--border);background:#FAFAFA;}
-.detail-content{overflow:hidden;max-height:0;transition:max-height .35s ease;}
-.detail-content.open{max-height:900px;}
-.detail-inner{padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.detail-content{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .3s ease-out;}
+.detail-content.open{grid-template-rows:1fr;}
+.detail-inner{min-height:0;padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
 .detail-chips{display:flex;gap:.5rem;flex-wrap:wrap;}
 .detail-chip{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.5rem .75rem;min-width:76px;}
 .detail-chip .dc-val{font-size:.9rem;font-weight:700;color:var(--fg);display:block;line-height:1.2;}
@@ -453,9 +459,13 @@ footer{border-top:1px solid var(--border);background:var(--card);}
   .race-hdr-right{display:none;}
   .topnav-links{display:none;}
 }
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;}
+}
 </style>
 </head>
 <body>
+<a href="#training" class="skip-link">Skip to content</a>
 
 <!-- ══════════════════════════════════════════
      NAV (shared)
@@ -507,7 +517,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
   <div class="period-bar">
     <div class="period-bar-left">
-      <span class="period-title"><span id="period-sport">Running</span></span>
+      <h2 class="period-title"><span id="period-sport">Running</span></h2>
       <div class="period-seg">
         <button class="period-btn" data-period="wtd">Week</button>
         <button class="period-btn" data-period="mtd">Month</button>
@@ -572,7 +582,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
   <div class="race-hdr">
     <div class="race-hdr-left">
-      <span class="race-name">70.3 Half-Ironman</span>
+      <h1 class="race-name">70.3 Half-Ironman</h1>
       <span class="phase-pill" id="phase-pill"></span>
     </div>
     <span class="race-hdr-right" id="race-hdr-right"></span>
@@ -604,7 +614,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
   <section class="week-section">
     <div class="sec-hdr">
-      <span class="sec-title" id="week-title">This Week</span>
+      <h2 class="sec-title" id="week-title">This Week</h2>
       <span class="sec-meta" id="week-meta"></span>
     </div>
     <div class="week-grid" id="week-grid"></div>
@@ -614,7 +624,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
   <section class="recent-acts-section hidden" id="recent-acts-section">
     <div class="sec-hdr">
-      <span class="sec-title">Recent Activities</span>
+      <h2 class="sec-title">Recent Activities</h2>
       <span class="sec-meta" id="recent-acts-meta"></span>
     </div>
     <div class="activities-card">
@@ -1247,7 +1257,7 @@ function renderAiPanel(summary) {
         <span class="ai-panel-title">AI Coaching</span>
         <span class="ai-panel-meta">${gAiSummary.length} change${gAiSummary.length !== 1 ? 's' : ''} applied to your plan</span>
       </div>
-      <button class="ai-panel-toggle" id="ai-panel-toggle">▾</button>
+      <button class="ai-panel-toggle" id="ai-panel-toggle" aria-label="Show coaching changes" aria-expanded="false">▾</button>
     </div>
     ${summary ? `<div class="ai-panel-summary">${esc(summary)}</div>` : ''}
     <div class="ai-panel-changes hidden" id="ai-panel-changes">
@@ -1258,8 +1268,11 @@ function renderAiPanel(summary) {
 
   document.getElementById('ai-panel-toggle').addEventListener('click', () => {
     const body = document.getElementById('ai-panel-changes');
-    const open = body.classList.toggle('hidden');
-    document.getElementById('ai-panel-toggle').textContent = open ? '▾' : '▴';
+    const isNowHidden = body.classList.toggle('hidden');
+    const btn = document.getElementById('ai-panel-toggle');
+    btn.textContent = isNowHidden ? '▾' : '▴';
+    btn.setAttribute('aria-expanded', isNowHidden ? 'false' : 'true');
+    btn.setAttribute('aria-label', isNowHidden ? 'Show coaching changes' : 'Hide coaching changes');
   });
 
   document.getElementById('ai-reset-btn').addEventListener('click', () => {
@@ -1565,7 +1578,9 @@ function renderCalendar() {
         }
       }
       if (isRaceEvent) flagHtml = `<div class="cal-flag">🏁</div>`;
-      html += `<div class="${cls}">${flagHtml}<span class="cal-day-num">${d.getDate()}</span>${dotHtml}${checkHtml}${durHtml}${tipHtml}</div>`;
+      const hasAct = cls.includes('has-act');
+      const tipId  = hasAct ? ` aria-label="${tipHtml.replace(/<[^>]*>/g,'').trim()}"` : '';
+      html += `<div class="${cls}"${hasAct ? ' tabindex="0" role="button"' : ''}${tipId}>${flagHtml}<span class="cal-day-num">${d.getDate()}</span>${dotHtml}${checkHtml}${durHtml}${tipHtml}</div>`;
       d = addDays(d, 1);
     }
     if (d.getMonth() !== calMonth && d.getFullYear() === calYear + (calMonth===11?1:0) && w >= 4) break;
