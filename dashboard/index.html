@@ -380,7 +380,8 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .detail-tr td{padding:0;border-bottom:1px solid var(--border);background:#FAFAFA;}
 .detail-content{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .3s ease-out;}
 .detail-content.open{grid-template-rows:1fr;}
-.detail-inner{min-height:0;overflow:hidden;padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.detail-inner{min-height:0;overflow:hidden;}
+.detail-body{padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
 .detail-chips{display:flex;gap:.5rem;flex-wrap:wrap;}
 .detail-chip{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.5rem .75rem;min-width:76px;}
 .detail-chip .dc-val{font-size:.9rem;font-weight:700;color:var(--fg);display:block;line-height:1.2;}
@@ -2044,7 +2045,7 @@ async function toggleDetail(activityId, activityType, rowEl) {
   const detailTr = document.createElement('tr');
   detailTr.className = 'detail-tr';
   detailTr.id = `detail-row-${activityId}`;
-  detailTr.innerHTML = `<td colspan="8"><div class="detail-content" id="detail-content-${activityId}"><div class="detail-inner"><div class="detail-loading">Loading details…</div></div></div></td>`;
+  detailTr.innerHTML = `<td colspan="8"><div class="detail-content" id="detail-content-${activityId}"><div class="detail-inner"><div class="detail-body"><div class="detail-loading">Loading details…</div></div></div></div></td>`;
   rowEl.after(detailTr);
   requestAnimationFrame(() => requestAnimationFrame(() => {
     detailTr.querySelector('.detail-content').classList.add('open');
@@ -2107,7 +2108,7 @@ function renderDetailContent(contentEl, detail, activityType) {
     ${userNote ? `<div class="detail-user-note"><div class="detail-user-note-label">Your note</div><p class="detail-user-note-text">${esc(userNote)}</p></div>` : ''}
   </div>`;
 
-  let html = '<div class="detail-inner">';
+  let html = '<div class="detail-inner"><div class="detail-body">';
   if (chips.length > 0) html += '<div class="detail-chips">'+chips.map(c=>`<div class="detail-chip"><span class="dc-val">${c.val}</span><span class="dc-label">${c.label}</span></div>`).join('')+'</div>';
 
   if (hasSplits) {
@@ -2116,7 +2117,7 @@ function renderDetailContent(contentEl, detail, activityType) {
     html += descHtml;
   }
 
-  html += '</div>';
+  html += '</div></div>';
   contentEl.innerHTML = html;
 }
 
