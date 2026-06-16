@@ -293,6 +293,20 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .connect-btn:hover{opacity:.88;}
 .connect-error{font-size:.73rem;color:#D93025;margin-top:.55rem;min-height:1em;font-weight:500;}
 
+/* ── WELCOME / LOGIN ── */
+.welcome-wrap{min-height:calc(100vh - 48px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 0 4rem;}
+.welcome-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:2.5rem 2.25rem;max-width:460px;width:100%;}
+.welcome-mark{width:46px;height:46px;background:var(--orange);border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:1.15rem;}
+.welcome-mark svg{width:26px;height:26px;}
+.welcome-wordmark{font-size:.64rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:.7rem;}
+.welcome-head{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:.55rem;}
+.welcome-sub{font-size:.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.5rem;}
+.welcome-actions{display:flex;flex-direction:column;gap:.6rem;}
+.strava-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.66rem;background:var(--card);color:var(--fg);font-weight:700;font-size:.84rem;border:1.5px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color .15s;}
+.strava-btn:hover{border-color:var(--fg);}
+.strava-btn svg{width:15px;height:15px;fill:var(--orange);}
+.welcome-foot{font-size:.74rem;color:var(--mid);line-height:1.6;margin-top:1.15rem;padding-top:1.15rem;border-top:1px solid var(--border);}
+
 /* ── STRAVA INLINE LOADING ── */
 .strava-loading-wrap{padding:2rem 0 3.5rem;display:flex;align-items:center;gap:1rem;}
 .loading-label{font-size:.76rem;font-weight:600;color:var(--mid);letter-spacing:.02em;}
@@ -539,6 +553,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
     <div class="topnav-right">
       <button class="topnav-link" id="edit-plan-btn" type="button">Edit Plan</button>
+      <button class="topnav-link hidden" id="nav-connect" type="button">Connect Strava</button>
       <span class="topnav-alltime hidden" id="topnav-alltime"></span>
       <span class="topnav-race" id="nav-race"></span>
     </div>
@@ -551,18 +566,30 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 <div id="activities"></div>
 
 <!-- ── STRAVA: not connected ── -->
-<div id="strava-setup" class="page hidden" style="padding-top:1.5rem;">
-  <div class="connect-wrap">
-    <div class="connect-card">
-      <div class="connect-logo">
-        <div class="connect-logo-icon">
-          <svg viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-        </div>
-        <span class="connect-logo-text">Strava</span>
+<div id="strava-setup" class="page hidden">
+  <div class="welcome-wrap">
+    <div class="welcome-card">
+      <div class="welcome-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <rect x="5" y="3" width="1.8" height="18" rx=".9" fill="#fff"/>
+          <g fill="#fff">
+            <rect x="8" y="4.6" width="3.2" height="3.2"/>
+            <rect x="14.4" y="4.6" width="3.2" height="3.2"/>
+            <rect x="11.2" y="7.8" width="3.2" height="3.2"/>
+          </g>
+        </svg>
       </div>
-      <div class="connect-heading">Connect your account</div>
-      <p class="connect-sub">Link Strava to see your runs, rides, and swims alongside your training plan.</p>
-      <button class="connect-btn" id="setup-btn">Connect with Strava →</button>
+      <div class="welcome-wordmark">Training Plan</div>
+      <h1 class="welcome-head">Plan your race, then train for it.</h1>
+      <p class="welcome-sub">Choose a ready-made plan, generate one with AI, or build your own, for any distance from a 5K to a full Ironman.</p>
+      <div class="welcome-actions">
+        <button class="connect-btn" id="start-planning-btn">Start planning →</button>
+        <button class="strava-btn" id="setup-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+          Connect with Strava
+        </button>
+      </div>
+      <p class="welcome-foot">Connecting Strava is optional. It syncs your activities and adapts upcoming sessions to how you are actually training.</p>
       <div class="connect-error" id="setup-error" aria-live="polite"></div>
     </div>
   </div>
@@ -2025,7 +2052,20 @@ function showStravaSetup() {
   document.getElementById('strava-loading').classList.add('hidden');
   document.getElementById('strava-content').classList.add('hidden');
   document.getElementById('training').classList.add('hidden');
+  document.getElementById('nav-connect').classList.add('hidden');
   document.getElementById('strava-topbar').innerHTML = '';
+  window.scrollTo(0, 0);
+}
+
+// Planner without Strava: the schedule, presets, AI, and manual builder all work
+// client-side, so let the athlete in without forcing an OAuth connection.
+function showPlannerOnly() {
+  document.getElementById('strava-setup').classList.add('hidden');
+  document.getElementById('strava-loading').classList.add('hidden');
+  document.getElementById('strava-content').classList.add('hidden');
+  document.getElementById('training').classList.remove('hidden');
+  document.getElementById('nav-connect').classList.remove('hidden');
+  window.scrollTo(0, 0);
 }
 function showStravaLoading() {
   document.getElementById('strava-setup').classList.add('hidden');
@@ -2039,6 +2079,7 @@ function showStravaContent() {
   document.getElementById('strava-loading').classList.add('hidden');
   document.getElementById('strava-content').classList.remove('hidden');
   document.getElementById('training').classList.remove('hidden');
+  document.getElementById('nav-connect').classList.add('hidden');
   document.getElementById('strava-topbar').innerHTML =
     `<button class="strava-disconnect" id="disconnect-btn">Disconnect</button>`;
   document.getElementById('disconnect-btn').addEventListener('click', () => {
@@ -2793,7 +2834,10 @@ async function stravaInit() {
   }
 }
 
-// ── Setup form ───────────────────────────────────────────────────
+// ── Welcome screen actions ───────────────────────────────────────
+document.getElementById('start-planning-btn').addEventListener('click', showPlannerOnly);
+document.getElementById('nav-connect').addEventListener('click', showStravaSetup);
+
 document.getElementById('setup-btn').addEventListener('click', () => {
   const err = document.getElementById('setup-error');
   if (!STRAVA_CLIENT_ID || !WORKER_URL) {
