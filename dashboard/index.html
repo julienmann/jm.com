@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; connect-src https://www.strava.com https://strava-auth.jmdashboard.workers.dev; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src * data:;">
-<title>Julien's Dashboard</title>
+<title>Training Plan</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%231A1A1D'/%3E%3Crect x='16.8' y='13' width='3.5' height='38' rx='1.6' fill='%23fff'/%3E%3Crect x='20.5' y='14' width='26' height='19.5' fill='%233A3A40'/%3E%3Cg fill='%23FC4C02'%3E%3Crect x='20.5' y='14' width='6.5' height='6.5'/%3E%3Crect x='33.5' y='14' width='6.5' height='6.5'/%3E%3Crect x='27' y='20.5' width='6.5' height='6.5'/%3E%3Crect x='40' y='20.5' width='6.5' height='6.5'/%3E%3Crect x='20.5' y='27' width='6.5' height='6.5'/%3E%3Crect x='33.5' y='27' width='6.5' height='6.5'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -48,7 +49,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 /* ── TOPNAV ── */
 .topnav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
 .topnav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:48px;gap:1rem;}
-.topnav-back{font-size:.75rem;font-weight:500;color:var(--mid);display:flex;align-items:center;gap:.3rem;transition:color .15s;flex-shrink:0;}
+.topnav-back{font-size:.75rem;font-weight:500;color:var(--mid);display:flex;align-items:center;gap:.3rem;transition:color .15s;flex-shrink:0;background:none;border:none;cursor:pointer;padding:0;}
 .topnav-back:hover{color:var(--fg);}
 .topnav-links{display:flex;gap:.15rem;flex-shrink:0;}
 .topnav-link{font-size:.75rem;font-weight:500;color:var(--mid);padding:.28rem .6rem;border-radius:5px;transition:color .15s,background .15s;white-space:nowrap;}
@@ -136,21 +137,6 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .sec-title{font-size:.8rem;font-weight:700;}
 .sec-meta{font-size:.7rem;color:var(--mid);}
 
-/* ── WEEK STRIP ── */
-.week-section{margin-bottom:1.25rem;}
-.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem;}
-.day-cell{
-  background:var(--card);border-radius:8px;box-shadow:var(--shadow);
-  padding:.7rem .4rem .6rem;text-align:center;display:flex;flex-direction:column;
-  align-items:center;gap:.28rem;border:2px solid transparent;transition:border-color .15s;
-}
-.day-cell.is-today{border-color:var(--orange);}
-.day-cell.is-past{opacity:.4;}
-.day-cell.pretrain-day{opacity:.35;}
-.day-name-lbl{font-size:.58rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mid);}
-.day-num-lbl{font-size:.75rem;font-weight:600;color:var(--fg);}
-.day-sport-badge{font-size:.56rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.16em .48em;border-radius:3px;white-space:nowrap;}
-.day-session-lbl{font-size:.6rem;color:var(--mid);max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;}
 
 /* ── CALENDAR ── */
 .cal-section{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;}
@@ -198,8 +184,39 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .cal-check.done{color:#22C55E;}
 .cal-check.missed{color:#EF4444;}
 
+/* ── Day detail popup ── */
+.day-popup-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .15s;pointer-events:none;}
+.day-popup-overlay.open{opacity:1;pointer-events:auto;}
+.day-popup{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,0,0,.18);max-width:420px;width:calc(100% - 2rem);padding:1.5rem;position:relative;transform:translateY(8px);transition:transform .15s;max-height:90vh;overflow-y:auto;}
+.day-popup-overlay.open .day-popup{transform:translateY(0);}
+.day-popup-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;cursor:pointer;color:var(--mid);font-size:1rem;padding:.25rem;line-height:1;border-radius:4px;transition:color .1s,background .1s;}
+.day-popup-close:hover{color:var(--fg);background:var(--bg);}
+.day-popup-date{font-size:.7rem;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.6rem;}
+.day-popup-label{font-size:1.05rem;font-weight:700;color:var(--fg);margin-bottom:.35rem;line-height:1.3;}
+.day-popup-badge{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.2em .5em;border-radius:4px;margin-bottom:.75rem;}
+.day-popup-effort{display:flex;align-items:center;gap:.55rem;margin-bottom:.7rem;}
+.day-popup-effort-dots{display:flex;gap:4px;}
+.day-popup-effort-dot{width:9px;height:9px;border-radius:50%;background:var(--border);}
+.day-popup-effort-label{font-size:.72rem;font-weight:600;color:var(--mid);}
+.day-popup-hr-pill{font-size:.68rem;font-weight:600;padding:.18em .5em;border-radius:99px;margin-left:auto;}
+.day-popup-stats{display:flex;flex-direction:column;gap:.45rem;border-top:1px solid var(--border);padding-top:.75rem;}
+.day-popup-stat{display:flex;justify-content:space-between;align-items:baseline;font-size:.78rem;}
+.day-popup-stat-label{color:var(--mid);font-weight:500;}
+.day-popup-stat-value{color:var(--fg);font-weight:600;}
+.day-popup-stat-value.is-pace{color:var(--orange-strong);}
+.day-popup-stat-note{font-size:.65rem;color:var(--mid);font-weight:400;margin-left:.3rem;}
+.day-popup-structure{background:var(--bg);border-radius:6px;padding:.55rem .7rem;font-size:.75rem;color:var(--mid);line-height:1.6;border-left:2.5px solid var(--border);margin-top:.5rem;}
+.day-popup-section{border-top:1px solid var(--border);margin-top:.75rem;padding-top:.65rem;}
+.day-popup-section-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin-bottom:.45rem;}
+.day-popup-focus{font-size:.78rem;color:var(--fg);line-height:1.6;font-style:italic;}
+.day-popup-strava{border-top:1px solid var(--border);margin-top:.6rem;padding-top:.6rem;}
+.day-popup-strava-title{font-size:.68rem;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem;}
+.day-popup-vs{display:flex;gap:.4rem;align-items:center;font-size:.72rem;margin-top:.5rem;}
+.day-popup-vs-chip{padding:.15em .45em;border-radius:4px;font-weight:600;font-size:.65rem;}
+.day-popup-personal-note{font-size:.65rem;color:var(--mid);margin-top:.5rem;display:flex;align-items:center;gap:.3rem;}
+
 /* ── AI coaching panel ── */
-.ai-panel{margin-bottom:1.25rem;}
+.ai-panel{margin-top:1.25rem;margin-bottom:1.25rem;}
 .ai-panel-inner{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
 .ai-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.25rem;cursor:pointer;user-select:none;}
 .ai-panel-title-row{display:flex;align-items:center;gap:.55rem;}
@@ -296,8 +313,8 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 /* ── WELCOME / LOGIN ── */
 .welcome-wrap{min-height:calc(100vh - 48px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 0 4rem;}
 .welcome-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:2.5rem 2.25rem;max-width:460px;width:100%;}
-.welcome-mark{width:46px;height:46px;background:var(--orange);border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:1.15rem;}
-.welcome-mark svg{width:26px;height:26px;}
+.welcome-mark{width:48px;height:48px;margin-bottom:1.15rem;}
+.welcome-mark svg{width:48px;height:48px;display:block;}
 .welcome-wordmark{font-size:.64rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:.7rem;}
 .welcome-head{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:.55rem;}
 .welcome-sub{font-size:.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.5rem;}
@@ -317,7 +334,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 /* ══════════════════════════════════════════
    ACTIVITIES SECTION
 ══════════════════════════════════════════ */
-.activities-page{padding-top:1.5rem;padding-bottom:4rem;}
+.activities-page{padding-top:1.5rem;padding-bottom:1.25rem;}
 
 /* ── PERIOD BAR ── */
 .period-bar{padding:.75rem 0 .5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
@@ -330,7 +347,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .period-btn.active{background:var(--orange-strong);color:#fff;}
 
 /* ── SPORT TABS ── */
-.sport-tabs{display:flex;gap:.4rem;padding-bottom:1rem;overflow-x:auto;}
+.sport-tabs{display:flex;gap:.4rem;padding-bottom:1rem;overflow-x:auto;align-items:center;}
 .sport-tab{
   padding:.4rem 1rem;border-radius:99px;font-size:.76rem;font-weight:600;
   border:1.5px solid var(--border);background:var(--card);color:var(--mid);
@@ -338,6 +355,28 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 }
 .sport-tab:hover{border-color:var(--orange-strong);color:var(--orange-strong);}
 .sport-tab.active{background:var(--orange-strong);color:#fff;border-color:var(--orange-strong);}
+.sport-tab-remove{margin-left:.25rem;font-size:.68rem;opacity:.55;display:inline-block;vertical-align:middle;line-height:1;}
+.sport-tab-remove:hover{opacity:1;}
+.sport-tab-add-wrap{position:relative;flex-shrink:0;}
+.sport-tab-add{
+  padding:.38rem .75rem;border-radius:99px;font-size:.73rem;font-weight:600;
+  border:1.5px dashed var(--border);background:transparent;color:var(--mid);
+  cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:.2rem;
+}
+.sport-tab-add:hover{border-color:var(--mid);color:var(--fg);}
+.sport-add-dropdown{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:200;
+  background:var(--card);border:1.5px solid var(--border);border-radius:10px;
+  padding:.3rem;min-width:155px;box-shadow:0 6px 20px rgba(0,0,0,.13);display:none;
+}
+.sport-add-dropdown.open{display:block;}
+.sport-add-option{
+  padding:.38rem .6rem;border-radius:6px;font-size:.75rem;font-weight:600;
+  color:var(--fg);cursor:pointer;transition:background .1s;width:100%;text-align:left;
+  background:none;border:none;display:block;
+}
+.sport-add-option:hover{background:var(--bg);}
+.sport-add-empty{padding:.38rem .6rem;font-size:.72rem;color:var(--mid);}
 
 /* ── STAT CARDS ── */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem;}
@@ -494,6 +533,13 @@ footer{border-top:1px solid var(--border);background:var(--card);}
    the dashed style stays reserved for "+ Add" placeholder actions. */
 .builder-cta-btn{border-style:solid;margin-bottom:0;}
 .builder-error{font-size:.78rem;color:#C0392B;font-weight:600;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.25);border-radius:6px;padding:.6rem .8rem;margin-bottom:1.25rem;}
+.builder-chooser{display:flex;gap:1rem;margin-bottom:1.25rem;}
+.builder-chooser-card{flex:1;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;cursor:pointer;border:2px solid transparent;transition:border-color .15s,box-shadow .15s;text-align:center;}
+.builder-chooser-card:hover{border-color:var(--orange);box-shadow:0 2px 12px rgba(252,76,2,.12);}
+.builder-chooser-icon{font-size:1.5rem;margin-bottom:.6rem;display:block;}
+.builder-chooser-label{font-size:.9rem;font-weight:700;color:var(--fg);margin-bottom:.3rem;}
+.builder-chooser-desc{font-size:.72rem;color:var(--mid);line-height:1.5;}
+@media(max-width:540px){.builder-chooser{flex-direction:column;}}
 .builder-actions{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0 3rem;gap:.75rem;flex-wrap:wrap;}
 .builder-actions-right{display:flex;gap:.6rem;}
 .builder-btn{font-size:.8rem;font-weight:700;padding:.62rem 1.2rem;border-radius:6px;transition:all .15s;}
@@ -512,8 +558,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 @media(max-width:760px){
   .page{padding:0 1rem;}
   .topnav-inner{padding:0 1rem;}
-  .week-grid{gap:.3rem;}
-  .day-session-lbl{display:none;}
+
   .timeline-label-row,.timeline-bar,.timeline-wrap.vert{display:none;}
   .training-page{padding-top:1rem;padding-bottom:2rem;}
 }
@@ -549,7 +594,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 ══════════════════════════════════════════ -->
 <nav class="topnav">
   <div class="topnav-inner">
-    <a href="../" class="topnav-back">← julienmann.ca</a>
+    <button type="button" class="topnav-back" id="nav-home">← Home</button>
 
     <div class="topnav-right">
       <button class="topnav-link" id="edit-plan-btn" type="button">Edit Plan</button>
@@ -570,12 +615,17 @@ footer{border-top:1px solid var(--border);background:var(--card);}
   <div class="welcome-wrap">
     <div class="welcome-card">
       <div class="welcome-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <rect x="5" y="3" width="1.8" height="18" rx=".9" fill="#fff"/>
-          <g fill="#fff">
-            <rect x="8" y="4.6" width="3.2" height="3.2"/>
-            <rect x="14.4" y="4.6" width="3.2" height="3.2"/>
-            <rect x="11.2" y="7.8" width="3.2" height="3.2"/>
+        <svg viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="15" fill="#1A1A1D"/>
+          <rect x="16.8" y="13" width="3.5" height="38" rx="1.6" fill="#fff"/>
+          <rect x="20.5" y="14" width="26" height="19.5" fill="#3A3A40"/>
+          <g fill="#FC4C02">
+            <rect x="20.5" y="14" width="6.5" height="6.5"/>
+            <rect x="33.5" y="14" width="6.5" height="6.5"/>
+            <rect x="27" y="20.5" width="6.5" height="6.5"/>
+            <rect x="40" y="20.5" width="6.5" height="6.5"/>
+            <rect x="20.5" y="27" width="6.5" height="6.5"/>
+            <rect x="33.5" y="27" width="6.5" height="6.5"/>
           </g>
         </svg>
       </div>
@@ -624,6 +674,10 @@ footer{border-top:1px solid var(--border);background:var(--card);}
     <button class="sport-tab" data-sport="ride">Cycling</button>
     <button class="sport-tab" data-sport="swim">Swimming</button>
     <button class="sport-tab" data-sport="hike">Hiking</button>
+    <div class="sport-tab-add-wrap">
+      <button class="sport-tab-add" id="sport-add-btn">+ Add</button>
+      <div class="sport-add-dropdown" id="sport-add-dropdown"></div>
+    </div>
   </div>
 
   <div class="stat-grid">
@@ -702,14 +756,6 @@ footer{border-top:1px solid var(--border);background:var(--card);}
       <div class="cal-legend" id="cal-legend"></div>
     </section>
   </div>
-
-  <section class="week-section">
-    <div class="sec-hdr">
-      <h2 class="sec-title" id="week-title">This Week</h2>
-      <span class="sec-meta" id="week-meta"></span>
-    </div>
-    <div class="week-grid" id="week-grid"></div>
-  </section>
 
   <div id="ai-panel" class="ai-panel hidden"></div>
 
@@ -859,6 +905,14 @@ footer{border-top:1px solid var(--border);background:var(--card);}
     </div>
   </div>
 </main>
+
+<!-- ── Day detail popup ── -->
+<div class="day-popup-overlay" id="day-popup-overlay">
+  <div class="day-popup" id="day-popup">
+    <button class="day-popup-close" id="day-popup-close" aria-label="Close">✕</button>
+    <div id="day-popup-content"></div>
+  </div>
+</div>
 
 <!-- ── FOOTER ── -->
 <footer>
@@ -1327,7 +1381,7 @@ const AI_OPT_KEY = 'jm_ai_opt_v1';
 
 // Bump whenever systemPrompt/response schema changes so stale cached
 // results (generated under an older prompt) don't get reused.
-const AI_PROMPT_VERSION = 3;
+const AI_PROMPT_VERSION = 4;
 
 function getCachedOpt() {
   try { return JSON.parse(localStorage.getItem(AI_OPT_KEY)); } catch { return null; }
@@ -1488,15 +1542,24 @@ function aiModelCandidates(fallbacks) {
 async function aiFetch({ candidates, system, messages, maxTokens }) {
   let res = { ok: false }, lastErr;
   for (const candidate of candidates) {
-    res = await fetch(WORKER_URL + '/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: candidate, max_tokens: maxTokens, system, messages }),
-    });
-    if (res.ok) { if (candidate !== getSavedModel()) saveModel(candidate); break; }
-    const errBody = await res.json().catch(() => ({}));
-    lastErr = `HTTP ${res.status}: ${errBody.error?.message || JSON.stringify(errBody)}`;
-    console.warn(`Model ${candidate} failed:`, lastErr);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      res = await fetch(WORKER_URL + '/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: candidate, max_tokens: maxTokens, system, messages }),
+      });
+      if (res.ok) { if (candidate !== getSavedModel()) saveModel(candidate); break; }
+      const errBody = await res.json().catch(() => ({}));
+      lastErr = `HTTP ${res.status}: ${errBody.error?.message || JSON.stringify(errBody)}`;
+      console.warn(`Model ${candidate} attempt ${attempt + 1} failed:`, lastErr);
+      if (res.status === 429 || res.status === 529) {
+        const wait = Math.min((attempt + 1) * 5000, 15000);
+        await new Promise(r => setTimeout(r, wait));
+        continue;
+      }
+      break;
+    }
+    if (res.ok) break;
     if (res.status !== 404) break;
   }
   if (!res.ok) throw new Error(lastErr || 'Request failed');
@@ -1524,25 +1587,53 @@ async function aiOptimizePlan(force = false) {
   panelEl.innerHTML = `<div class="ai-panel-inner"><div class="ai-panel-loading"><em class="ai-panel-icon">✦</em> Analyzing your workout…<div class="ai-loading-bar-wrap"><div class="ai-loading-bar"></div></div></div></div>`;
 
   const systemPrompt =
-`You are an expert triathlon coach. Analyze the athlete's recent training and propose concrete adjustments to their upcoming sessions.
+`You are a certified endurance coach with 15+ years of experience coaching triathletes and runners from beginners through age-group podium finishers. You specialize in data-driven periodized training and recovery management. Your coaching style is direct, encouraging, and grounded in exercise science.
 
-Rules:
-- You may propose changes for any date from today through race day (see PLAN OVERVIEW for the phase/race structure beyond the next 14 days)
-- Use "changes" for up to 5 individual day-specific tweaks based on near-term fitness/fatigue, or a one-off date the athlete mentioned
-- Use "ranges" when the athlete needs to avoid a sport across many days for an extended period — e.g. "I can't bike until August 25th" due to injury, illness, travel, or no equipment access. Each range entry replaces every base-plan session of a type listed in "avoid" within start..end (inclusive, both within today..race day) with a "replacement" session of the same duration (or "rest" if no good substitute fits). Don't enumerate these days individually in "changes"
-- Routine fatigue/fitness adjustments should stay within the next 14 days, where you have day-by-day detail. Only reach further out — basing the session's type and duration on that date's phase in PLAN OVERVIEW — when there's a specific reason, e.g. an athlete request about a future date (a trip, an event, a goal race)
-- Skip rest days in "changes" unless a forced rest is warranted
-- Prioritise recovery if you see fatigue signals (pace notably slower than recent, HR notably higher)
-- Add load if fitness signals are strong (pace improving, HR controlled)
-- Keep race events (type "race") unchanged — never include a race date in a range or as a change
-- Keep changes realistic: don't increase any single session's duration by more than 20%
-- If an ATHLETE REQUEST is included, prioritise addressing it directly (within the rules above) — it overrides the default focus on fatigue/fitness signals
-- If a FOLLOW-UP section is included, it answers a question you previously asked — use it to refine your changes/ranges and do not ask the same question again
-- Only ask a clarifying question if you genuinely cannot make a good decision without it (e.g. an injury's severity/location is unclear, or an athlete request implies a constraint you can't resolve, like unspecified dates). This should be rare. In the normal case, leave "question" as an empty string and just make the changes
-- If you do ask a question, you may still propose your best-guess changes/ranges in the same response
+COACHING PHILOSOPHY
+- 80/20 intensity distribution: approximately 80% of sessions at low intensity (conversational, nose-breathing, Zone 1–2) and 20% at moderate-to-high intensity. Never stack quality on top of fatigue.
+- Hard-Easy principle: never schedule two high-intensity sessions back-to-back. Quality sessions (intervals, tempo, race-pace) need 48h of easy or rest buffer before and after.
+- Consistency beats heroics: a slightly easier session completed is worth more than a perfect session skipped or that causes injury.
+- Specificity increases as race day approaches: in the final 8 weeks, training should feel increasingly like race day.
+- Run protection: running carries the highest injury risk of the three sports. When load must be cut, reduce run first.
+
+READING FITNESS AND FATIGUE SIGNALS (apply when analyzing PAST sessions)
+- Pace significantly slower than recent average at similar HR → accumulated fatigue; reduce upcoming load.
+- HR notably higher than recent average at the same pace → cardiac drift / fatigue; prioritize easy work.
+- 2+ sessions missed in the past 7 days → athlete is struggling with volume; pull back upcoming sessions 15–25%.
+- Consecutive missed sessions → possible illness or life stress; drop to minimum maintenance volume only.
+- Sessions completed faster than planned, or with lower HR than expected → athlete is absorbing load well; a slight volume or intensity increase is appropriate.
+- Suffer score (relative effort) consistently high on easy days → athlete is not recovering between sessions; add rest or swap to active recovery.
+
+PHASE-SPECIFIC COACHING PRIORITIES
+- Foundation / Base: protect aerobic development above all. Keep 90%+ of sessions truly easy. Do not add intensity even if the athlete feels strong — the aerobic engine needs time, not excitement.
+- Base Building: introduce 1 quality session per sport per week (CSS swim intervals, sweet-spot bike, tempo run). Keep everything else easy.
+- Build I / Build II: 1–2 quality sessions per sport per week, including race-pace efforts. Long brick for triathletes. Increasing long-run and long-ride durations. Race simulation begins.
+- Peak: highest intensity week(s), moderate volume. Race-simulation workouts, confidence brick. Tune-up race if scheduled.
+- Taper: CUT VOLUME (30–50%), MAINTAIN INTENSITY. The pace/effort of quality sessions should not drop — shorten them instead. The athlete must arrive at race day feeling sharp and hungry, not flat and over-rested. Never add new stress in the taper window.
+
+SPORT-SPECIFIC COACHING RULES
+- Swimming: technique compounds under fatigue. If the athlete is struggling, reduce distance or switch to a drill/technique session rather than cutting the session entirely.
+- Cycling: the aerobic workhorse and the safest sport to add load to. A slightly longer ride when fresh builds the engine that supports the run.
+- Running: never increase run duration by more than 10% in one step. If the athlete is fatigued, substitute an easy bike or rest before adding more run volume. Back-to-back hard run days are never appropriate.
+- Brick (bike → run): always place the day before a recovery or rest day. The T2 transition stress requires 24–48h of easy work to follow.
+- Rest days: protect them in Foundation phase. In Build phase, one active recovery option is acceptable. In Peak and Taper, rest days are non-negotiable.
+
+MODIFICATION RULES
+- You may propose changes for any date from today through race day (see PLAN OVERVIEW for phase/race structure beyond the next 14 days).
+- Use "changes" for up to 5 individual day-specific tweaks driven by near-term fitness/fatigue, or a one-off date the athlete mentioned.
+- Use "ranges" when the athlete needs to avoid a sport across many days — e.g. "I can't bike until August 25th" due to injury, illness, travel, or missing equipment. Each range entry replaces every matching base-plan session within start..end (inclusive) with a "replacement" session of the same duration (or "rest" if no good substitute exists). Do not enumerate these days individually in "changes".
+- Routine fatigue/fitness adjustments should stay within the next 14 days, where you have day-by-day context. Reach further out only for specific athlete requests (a trip, a future event, a goal).
+- Skip rest days in "changes" unless a forced rest is clearly warranted.
+- Keep changes realistic: do not increase any single session's duration by more than 20%. Do not add a quality session on a day that already follows a hard session.
+- Keep race events (type "race") unchanged — never include a race date in a range or as a change.
+- If an ATHLETE REQUEST is included, address it directly and prioritize it over routine fatigue/fitness signals.
+- If a FOLLOW-UP section is included, it answers a question you previously asked — use it to refine your response. Do not ask the same question again.
+- Only ask a clarifying question if you genuinely cannot make a good coaching decision without the answer (e.g. injury location/severity is unclear, or an athlete request implies a constraint you cannot resolve). This should be rare — in the normal case, make the call and leave "question" as an empty string.
+- If you ask a question, you may still propose your best-guess changes in the same response.
+- Write "reason" fields in plain coaching language the athlete will understand, referencing their actual data (e.g. "Your pace was 15% slower than your recent average on Thursday — that's a clear fatigue signal.").
 
 Respond ONLY with a valid JSON object — no markdown, no explanation outside the JSON:
-{"summary":"1–2 sentence coaching note","changes":[{"date":"YYYY-MM-DD","type":"run|swim|bike|brick|rest","label":"session name","duration":minutes,"reason":"why"}],"ranges":[{"start":"YYYY-MM-DD","end":"YYYY-MM-DD","avoid":["run|swim|bike|brick"],"replacement":"run|swim|bike|brick|rest","reason":"why"}],"question":"a short clarifying question for the athlete, or an empty string if none is needed"}`;
+{"summary":"1–2 sentence coaching note written directly to the athlete","changes":[{"date":"YYYY-MM-DD","type":"run|swim|bike|brick|rest","label":"session name","duration":minutes,"reason":"plain-language coaching reason referencing the athlete's data"}],"ranges":[{"start":"YYYY-MM-DD","end":"YYYY-MM-DD","avoid":["run|swim|bike|brick"],"replacement":"run|swim|bike|brick|rest","reason":"why"}],"question":"a short clarifying question for the athlete, or an empty string if none is needed"}`;
 
   try {
     const FALLBACKS = [
@@ -1861,68 +1952,7 @@ function renderTimeline() {
   }
 }
 
-function renderWeekStrip() {
-  const mon = mondayOf(today);
-  const grid = document.getElementById('week-grid');
-  const fullNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  let html = '', totalMin = 0;
-  for (let i=0; i<7; i++) {
-    const d = addDays(mon, i);
-    const isToday    = trnDateStr(d) === trnDateStr(today);
-    const isPast     = d < today && !isToday;
-    const isPreTrain = d < TRAIN_START;
-    const act = getActivity(d);
-    let cls = 'day-cell';
-    if (isToday)    cls += ' is-today';
-    if (isPast)     cls += ' is-past';
-    if (isPreTrain) cls += ' pretrain-day';
-    let badgeHtml = '', sessionHtml = '';
-    if (act && !isPreTrain) {
-      const sc = sportStyle(act.type);
-      badgeHtml   = `<span class="day-sport-badge" style="color:${sc.color};background:${sc.dim};">${sc.badge}</span>`;
-      sessionHtml = `<span class="day-session-lbl">${act.label}</span>`;
-      if (act.duration) totalMin += act.duration;
-    } else if (isPreTrain) {
-      badgeHtml = `<span class="day-sport-badge" style="color:var(--mid);background:var(--bg);">—</span>`;
-    } else {
-      badgeHtml = `<span class="day-sport-badge" style="color:var(--border);background:var(--bg);">—</span>`;
-    }
-    const status   = getCompletionStatus(d);
-    const statusHtml = status ? `<span class="day-status ${status}">${status === 'done' ? '✓' : '✗'}</span>` : '';
-    const aiOv  = gAiOverrides[trnDateStr(d)];
-    const rOv   = gOverrides[trnDateStr(d)];
-    const ov    = aiOv || rOv;
-    const adaptLbl = aiOv ? '✦ ai' : rOv ? { moved_from:'→ moved', moved_here:'↗ rescheduled', makeup:'+ makeup', reduced:'↓ easier' }[rOv.type] : null;
-    const adaptCls = aiOv ? 'ai' : ov?.type;
-    const adaptHtml = adaptLbl ? `<span class="day-adapt day-adapt-${adaptCls}" title="${esc(ov.reason)}">${adaptLbl}</span>` : '';
-    html += `<div class="${cls}">
-      <span class="day-name-lbl">${fullNames[i]}</span>
-      <span class="day-num-lbl">${d.getDate()}</span>
-      ${badgeHtml}${sessionHtml}${statusHtml}${adaptHtml}
-    </div>`;
-  }
-  grid.innerHTML = html;
-  document.getElementById('week-title').textContent = `Week of ${fmtTrnDate(mon, {month:'short',day:'numeric'})}`;
-  const meta = document.getElementById('week-meta');
-  if (gActivities && today >= TRAIN_START) {
-    let planned = 0, done = 0;
-    for (let i = 0; i < 7; i++) {
-      const di = addDays(mon, i);
-      if (startOfDay(di) >= today) break;
-      const act = getActivity(di);
-      if (act && act.type !== 'rest') { planned++; if (getCompletionStatus(di) === 'done') done++; }
-    }
-    if (planned > 0) meta.textContent = `${done}/${planned} done this week`;
-    else if (totalMin > 0) meta.textContent = fmtTrnDur(totalMin) + ' total';
-    else meta.textContent = '';
-  } else if (totalMin > 0) {
-    meta.textContent = fmtTrnDur(totalMin) + ' total';
-  } else if (today < TRAIN_START) {
-    meta.textContent = 'Pre-training';
-  } else {
-    meta.textContent = '';
-  }
-}
+function renderWeekStrip() {}
 
 function renderCalendar() {
   const firstOfMonth = new Date(calYear, calMonth, 1);
@@ -1993,7 +2023,7 @@ function renderCalendar() {
       if (isRaceEvent) flagHtml = `<div class="cal-flag">🏁</div>`;
       const hasAct = cls.includes('has-act');
       const tipId  = hasAct ? ` aria-label="${tipHtml.replace(/<[^>]*>/g,'').trim()}"` : '';
-      html += `<div class="${cls}"${hasAct ? ' tabindex="0" role="button"' : ''}${tipId}>${flagHtml}<span class="cal-day-num">${d.getDate()}</span>${dotHtml}${checkHtml}${durHtml}${tipHtml}</div>`;
+      html += `<div class="${cls}"${hasAct ? ` tabindex="0" role="button" data-date="${ds}"` : ''}${tipId}>${flagHtml}<span class="cal-day-num">${d.getDate()}</span>${dotHtml}${checkHtml}${durHtml}${tipHtml}</div>`;
       d = addDays(d, 1);
     }
     if (d.getMonth() !== calMonth && d.getFullYear() === calYear + (calMonth===11?1:0) && w >= 4) break;
@@ -2026,6 +2056,72 @@ const STORAGE_KEY = 'jm_strava_v1';
 let gAthlete, gStats, gActivities, gCfg;
 let gSport  = 'run';
 let gPeriod = 'ytd';
+let gAthleteZones = null; // personalized pace / HR zones derived from Strava history
+
+// ── Derive personal pace/HR zones from recent Strava history ─────
+function deriveAthleteZones() {
+  if (!gActivities || gActivities.length < 3) return null;
+  const cutoff = addDays(new Date(), -90);
+
+  // MM:SS pace from speed in m/s; distM=1000 for run, 100 for swim
+  const spdToPace = (distM, spd) => { const s = Math.round(distM / spd); return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; };
+  const runPaceRange  = (lo, hi) => `${spdToPace(1000, hi)} – ${spdToPace(1000, lo)}`;
+  const swimPaceRange = (lo, hi) => `${spdToPace(100,  hi)} – ${spdToPace(100,  lo)}`;
+  const kphRange      = (lo, hi) => `${(lo*3.6).toFixed(0)}–${(hi*3.6).toFixed(0)} km/h`;
+
+  const pct = (arr, p) => arr[Math.max(0, Math.min(arr.length-1, Math.floor(arr.length * p)))];
+  const spd = a => a.average_speed;
+  const sportActivities = (types, minTime) =>
+    gActivities
+      .filter(a => [].concat(types).includes(a.type) && a.average_speed > 0 &&
+                   a.moving_time > minTime && new Date(a.start_date) >= cutoff)
+      .sort((a, b) => a.average_speed - b.average_speed);
+
+  const zones = {};
+
+  // Run zones — use activities ≥10 min with speed data
+  const runs = sportActivities(['Run','VirtualRun'], 600);
+  if (runs.length >= 3) {
+    const e = pct(runs, 0.25), m = pct(runs, 0.55), t = pct(runs, 0.80), r = pct(runs, 0.93);
+    zones.run = {
+      easy:     runPaceRange(spd(e)*0.96, spd(e)*1.08),
+      moderate: runPaceRange(spd(m)*0.97, spd(m)*1.05),
+      tempo:    runPaceRange(spd(t)*0.97, spd(t)*1.04),
+      race:     runPaceRange(spd(r)*0.97, spd(r)*1.03),
+    };
+  }
+
+  // Swim zones
+  const swims = sportActivities('Swim', 300);
+  if (swims.length >= 2) {
+    const e = pct(swims, 0.20), m = pct(swims, 0.55), r = pct(swims, 0.88);
+    zones.swim = {
+      easy:     swimPaceRange(spd(e)*0.96, spd(e)*1.10),
+      moderate: swimPaceRange(spd(m)*0.97, spd(m)*1.05),
+      race:     swimPaceRange(spd(r)*0.97, spd(r)*1.03),
+    };
+  }
+
+  // Bike zones
+  const bikes = sportActivities(['Ride','VirtualRide'], 1200);
+  if (bikes.length >= 2) {
+    const e = pct(bikes, 0.20), m = pct(bikes, 0.50), t = pct(bikes, 0.78), r = pct(bikes, 0.92);
+    zones.bike = {
+      easy:     kphRange(spd(e)*0.93, spd(e)*1.08),
+      moderate: kphRange(spd(m)*0.96, spd(m)*1.06),
+      tempo:    kphRange(spd(t)*0.97, spd(t)*1.05),
+      race:     kphRange(spd(r)*0.97, spd(r)*1.04),
+    };
+  }
+
+  // Max HR from recent hard efforts (cap at 220 as sanity check)
+  const maxHRs = gActivities
+    .filter(a => a.max_heartrate > 100 && a.max_heartrate < 220)
+    .map(a => a.max_heartrate);
+  zones.maxHR = maxHRs.length ? Math.max(...maxHRs) : null;
+
+  return zones;
+}
 const gDetailCache = {};
 
 const PERIODS = {
@@ -2544,6 +2640,89 @@ function renderDetailContent(contentEl, detail, activityType) {
   contentEl.innerHTML = html;
 }
 
+// ── Custom sport tabs ────────────────────────────────────────────
+const CUSTOM_SPORTS_KEY = 'jm_custom_sports_v1';
+let gCustomSports = []; // strava activity type strings added by the user
+
+const DEFAULT_COVERED_TYPES = new Set([
+  ...STRAVA_TYPES.run, ...STRAVA_TYPES.ride, ...STRAVA_TYPES.swim, ...STRAVA_TYPES.hike,
+]);
+
+function buildCustomSportDef(type) {
+  return { types:[type], label:typeLabel(type), countLabel:'Activities', longestLabel:'Longest', ytdKey:null };
+}
+
+function renderCustomTabs() {
+  document.querySelectorAll('.sport-tab[data-custom]').forEach(el => el.remove());
+  const tabsEl = document.querySelector('.sport-tabs');
+  const addWrap = document.getElementById('sport-add-btn').closest('.sport-tab-add-wrap');
+  gCustomSports.forEach(type => {
+    const key = 'custom_' + type;
+    const tab = document.createElement('button');
+    tab.className = 'sport-tab';
+    tab.dataset.sport = key;
+    tab.dataset.custom = '1';
+    tab.appendChild(document.createTextNode(typeLabel(type)));
+    const rm = document.createElement('span');
+    rm.className = 'sport-tab-remove';
+    rm.textContent = '×';
+    rm.title = 'Remove';
+    rm.addEventListener('click', e => { e.stopPropagation(); removeCustomSport(type); });
+    tab.appendChild(rm);
+    tab.addEventListener('click', () => setSport(key));
+    tab.classList.toggle('active', gSport === key);
+    tabsEl.insertBefore(tab, addWrap);
+  });
+}
+
+function addCustomSport(type) {
+  if (gCustomSports.includes(type)) return;
+  gCustomSports.push(type);
+  SPORTS['custom_' + type] = buildCustomSportDef(type);
+  localStorage.setItem(CUSTOM_SPORTS_KEY, JSON.stringify(gCustomSports));
+  renderCustomTabs();
+  setSport('custom_' + type);
+}
+
+function removeCustomSport(type) {
+  const key = 'custom_' + type;
+  gCustomSports = gCustomSports.filter(t => t !== type);
+  delete SPORTS[key];
+  localStorage.setItem(CUSTOM_SPORTS_KEY, JSON.stringify(gCustomSports));
+  renderCustomTabs();
+  if (gSport === key) setSport('run');
+}
+
+function openSportAddDropdown() {
+  const dropdown = document.getElementById('sport-add-dropdown');
+  if (dropdown.classList.contains('open')) { dropdown.classList.remove('open'); return; }
+  const available = gActivities
+    ? [...new Set(gActivities.map(a => a.type))]
+        .filter(t => !DEFAULT_COVERED_TYPES.has(t) && !gCustomSports.includes(t))
+        .sort((a, b) => typeLabel(a).localeCompare(typeLabel(b)))
+    : [];
+  if (available.length) {
+    dropdown.innerHTML = available.map(t =>
+      `<button class="sport-add-option" data-type="${t}">${typeLabel(t)}</button>`
+    ).join('');
+    dropdown.querySelectorAll('.sport-add-option').forEach(btn =>
+      btn.addEventListener('click', () => {
+        addCustomSport(btn.dataset.type);
+        dropdown.classList.remove('open');
+      })
+    );
+  } else {
+    dropdown.innerHTML = '<div class="sport-add-empty">No other sport types found</div>';
+  }
+  dropdown.classList.add('open');
+}
+
+function loadCustomSports() {
+  try { gCustomSports = JSON.parse(localStorage.getItem(CUSTOM_SPORTS_KEY)) || []; } catch { gCustomSports = []; }
+  gCustomSports.forEach(type => { SPORTS['custom_' + type] = buildCustomSportDef(type); });
+  renderCustomTabs();
+}
+
 // ── setSport / setPeriod ─────────────────────────────────────────
 function setSport(sport) {
   gSport = sport;
@@ -2566,7 +2745,77 @@ function setPeriod(period) {
   setSport(gSport);
 }
 
+// ── Workout structure breakdown ──────────────────────────────────
+function getWorkoutStructure(label, type, duration) {
+  label = label.toLowerCase();
+  const d = duration || 0;
+  if (type === 'rest') return null;
+  if (/css intervals/.test(label))       return '300m warmup · 10×100m @ CSS with 10s rest (or 4×200m) · 200m easy cool-down';
+  if (/technique swim/.test(label))      return '5 min drills (catch-up, fingertip drag) · main set focus on high elbow catch · easy cool-down';
+  if (/endurance swim/.test(label))      return 'Easy 200m warmup · continuous steady swim · start conservative, build in final third';
+  if (/race.?pace swim/.test(label))     return '200m warmup · race-effort main set · 100m easy cool-down';
+  if (/taper swim/.test(label))          return 'Short easy warmup · 4–6×50m at race pace · cool-down — keep it crisp';
+  if (/strides/.test(label))            return `${Math.max(15, Math.round(d*0.6))} min easy · 4–6×20s strides at 1 mile effort with full jog recovery`;
+  if (/5k.?pace intervals|5k interval/.test(label)) {
+    const work = Math.max(15, Math.round(d * 0.55));
+    return `10 min warmup · ${work} min 5K-pace work (e.g. 5×1 km with 90s rest) · 5 min cool-down`;
+  }
+  if (/intervals/.test(label) && type === 'run') {
+    const work = Math.max(15, Math.round(d * 0.55));
+    return `10 min warmup · ${work} min intervals · 5 min cool-down`;
+  }
+  if (/tempo run/.test(label)) {
+    const work = Math.max(10, Math.round(d * 0.55));
+    return `10 min easy warmup · ${work} min comfortably hard tempo · 5 min easy cool-down`;
+  }
+  if (/race.?pace run/.test(label)) {
+    const work = Math.max(10, Math.round(d * 0.5));
+    return `10 min warmup · ${work} min at race effort · 5 min easy cool-down`;
+  }
+  if (/long run/.test(label))           return 'Easy first half · build to moderate aerobic pace in the final third · walk/jog last 5 min';
+  if (/sweet spot/.test(label))         return '10 min warmup · 2–3×15 min sweet-spot efforts with 5 min easy between · 10 min cool-down';
+  if (/quality ride/.test(label)) {
+    const work = Math.max(20, Math.round(d * 0.55));
+    return `15 min warmup · ${work} min quality intervals (e.g. 3×8 min threshold) · 10 min cool-down`;
+  }
+  if (/long ride|long race.?pace ride/.test(label)) return 'Steady Zone 2 throughout · fuel every 45 min · cadence 85–95 rpm · last 30 min race pace option';
+  if (/race.?pace ride/.test(label)) {
+    const work = Math.max(20, Math.round(d * 0.55));
+    return `15 min warmup · ${work} min at race effort · 10 min easy cool-down`;
+  }
+  if (/race.?sim|confidence brick|long brick/.test(label)) {
+    const bikeMin = Math.round(d * 0.72);
+    const runMin  = d - bikeMin;
+    return `${bikeMin} min bike at race effort → fast T2 transition → ${runMin} min run at race pace · practice nutrition strategy`;
+  }
+  if (/brick/.test(label)) {
+    const bikeMin = Math.round(d * 0.70);
+    const runMin  = d - bikeMin;
+    return `${bikeMin} min bike (moderate) → T2 → ${runMin} min run · focus on the first 500m — legs will feel heavy, stay patient`;
+  }
+  if (/easy|recovery|opener|activation/.test(label)) return 'Continuous easy effort throughout — conversational pace, nose-breathing';
+  if (/race.?tune-up|tune.?up/.test(label))          return 'Treat it as a time trial — full warm-up, race effort, note your finishing time';
+  return null;
+}
+
 // ── Workout detail metadata (effort, HR zone, pace, focus) ───────
+const EFFORT_META = [
+  null,
+  { label:'Recovery',  dots:[1,0,0,0,0] },
+  { label:'Aerobic',   dots:[1,1,0,0,0] },
+  { label:'Tempo',     dots:[1,1,1,0,0] },
+  { label:'Threshold', dots:[1,1,1,1,0] },
+  { label:'Race',      dots:[1,1,1,1,1] },
+];
+
+const HR_ZONE_DEFS = [
+  { label:'Zone 1', lo:0.50, hi:0.60, color:'#22C55E' },
+  { label:'Zone 2', lo:0.60, hi:0.72, color:'#84CC16' },
+  { label:'Zone 3', lo:0.72, hi:0.82, color:'#EAB308' },
+  { label:'Zone 4', lo:0.82, hi:0.90, color:'#F97316' },
+  { label:'Zone 5', lo:0.90, hi:1.00, color:'#EF4444' },
+];
+
 function getWorkoutDetails(act) {
   const label = (act.label || '').toLowerCase();
   const type  = act.type;
@@ -2581,44 +2830,69 @@ function getWorkoutDetails(act) {
   else if (/\b(easy|recovery|opener|easy jog|easy long|short run|activation|taper)\b/.test(label)) effort = 1;
   else if (/\b(long run|long ride|long brick|endurance|moderate)\b/.test(label))         effort = 2;
 
-  const EFFORT_META = [
-    null,
-    { label:'Recovery',  dots:[1,0,0,0,0] },
-    { label:'Aerobic',   dots:[1,1,0,0,0] },
-    { label:'Tempo',     dots:[1,1,1,0,0] },
-    { label:'Threshold', dots:[1,1,1,1,0] },
-    { label:'Race',      dots:[1,1,1,1,1] },
-  ];
+  // HR zones — personalized if we have max HR from Strava, else generic
+  const maxHR = gAthleteZones?.maxHR || 185;
+  const zIdx = Math.min(effort - 1, 4);
+  const zDef = HR_ZONE_DEFS[zIdx];
+  const hrZone = {
+    label: zDef.label,
+    range: `${Math.round(maxHR*zDef.lo)}–${Math.round(maxHR*zDef.hi)} bpm`,
+    color: zDef.color,
+    personalized: !!gAthleteZones?.maxHR,
+  };
 
-  const HR_ZONES = [
-    { zone:1, label:'Zone 1', range:'100–115 bpm', color:'#22C55E' },
-    { zone:2, label:'Zone 2', range:'116–135 bpm', color:'#84CC16' },
-    { zone:3, label:'Zone 3', range:'136–152 bpm', color:'#EAB308' },
-    { zone:4, label:'Zone 4', range:'153–168 bpm', color:'#F97316' },
-    { zone:5, label:'Zone 5', range:'169–185 bpm', color:'#EF4444' },
-  ];
-  const hrZone = HR_ZONES[effort - 1];
-
-  // Sport-specific pace / power targets
-  let paceTarget = null, paceUnit = null;
+  // Pace / speed targets — personalized from Strava if available, fallback to generic
+  let paceTarget = null, paceUnit = null, pacePersonalized = false;
+  const z = gAthleteZones;
   if (type === 'run') {
-    if      (effort <= 1) { paceTarget = '6:10 – 6:50'; paceUnit = 'min/km'; }
-    else if (effort === 2) { paceTarget = '5:45 – 6:15'; paceUnit = 'min/km'; }
-    else if (effort === 3) { paceTarget = '4:55 – 5:20'; paceUnit = 'min/km'; }
-    else                  { paceTarget = '4:25 – 4:50'; paceUnit = 'min/km'; }
+    if (z?.run) {
+      pacePersonalized = true;
+      if      (effort <= 1) { paceTarget = z.run.easy;     paceUnit = 'min/km'; }
+      else if (effort === 2) { paceTarget = z.run.moderate; paceUnit = 'min/km'; }
+      else if (effort === 3) { paceTarget = z.run.tempo;    paceUnit = 'min/km'; }
+      else                   { paceTarget = z.run.race;     paceUnit = 'min/km'; }
+    } else {
+      if      (effort <= 1) { paceTarget = '6:10 – 6:50'; paceUnit = 'min/km'; }
+      else if (effort === 2) { paceTarget = '5:45 – 6:15'; paceUnit = 'min/km'; }
+      else if (effort === 3) { paceTarget = '4:55 – 5:20'; paceUnit = 'min/km'; }
+      else                   { paceTarget = '4:25 – 4:50'; paceUnit = 'min/km'; }
+    }
   } else if (type === 'swim') {
-    if      (effort <= 1) { paceTarget = '2:15 – 2:40'; paceUnit = '/100m'; }
-    else if (effort === 2) { paceTarget = '2:00 – 2:20'; paceUnit = '/100m'; }
-    else                  { paceTarget = '1:45 – 2:05'; paceUnit = '/100m'; }
+    if (z?.swim) {
+      pacePersonalized = true;
+      if      (effort <= 1) { paceTarget = z.swim.easy;     paceUnit = '/100m'; }
+      else if (effort === 2) { paceTarget = z.swim.moderate; paceUnit = '/100m'; }
+      else                   { paceTarget = z.swim.race;     paceUnit = '/100m'; }
+    } else {
+      if      (effort <= 1) { paceTarget = '2:15 – 2:40'; paceUnit = '/100m'; }
+      else if (effort === 2) { paceTarget = '2:00 – 2:20'; paceUnit = '/100m'; }
+      else                   { paceTarget = '1:45 – 2:05'; paceUnit = '/100m'; }
+    }
   } else if (type === 'bike') {
-    if      (effort <= 1) { paceTarget = '140 – 165 W'; paceUnit = '28–32 km/h'; }
-    else if (effort === 2) { paceTarget = '170 – 200 W'; paceUnit = '30–34 km/h'; }
-    else if (effort === 3) { paceTarget = '210 – 240 W'; paceUnit = '33–37 km/h'; }
-    else                  { paceTarget = '235 – 265 W'; paceUnit = '35–38 km/h'; }
+    if (z?.bike) {
+      pacePersonalized = true;
+      if      (effort <= 1) { paceTarget = z.bike.easy;     paceUnit = null; }
+      else if (effort === 2) { paceTarget = z.bike.moderate; paceUnit = null; }
+      else if (effort === 3) { paceTarget = z.bike.tempo;    paceUnit = null; }
+      else                   { paceTarget = z.bike.race;     paceUnit = null; }
+    } else {
+      if      (effort <= 1) { paceTarget = '28–32 km/h'; paceUnit = null; }
+      else if (effort === 2) { paceTarget = '30–34 km/h'; paceUnit = null; }
+      else if (effort === 3) { paceTarget = '33–37 km/h'; paceUnit = null; }
+      else                   { paceTarget = '35–38 km/h'; paceUnit = null; }
+    }
   } else if (type === 'brick') {
-    if      (effort <= 2) { paceTarget = '5:45 – 6:20'; paceUnit = 'run min/km'; }
-    else if (effort === 3) { paceTarget = '5:10 – 5:35'; paceUnit = 'run min/km'; }
-    else                  { paceTarget = '4:35 – 5:00'; paceUnit = 'run min/km'; }
+    // use run zones for the run leg
+    if (z?.run) {
+      pacePersonalized = true;
+      if      (effort <= 2) { paceTarget = z.run.easy;     paceUnit = 'run min/km'; }
+      else if (effort === 3) { paceTarget = z.run.moderate; paceUnit = 'run min/km'; }
+      else                   { paceTarget = z.run.race;     paceUnit = 'run min/km'; }
+    } else {
+      if      (effort <= 2) { paceTarget = '5:45 – 6:20'; paceUnit = 'run min/km'; }
+      else if (effort === 3) { paceTarget = '5:10 – 5:35'; paceUnit = 'run min/km'; }
+      else                   { paceTarget = '4:35 – 5:00'; paceUnit = 'run min/km'; }
+    }
   }
 
   // Coaching focus
@@ -2640,7 +2914,9 @@ function getWorkoutDetails(act) {
   else if (/taper swim|taper/.test(label))          focus = 'Keep sharp, not tired. Maintain pace, reduce volume — trust the taper.';
   else if (/easy|recovery|opener|activation/.test(label)) focus = 'Zone 1–2 only. If you can\'t hold a sentence while running, slow down.';
 
-  return { effort, effortMeta: EFFORT_META[effort], hrZone, paceTarget, paceUnit, focus };
+  const structure = getWorkoutStructure(label, type, act.duration);
+
+  return { effort, effortMeta: EFFORT_META[effort], hrZone, paceTarget, paceUnit, pacePersonalized, focus, structure };
 }
 
 // ── Countdown card (days until training start or race) ───────────
@@ -2770,6 +3046,7 @@ function renderRecentActivities(expanded) {
 // ── Main render (after data load) ────────────────────────────────
 function stravaRender(athlete, stats, activities, cfg) {
   gAthlete = athlete; gStats = stats; gActivities = activities; gCfg = cfg || null;
+  gAthleteZones = deriveAthleteZones();
   document.getElementById('footer-year').textContent = new Date().getFullYear();
   // All-time run stats → topnav
   const atRun = stats.all_run_totals || {};
@@ -2781,8 +3058,9 @@ function stravaRender(athlete, stats, activities, cfg) {
     allTimeEl.classList.remove('hidden');
   }
   renderCountdownCard();
-  document.querySelectorAll('.sport-tab').forEach(btn => btn.addEventListener('click', () => setSport(btn.dataset.sport)));
+  document.querySelectorAll('.sport-tab:not([data-custom])').forEach(btn => btn.addEventListener('click', () => setSport(btn.dataset.sport)));
   document.querySelectorAll('.period-btn').forEach(btn => btn.addEventListener('click', () => setPeriod(btn.dataset.period)));
+  loadCustomSports();
   setSport('run');
   // Rule-based adaptations (sync)
   adaptPlan();
@@ -2834,7 +3112,11 @@ async function stravaInit() {
   }
 }
 
-// ── Welcome screen actions ───────────────────────────────────────
+// ── Nav actions ─────────────────────────────────────────────────
+document.getElementById('nav-home').addEventListener('click', () => {
+  document.getElementById('plan-builder').classList.add('hidden');
+  getCfg()?.access_token ? showStravaContent() : showPlannerOnly();
+});
 document.getElementById('start-planning-btn').addEventListener('click', showPlannerOnly);
 document.getElementById('nav-connect').addEventListener('click', showStravaSetup);
 
@@ -2876,9 +3158,61 @@ function openPlanBuilder() {
   BUILDER_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
   DRAFT_PLAN = JSON.parse(JSON.stringify(loadRawPlan()));
   document.getElementById('builder-error').classList.add('hidden');
+  document.getElementById('ai-builder-body').classList.add('hidden');
   document.getElementById('plan-builder').classList.remove('hidden');
-  renderPlanBuilder();
+  document.getElementById('builder-actions').classList.add('hidden');
+  renderBuilderChooser();
   window.scrollTo(0, 0);
+}
+
+function renderBuilderChooser() {
+  document.getElementById('builder-body').innerHTML = `
+    <div class="builder-chooser">
+      <div class="builder-chooser-card" id="chooser-new" tabindex="0" role="button">
+        <span class="builder-chooser-icon">✦</span>
+        <div class="builder-chooser-label">Create new plan</div>
+        <div class="builder-chooser-desc">Start fresh from a preset distance or generate a custom plan with AI.</div>
+      </div>
+      <div class="builder-chooser-card" id="chooser-edit" tabindex="0" role="button">
+        <span class="builder-chooser-icon">✎</span>
+        <div class="builder-chooser-label">Edit current plan</div>
+        <div class="builder-chooser-desc">Adjust race info, phases, templates, and race events on your existing plan.</div>
+      </div>
+    </div>`;
+  document.getElementById('chooser-new').addEventListener('click', openBuilderCreate);
+  document.getElementById('chooser-edit').addEventListener('click', openBuilderEdit);
+}
+
+function openBuilderCreate() {
+  document.getElementById('builder-actions').classList.add('hidden');
+  document.getElementById('builder-body').innerHTML = `
+    <div class="builder-card">
+      <div class="builder-card-title">Start from a preset plan</div>
+      <p class="builder-section-sub">Pick a ready-made plan for a common race distance. It starts today and runs through to race day.</p>
+      <div class="form-group"><label class="form-label">Race distance</label>
+        <select class="form-input" id="preset-select">
+          <option value="">Choose a distance…</option>
+          ${PRESET_ORDER.map(id => `<option value="${id}">${esc(PRESET_SPECS[id].label)}</option>`).join('')}
+        </select></div>
+      <button class="builder-add-btn builder-cta-btn" id="load-preset-btn" type="button">Load preset plan</button>
+    </div>
+    <div class="builder-card">
+      <div class="builder-card-title">✦ Build a plan with AI</div>
+      <p class="builder-section-sub">Answer a few questions about your race, schedule, and fitness, and AI will draft a complete periodized plan.</p>
+      <button class="builder-add-btn builder-cta-btn" id="open-ai-builder-btn" type="button">Start AI questionnaire</button>
+    </div>
+    <button class="builder-btn builder-btn-secondary" id="builder-back-chooser" type="button" style="margin-top:.5rem;">← Back</button>`;
+  document.getElementById('open-ai-builder-btn').addEventListener('click', openAiBuilder);
+  document.getElementById('load-preset-btn').addEventListener('click', () => {
+    const id = document.getElementById('preset-select').value;
+    if (id) applyPreset(id);
+  });
+  document.getElementById('builder-back-chooser').addEventListener('click', renderBuilderChooser);
+}
+
+function openBuilderEdit() {
+  document.getElementById('builder-actions').classList.remove('hidden');
+  renderPlanBuilder();
 }
 
 function closePlanBuilder() {
@@ -2993,21 +3327,6 @@ function raceEventCardHtml(e, i) {
 function renderPlanBuilder() {
   const p = DRAFT_PLAN;
   document.getElementById('builder-body').innerHTML = `
-    <div class="builder-card">
-      <div class="builder-card-title">Start from a preset plan</div>
-      <p class="builder-section-sub">Pick a ready-made plan for a common race distance. It starts today and runs through to race day. Review and tweak everything below before saving.</p>
-      <div class="form-group"><label class="form-label">Race distance</label>
-        <select class="form-input" id="preset-select">
-          <option value="">Choose a distance…</option>
-          ${PRESET_ORDER.map(id => `<option value="${id}">${esc(PRESET_SPECS[id].label)}</option>`).join('')}
-        </select></div>
-      <button class="builder-add-btn builder-cta-btn" id="load-preset-btn" type="button">Load preset plan</button>
-    </div>
-    <div class="builder-card">
-      <div class="builder-card-title">✦ Build a plan with AI</div>
-      <p class="builder-section-sub">Answer a few questions about your race, schedule, and fitness, and AI will draft a complete periodized plan. Review and adjust everything below before saving.</p>
-      <button class="builder-add-btn builder-cta-btn" id="open-ai-builder-btn" type="button">Start AI questionnaire</button>
-    </div>
     ${raceInfoCardHtml(p)}
     <div class="builder-section-title">Training Phases</div>
     ${p.phases.map((ph, i) => phaseCardHtml(ph, i, p.phases.length)).join('')}
@@ -3084,12 +3403,6 @@ function attachBuilderListeners() {
     renderPlanBuilder();
   });
 
-  document.getElementById('open-ai-builder-btn').addEventListener('click', openAiBuilder);
-
-  document.getElementById('load-preset-btn').addEventListener('click', () => {
-    const id = document.getElementById('preset-select').value;
-    if (id) applyPreset(id);
-  });
 }
 
 function validatePlan(p) {
@@ -3245,6 +3558,7 @@ function applyPreset(id) {
   if (!plan) return;
   DRAFT_PLAN = plan;
   document.getElementById('builder-error').classList.add('hidden');
+  document.getElementById('builder-actions').classList.remove('hidden');
   renderPlanBuilder();
   window.scrollTo(0, 0);
 }
@@ -3321,7 +3635,7 @@ function openAiBuilder() {
 function closeAiBuilder() {
   document.getElementById('ai-builder-body').classList.add('hidden');
   document.getElementById('builder-body').classList.remove('hidden');
-  document.getElementById('builder-actions').classList.remove('hidden');
+  openBuilderCreate();
 }
 
 function aiqVal(id) { return document.getElementById(id).value.trim(); }
@@ -3371,26 +3685,143 @@ function buildAiQuestionnaireContext() {
 }
 
 const AI_PLAN_SYSTEM_PROMPT =
-`You are an expert multi-sport endurance coach who designs periodized training plans.
+`You are a certified endurance coach with expertise in periodized training for triathlon (sprint through full Ironman), road running (5K through ultramarathon), and multi-sport events. You write training plans the way a real coach would: specific, purposeful, and calibrated to the individual athlete's fitness level and timeline.
 
-Using the athlete's questionnaire answers, design a complete training plan from their training start date through race day.
+SESSION NAMING — be specific and descriptive. Never use generic names like "Run" or "Bike session". Every session name should tell the athlete what to do and at what effort level. Use these conventions:
 
-Respond ONLY with a single valid JSON object — no markdown formatting, no commentary before or after — matching exactly this schema:
+Running:
+- "Zone 2 aerobic run — conversational pace" (easy base work)
+- "Easy recovery run" (post-hard-session, very slow)
+- "Tempo run — comfortably hard, 30–40 min effort" (sustained lactate threshold)
+- "5K-pace intervals — e.g. 5×1 km with 90s jog rest" (speed-endurance)
+- "Long run — easy to moderate, build in final third" (weekend cornerstone)
+- "Strides — 4–6×20s at mile effort, full recovery" (neuromuscular activation)
+- "Race-pace run — dial in your goal rhythm" (specificity)
+- "Hill repeats — 6×90s hard uphill, jog down recovery"
 
-{"raceName":"string","raceDate":"YYYY-MM-DD","raceDuration":integer minutes (goal finish time),"raceDistances":{"swim":"e.g. '1.9 km' or ''","bike":"e.g. '90 km' or ''","run":"e.g. '21.1 km' or ''"},"trainStart":"YYYY-MM-DD","phases":[{"name":"string (e.g. 'Foundation','Base Building','Build','Peak','Taper')","weeks":integer >= 1,"hrs":"string, e.g. '5-7 hrs/wk'","color":"#RRGGBB","focus":"short string describing this phase's emphasis","recoveryEvery":integer >= 0 (0 = every week uses 'template'; otherwise every Nth week of the phase uses 'recoveryTemplate' instead),"template":[[type,label,durationMinutes], ... exactly 7 entries, Monday through Sunday],"recoveryTemplate": same shape as "template", or null if recoveryEvery is 0}],"raceEvents":[{"date":"YYYY-MM-DD","label":"string","duration":integer minutes,"weekTemplate": same shape as "template" or null}]}
+Swimming:
+- "Technique drill session — focus on catch and rotation" (form-first, low intensity)
+- "CSS intervals — 10×100m with 10s rest" (critical swim speed, threshold)
+- "Endurance swim — negative split, build through the set" (aerobic capacity)
+- "Race-pace swim — hold your goal 100m split" (race specificity)
+- "Pull set — buoy only, 1500m steady" (upper-body endurance)
+- "Easy recovery swim — 800–1000m, no effort" (active recovery)
+- "Taper swim — short, sharp, race-pace repeats"
 
-Hard rules:
-- "type" must be one of: "rest", "swim", "run", "bike", "brick", "race". "duration" is 0 for rest days.
-- Each template/recoveryTemplate/weekTemplate array has exactly 7 entries ordered Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.
-- phases[].weeks should sum to approximately {totalWeeks} weeks (the athlete's full training window). The final phase will be stretched or compressed slightly to land exactly on race day, so being off by 1-2 weeks is fine.
-- Use 3-6 phases following standard periodization for the race distance and timeline (e.g. base/foundation -> build -> peak -> taper). A short timeline (under ~10 weeks) may use only 2-3 phases. The final phase must be a taper with recoveryEvery: 0 and reduced weekly volume.
-- Gradually build weekly volume across phases; respect the athlete's stated current training volume as the realistic starting point.
-- Respect the athlete's available training days per week, preferred rest day, preferred long-session day, and max session durations on weekdays vs weekends.
-- Respect any stated injuries/limitations — substitute or reduce affected sports as needed.
-- raceEvents: only include tune-up races the athlete explicitly mentioned in their notes, each with a date strictly between trainStart and raceDate. For each, set "weekTemplate" to a lighter week with a "race" session on the event's day (label = the event name, duration = the event's expected duration), or null to use that week's normal phase template. If no tune-up races were mentioned, return an empty array.
-- raceDistances: only fill swim/bike/run for triathlon-style races; use "" for any leg that doesn't apply (e.g. a running race has swim:"" and bike:"").
-- Give each phase a distinct hex color, progressing from a brighter/cooler tone in early phases to a warmer/darker tone near race day (e.g. "#FC4C02","#E97316","#D97706","#B45309","#92400E","#78350F" — pick a subset/variation appropriate to the number of phases).
-- If the athlete didn't give a race name, invent a sensible one from the race type/distance.`;
+Cycling:
+- "Zone 2 endurance ride — steady aerobic effort" (aerobic base)
+- "Sweet-spot intervals — 2×20min at 88–93% FTP" (high-value aerobic threshold work)
+- "FTP threshold effort — 2×15min at hard but sustainable pace" (lactate threshold)
+- "Long ride — fuel every 45 min, cadence 85–95 rpm" (endurance cornerstone)
+- "Cadence drills — 10min at 100+ rpm, easy gear" (neuromuscular)
+- "Race-pace ride — hold your target triathlon watts or speed" (race specificity)
+- "Easy spin / active recovery — very easy, 50–60 rpm ok"
+
+Brick (bike → run):
+- "Bike to run transition — moderate bike, 10–15 min easy run" (introduction to T2 legs)
+- "Long brick — race-sim bike effort + 20–30 min run" (peak specificity)
+- "Confidence brick — goal-pace bike + race-pace run off the bike" (final race rehearsal)
+
+PERIODIZATION STRUCTURE — build phases like a real coach:
+
+Foundation (early weeks, 4–8 weeks depending on timeline):
+- Goal: aerobic base, movement economy, consistency
+- Intensity: 90%+ Zone 1–2. No speedwork. Not even "a little tempo". The base takes time.
+- Swim: 2× technique or easy endurance, 1× easy pull if 3 days available
+- Bike: 2–3× Zone 2 rides, one long ride on the preferred long day
+- Run: easy Zone 2 runs only. Long run at fully conversational effort.
+- Brick: none yet — build the engine first
+- Recovery week every 3rd week: cut volume 30–35%, same session types
+
+Base Building (bridges to hard work, 3–5 weeks):
+- Goal: introduce controlled quality without accumulating debt
+- Intensity: 75–80% Zone 1–2, 20–25% quality
+- Introduce 1 quality session per sport: CSS intervals (swim), sweet-spot (bike), tempo run
+- Brick workouts begin: short bike-to-run transitions, moderate effort
+- Recovery week every 3rd–4th week
+
+Build I / Build II (2–3 weeks each):
+- Goal: race-specific fitness, increasing specificity
+- Intensity: 70–75% easy, 25–30% quality
+- 1–2 quality sessions per sport. Race-pace sessions begin.
+- Long brick on weekend (triathlon) or long run peak (running)
+- Race simulations introduced in Build II
+- Recovery week every 3rd week
+
+Peak (1–2 weeks):
+- Goal: highest quality, moderate volume, confidence
+- Confidence brick or race-sim workout. Tune-up race if scheduled.
+- Sessions should feel like race day. Athlete should feel strong, not exhausted.
+
+Taper (final phase, ALWAYS last, recoveryEvery: 0):
+- Goal: shed fatigue, hold fitness, arrive sharp
+- CUT VOLUME 40–60%. MAINTAIN INTENSITY — shorten quality sessions, do not make them easier.
+- No new stressors. No new sessions the athlete hasn't done before.
+- Final week: nothing hard in the last 4 days before race day. Short, sharp, confidence sessions only.
+- Sprint/Olympic tri, 5K–10K: 1-week taper. 70.3, half-marathon: 2 weeks. Ironman, marathon, 50K: 3 weeks.
+
+WEEKLY VOLUME PROGRESSION:
+- Start at or just below the athlete's stated current weekly training hours
+- Maximum 10% volume increase per week (not session-by-session — total weekly load)
+- Recovery week volume = 60–70% of the preceding week
+- Peak volume in the last full build week before taper begins
+
+WEEKLY STRUCTURE — respect available days and preferred long/rest days:
+Triathlon (6 days available example):
+- Mon: swim technique or easy recovery run
+- Tue: quality bike (intervals or sweet-spot) + short easy run
+- Wed: swim endurance or CSS intervals
+- Thu: quality run (tempo or intervals)
+- Fri: easy swim or rest
+- Sat: long ride (add short run in build phase = brick)
+- Sun: long run (easy-to-moderate)
+Running only (5 days available example):
+- Mon: rest or easy cross-train
+- Tue: quality run (tempo or intervals)
+- Wed: easy aerobic run
+- Thu: easy run with strides
+- Fri: rest
+- Sat: long run
+- Sun: easy recovery run or rest
+Place the long session (long ride or long run) on the athlete's preferred long-session day. Place rest on the preferred rest day. Never put two quality sessions back-to-back.
+
+SPORT-SPECIFIC RULES:
+- Swimming: minimum 2× per week for triathletes to maintain feel for the water. Technique sessions early, speed later.
+- Cycling: the safest sport to build volume on. The long ride is the cornerstone of triathlon fitness. Cadence should be trained explicitly.
+- Running: the highest injury risk. Never increase long-run duration by more than 10% per week. Protect run days with easy sessions the day before and after hard runs.
+- Brick: always place brick sessions the day before a rest or easy recovery day. The run-off-the-bike adaptation requires 24h recovery.
+- Rest: mandatory. 1–2 complete rest days per week in Foundation, 1 in Build, 1 in Peak. Do not fill rest days with "easy optional" sessions — they are rest.
+
+RACE-DISTANCE-SPECIFIC GUIDANCE:
+- Sprint triathlon: speed and transitions matter more than raw endurance. Keep sessions short and fast.
+- Olympic triathlon: blend of speed and endurance. Race-pace work in all three sports from Base Building.
+- 70.3 Half-Ironman: the long ride (90km equivalent effort) and bike-run brick are the most important sessions. Pacing discipline is the key skill.
+- Full Ironman: volume and fueling strategy are paramount. Long rides of 5+ hours, runs of 28–32 km. Taper must be 3 weeks.
+- 5K: speed-endurance and VO2max intervals. Short taper (1 week).
+- 10K: mix of tempo and intervals. 1–2 week taper.
+- Half-marathon: tempo work is king. Long runs peak at 26–28 km. 2-week taper.
+- Marathon: aerobic base is everything. Long runs peak at 32–35 km. 3-week taper. No hard efforts after week 18 of a typical 20-week plan.
+- 50K ultra: back-to-back long run weekends in peak phase (long Saturday + moderate Sunday). Time-on-feet matters more than pace. 2–3 week taper.
+
+INJURY/LIMITATION HANDLING:
+- Reduce or substitute affected sport, not just cut sessions randomly. If athlete can't run: substitute easy bike or swim of similar duration.
+- Never keep a full volume of a sport the athlete has flagged as injured — show visible modification.
+
+Now use the athlete's questionnaire to design their plan. Apply all of the above. Respond ONLY with a single valid JSON object — no markdown formatting, no commentary before or after — matching exactly this schema:
+
+{"raceName":"string","raceDate":"YYYY-MM-DD","raceDuration":integer minutes (goal finish time),"raceDistances":{"swim":"e.g. '1.9 km' or ''","bike":"e.g. '90 km' or ''","run":"e.g. '21.1 km' or ''"},"trainStart":"YYYY-MM-DD","phases":[{"name":"string","weeks":integer >= 1,"hrs":"string e.g. '5–7 hrs/wk'","color":"#RRGGBB","focus":"one sentence describing this phase's training emphasis","recoveryEvery":integer >= 0 (0 = no recovery weeks; N = every Nth week uses recoveryTemplate),"template":[[type,label,durationMinutes], ... exactly 7 entries Mon–Sun],"recoveryTemplate":same shape as template or null if recoveryEvery is 0}],"raceEvents":[{"date":"YYYY-MM-DD","label":"string","duration":integer minutes,"weekTemplate":same shape as template or null}]}
+
+Hard constraints:
+- "type" must be one of: "rest","swim","run","bike","brick","race". "duration" is 0 for rest.
+- Each template/recoveryTemplate/weekTemplate has exactly 7 entries: Monday through Sunday.
+- phases[].weeks must sum to approximately {totalWeeks} (athlete's full training window). The final phase is auto-stretched or compressed to land on race day exactly, so ±1–2 weeks is fine.
+- Use 3–6 phases. Short timelines (<10 weeks) may use 2–3. The final phase must always be the taper with recoveryEvery: 0 and clearly reduced volume.
+- Gradually increase weekly volume across phases, respecting the athlete's stated current volume as the starting point.
+- Respect training days/week, preferred rest day, preferred long-session day, and max session lengths (weekday vs. weekend).
+- raceEvents: only include tune-up races the athlete explicitly mentioned. Each must be strictly between trainStart and raceDate. Set "weekTemplate" to a reduced-volume week with a "race" session on that day, or null to use the phase's normal template. Empty array if none mentioned.
+- raceDistances: fill swim/bike/run only for triathlon-type races. Use "" for legs that don't apply.
+- Phase colors: progress from a brighter/cooler tone in early phases to a warmer/darker tone near race day (e.g. use variations of "#3B82F6","#10B981","#F59E0B","#F97316","#EF4444","#7C3AED" — pick a subset appropriate to the number of phases).
+- If no race name was given, invent a sensible one from the race type and distance.`;
 
 function sanitizeTemplate(tmpl) {
   if (!Array.isArray(tmpl) || tmpl.length !== 7) return null;
@@ -3567,6 +3998,137 @@ document.getElementById('cal-prev').addEventListener('click', () => {
 document.getElementById('cal-next').addEventListener('click', () => {
   calMonth++; if (calMonth > 11) { calMonth=0; calYear++; }
   renderCalendar();
+});
+
+// ── Day detail popup ─────────────────────────────────────────────
+const dayPopupOverlay = document.getElementById('day-popup-overlay');
+const dayPopupContent = document.getElementById('day-popup-content');
+
+function closeDayPopup() { dayPopupOverlay.classList.remove('open'); }
+document.getElementById('day-popup-close').addEventListener('click', closeDayPopup);
+dayPopupOverlay.addEventListener('click', e => { if (e.target === dayPopupOverlay) closeDayPopup(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && dayPopupOverlay.classList.contains('open')) closeDayPopup(); });
+document.getElementById('sport-add-btn').addEventListener('click', e => { e.stopPropagation(); openSportAddDropdown(); });
+document.addEventListener('click', () => document.getElementById('sport-add-dropdown')?.classList.remove('open'));
+
+function openDayPopup(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const dayLabel = d.toLocaleDateString('en-CA', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  const phase = getPhaseForDate(d);
+  const isPastOrToday = startOfDay(d) <= today;
+  const stravaActs = isPastOrToday ? getStravaActsForDate(d) : [];
+  const act = getActivity(d);
+  if (!act && !stravaActs.length) return;
+
+  let html = `<div class="day-popup-date">${esc(dayLabel)}</div>`;
+
+  if (stravaActs.length) {
+    // ── Completed activity (Strava data) ────────────────────────
+    const wdPlan = (act && act.type !== 'rest') ? getWorkoutDetails(act) : null;
+    for (const sa of stravaActs) {
+      const sport = stravaTypeToSport(sa.type) || 'rest';
+      const sc = sportStyle(sport);
+      html += `<div class="day-popup-label">${esc(sa.name)}</div>`;
+      html += `<span class="day-popup-badge" style="background:${sc.dim};color:${sc.color};">${sc.badge}</span>`;
+      html += `<div class="day-popup-stats">`;
+      const isSwim = sa.type === 'Swim';
+      if (sa.distance > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Distance</span><span class="day-popup-stat-value">${isSwim ? Math.round(sa.distance) + ' m' : fmtKm(sa.distance) + ' km'}</span></div>`;
+      if (sa.moving_time > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Duration</span><span class="day-popup-stat-value">${fmtTrnDur(Math.round(sa.moving_time / 60))}</span></div>`;
+      if (sa.average_speed > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Pace</span><span class="day-popup-stat-value is-pace">${fmtPace(sa.average_speed, sa.type)}</span></div>`;
+      if (sa.average_heartrate > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Avg HR</span><span class="day-popup-stat-value">${Math.round(sa.average_heartrate)} bpm</span></div>`;
+      if (sa.max_heartrate > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Max HR</span><span class="day-popup-stat-value">${Math.round(sa.max_heartrate)} bpm</span></div>`;
+      if (sa.average_watts > 0 && !isSwim) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Avg Power</span><span class="day-popup-stat-value">${Math.round(sa.average_watts)} W</span></div>`;
+      if (sa.total_elevation_gain > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Elevation</span><span class="day-popup-stat-value">+${Math.round(sa.total_elevation_gain)} m</span></div>`;
+      if (sa.suffer_score > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Relative Effort</span><span class="day-popup-stat-value">${sa.suffer_score}</span></div>`;
+      if (sa.kilojoules > 0 && !isSwim) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Energy</span><span class="day-popup-stat-value">${Math.round(sa.kilojoules)} kJ</span></div>`;
+      html += `</div>`;
+
+      // Compare to plan if there was one
+      if (wdPlan) {
+        html += `<div class="day-popup-strava"><div class="day-popup-strava-title">vs. Plan</div>`;
+        html += `<div class="day-popup-stat"><span class="day-popup-stat-label">${esc(act.label)}</span><span class="day-popup-stat-value">${fmtTrnDur(act.duration) || ''}</span></div>`;
+        if (sa.average_speed > 0 && wdPlan.paceTarget) {
+          html += `<div class="day-popup-stat" style="margin-top:.25rem;"><span class="day-popup-stat-label">Target pace</span><span class="day-popup-stat-value">${esc(wdPlan.paceTarget)}${wdPlan.paceUnit ? ' <span class="day-popup-stat-note">'+esc(wdPlan.paceUnit)+'</span>' : ''}</span></div>`;
+        }
+        html += `</div>`;
+      }
+    }
+  } else if (act) {
+    // ── Planned / upcoming session ───────────────────────────────
+    const sc = sportStyle(act.type);
+    const wd = act.type !== 'rest' ? getWorkoutDetails(act) : null;
+
+    html += `<div class="day-popup-label">${esc(act.label)}</div>`;
+    html += `<span class="day-popup-badge" style="background:${sc.dim};color:${sc.color};">${sc.badge}</span>`;
+
+    // Effort row with HR zone pill
+    if (wd) {
+      const dotHtml = wd.effortMeta.dots.map(on =>
+        `<span class="day-popup-effort-dot" style="${on ? `background:${wd.hrZone.color}` : ''}"></span>`
+      ).join('');
+      html += `<div class="day-popup-effort">
+        <div class="day-popup-effort-dots">${dotHtml}</div>
+        <span class="day-popup-effort-label">${wd.effortMeta.label}</span>
+        <span class="day-popup-hr-pill" style="background:${wd.hrZone.color}22;color:${wd.hrZone.color};">${wd.hrZone.label} · ${wd.hrZone.range}</span>
+      </div>`;
+    }
+
+    html += `<div class="day-popup-stats">`;
+    if (act.duration > 0) html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Duration</span><span class="day-popup-stat-value">${fmtTrnDur(act.duration)}</span></div>`;
+
+    // Pace / speed target
+    if (wd?.paceTarget) {
+      const noteHtml = wd.paceUnit ? ` <span class="day-popup-stat-note">${esc(wd.paceUnit)}</span>` : '';
+      const personalBadge = wd.pacePersonalized ? ' <span class="day-popup-stat-note" title="Based on your recent Strava activities">· from your data</span>' : '';
+      html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Target pace</span><span class="day-popup-stat-value is-pace">${esc(wd.paceTarget)}${noteHtml}${personalBadge}</span></div>`;
+    }
+
+    // Phase + week
+    if (phase) {
+      const wk = getWeekInPhase(d, phase);
+      html += `<div class="day-popup-stat"><span class="day-popup-stat-label">Phase</span><span class="day-popup-stat-value">${esc(phase.name)} · Wk ${wk} of ${phase.weeks}</span></div>`;
+    }
+
+    html += `</div>`;
+
+    // Adaptation note
+    const aiOv = gAiOverrides[dateStr], rOv = gOverrides[dateStr], ov = aiOv || rOv;
+    if (ov) html += `<div class="day-popup-section">
+      <div class="day-popup-section-lbl">Adapted</div>
+      <div style="font-size:.76rem;color:var(--orange-strong);line-height:1.55;">${esc(ov.reason)}</div>
+    </div>`;
+
+    // Workout structure
+    if (wd?.structure) {
+      html += `<div class="day-popup-section">
+        <div class="day-popup-section-lbl">Session structure</div>
+        <div class="day-popup-structure">${esc(wd.structure)}</div>
+      </div>`;
+    }
+
+    // Coaching focus
+    if (wd?.focus) {
+      html += `<div class="day-popup-section">
+        <div class="day-popup-section-lbl">Coach's focus</div>
+        <div class="day-popup-focus">"${esc(wd.focus)}"</div>
+      </div>`;
+    }
+
+    // Personal data note when no Strava connected
+    if (!gAthleteZones) {
+      html += `<div class="day-popup-personal-note"><span style="opacity:.5;">✦</span> Connect Strava for personalized pace targets based on your recent activities.</div>`;
+    }
+  }
+
+  dayPopupContent.innerHTML = html;
+  dayPopupOverlay.classList.add('open');
+}
+
+document.getElementById('cal-grid').addEventListener('click', e => {
+  const cell = e.target.closest('.cal-day.has-act');
+  if (!cell) return;
+  const ds = cell.dataset.date;
+  if (ds) openDayPopup(ds);
 });
 
 document.getElementById('footer-year').textContent = new Date().getFullYear();
