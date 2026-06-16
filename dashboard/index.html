@@ -11,6 +11,9 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --orange:#FC4C02;
+  /* AA-compliant action orange (4.9:1 on white) for small text and filled buttons.
+     --orange stays for large display numbers, badges, dots, and decorative fills. */
+  --orange-strong:#CC4011;
   --orange-dim:rgba(252,76,2,.1);
   --bg:#F5F5F5;
   --card:#FFFFFF;
@@ -50,7 +53,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .topnav-links{display:flex;gap:.15rem;flex-shrink:0;}
 .topnav-link{font-size:.75rem;font-weight:500;color:var(--mid);padding:.28rem .6rem;border-radius:5px;transition:color .15s,background .15s;white-space:nowrap;}
 .topnav-link:hover{color:var(--fg);background:var(--bg);}
-.topnav-race{font-size:.72rem;font-weight:700;color:var(--orange);letter-spacing:.015em;}
+.topnav-race{font-size:.72rem;font-weight:700;color:var(--orange-strong);letter-spacing:.015em;}
 .topnav-right{display:flex;align-items:center;gap:.75rem;flex-shrink:0;}
 .topnav-alltime{font-size:.7rem;color:var(--mid);white-space:nowrap;}
 
@@ -214,6 +217,16 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .ai-change-reason{grid-column:1/-1;font-size:.7rem;color:var(--mid);padding-left:6.55rem;line-height:1.5;}
 .ai-reset-btn{margin-top:.4rem;font-size:.7rem;color:var(--mid);padding:.3rem .7rem;border:1.5px solid var(--border);border-radius:5px;align-self:flex-start;transition:all .15s;}
 .ai-reset-btn:hover{border-color:var(--fg);color:var(--fg);}
+.ai-ask{padding:.85rem 1.25rem 1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem;}
+.ai-ask-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);}
+.ai-ask-row{display:flex;gap:.5rem;align-items:flex-end;}
+.ai-ask-input{flex:1;resize:vertical;min-height:2.3rem;max-height:8rem;border:1.5px solid var(--border);border-radius:6px;background:var(--card);color:var(--fg);font-family:var(--sans);font-size:.8rem;line-height:1.5;padding:.5rem .65rem;outline:none;transition:border-color .15s;}
+.ai-ask-input:focus{border-color:#D97706;}
+.ai-ask-btn{padding:.5rem .9rem;background:#D97706;color:#fff;font-weight:700;font-size:.75rem;border-radius:6px;white-space:nowrap;transition:opacity .15s;}
+.ai-ask-btn:hover{opacity:.88;}
+.ai-question{margin:.85rem 1.25rem;padding:.75rem .9rem;background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.28);border-radius:8px;display:flex;flex-direction:column;gap:.55rem;}
+.ai-question-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#D97706;}
+.ai-question-text{font-size:.8rem;color:var(--fg);line-height:1.6;}
 .ai-panel-loading{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;font-size:.76rem;font-weight:600;color:var(--mid);}
 .ai-loading-bar-wrap{width:80px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
 .ai-loading-bar{height:100%;width:40%;background:#D97706;border-radius:99px;animation:loadbar 1s ease-in-out infinite alternate;}
@@ -269,14 +282,14 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .connect-heading{font-size:.95rem;font-weight:700;margin-bottom:.25rem;}
 .connect-sub{font-size:.8rem;color:var(--mid);margin-bottom:1.1rem;line-height:1.6;}
 .connect-note{font-size:.76rem;color:var(--mid);line-height:1.7;margin-bottom:1.1rem;background:var(--bg);border-radius:6px;padding:.8rem .9rem;border:1px solid var(--border);}
-.connect-note a{color:var(--orange);font-weight:500;}
+.connect-note a{color:var(--orange-strong);font-weight:500;}
 .connect-note a:hover{text-decoration:underline;}
 .connect-note code{font-size:.73rem;background:#fff;border:1px solid var(--border);padding:.1em .35em;border-radius:3px;font-family:ui-monospace,monospace;}
 .form-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem;}
 .form-label{font-size:.68rem;font-weight:600;color:var(--fg);letter-spacing:.01em;}
 .form-input{border:1.5px solid var(--border);border-radius:6px;background:var(--card);color:var(--fg);font-family:var(--sans);font-size:.86rem;padding:.52rem .72rem;outline:none;transition:border-color .15s;width:100%;}
 .form-input:focus{border-color:var(--orange);}
-.connect-btn{width:100%;padding:.68rem;background:var(--orange);color:#fff;font-weight:700;font-size:.86rem;border:none;border-radius:6px;transition:opacity .15s;margin-top:.2rem;}
+.connect-btn{width:100%;padding:.68rem;background:var(--orange-strong);color:#fff;font-weight:700;font-size:.86rem;border:none;border-radius:6px;transition:opacity .15s;margin-top:.2rem;}
 .connect-btn:hover{opacity:.88;}
 .connect-error{font-size:.73rem;color:#D93025;margin-top:.55rem;min-height:1em;font-weight:500;}
 
@@ -300,7 +313,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .period-seg{display:flex;background:var(--bg);border:1.5px solid var(--border);border-radius:99px;padding:2px;gap:1px;flex-shrink:0;}
 .period-btn{padding:.25rem .7rem;font-size:.68rem;font-weight:600;background:transparent;border:none;color:var(--mid);cursor:pointer;transition:all .15s;border-radius:99px;white-space:nowrap;}
 .period-btn:hover{color:var(--fg);}
-.period-btn.active{background:var(--orange);color:#fff;}
+.period-btn.active{background:var(--orange-strong);color:#fff;}
 
 /* ── SPORT TABS ── */
 .sport-tabs{display:flex;gap:.4rem;padding-bottom:1rem;overflow-x:auto;}
@@ -309,8 +322,8 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
   border:1.5px solid var(--border);background:var(--card);color:var(--mid);
   cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
 }
-.sport-tab:hover{border-color:var(--orange);color:var(--orange);}
-.sport-tab.active{background:var(--orange);color:#fff;border-color:var(--orange);}
+.sport-tab:hover{border-color:var(--orange-strong);color:var(--orange-strong);}
+.sport-tab.active{background:var(--orange-strong);color:#fff;border-color:var(--orange-strong);}
 
 /* ── STAT CARDS ── */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem;}
@@ -377,11 +390,11 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .data-row.is-open td{background:rgba(252,76,2,.04);}
 .data-row.is-open td:first-child{border-left:3px solid var(--orange);padding-left:calc(1.5rem - 3px);}
 
-.detail-tr td{padding:0;border-bottom:1px solid var(--border);background:#FAFAFA;}
+.detail-tr td{padding:0;background:#FAFAFA;}
 .detail-content{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .3s ease-out;}
 .detail-content.open{grid-template-rows:1fr;}
 .detail-inner{min-height:0;overflow:hidden;}
-.detail-body{padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.detail-body{padding:1.1rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;border-bottom:1px solid var(--border);}
 .detail-chips{display:flex;gap:.5rem;flex-wrap:wrap;}
 .detail-chip{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.5rem .75rem;min-width:76px;}
 .detail-chip .dc-val{font-size:.9rem;font-weight:700;color:var(--fg);display:block;line-height:1.2;}
@@ -399,7 +412,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .splits-table th{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--mid);padding:.32rem .7rem;text-align:left;border-bottom:1px solid var(--border);background:var(--card);}
 .splits-table td{font-size:.76rem;padding:.35rem .7rem;border-bottom:1px solid var(--border);color:var(--fg);}
 .splits-table tbody tr:last-child td{border-bottom:none;}
-.split-pace{font-weight:700;color:var(--orange);}
+.split-pace{font-weight:700;color:var(--orange-strong);}
 .split-elev{font-size:.7rem;}
 .split-elev.up{color:var(--red);}
 .split-elev.down{color:var(--green);}
@@ -409,7 +422,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 
 .td-index{color:var(--border);font-size:.72rem;font-weight:500;width:1.5rem;}
 .type-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.22em .5em;border-radius:4px;white-space:nowrap;}
-.type-badge.t-run{background:var(--orange-dim);color:var(--orange);}
+.type-badge.t-run{background:var(--orange-dim);color:var(--orange-strong);}
 .type-badge.t-ride{background:var(--blue-dim);color:var(--blue);}
 .type-badge.t-swim{background:var(--teal-dim);color:var(--teal);}
 .type-badge.t-other{background:var(--bg);color:var(--mid);}
@@ -418,7 +431,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0;}
 .td-dist{font-weight:600;white-space:nowrap;}
 .td-time{color:var(--mid);white-space:nowrap;}
 .td-pace{font-size:.76rem;color:var(--mid);white-space:nowrap;}
-.td-pace.t-run{color:var(--orange);font-weight:600;}
+.td-pace.t-run{color:var(--orange-strong);font-weight:600;}
 .td-elev{color:var(--mid);white-space:nowrap;}
 .expand-icon{float:right;color:var(--border);font-size:.68rem;transition:transform .2s;}
 .data-row.is-open .expand-icon{transform:rotate(180deg);color:var(--orange);}
@@ -429,7 +442,53 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 .footer-copy{font-size:.7rem;color:var(--mid);}
 .footer-links{display:flex;gap:1.25rem;list-style:none;}
 .footer-links a{font-size:.7rem;color:var(--mid);transition:color .15s;}
-.footer-links a:hover{color:var(--orange);}
+.footer-links a:hover{color:var(--orange-strong);}
+
+/* ══════════════════════════════════════════
+   PLAN BUILDER
+══════════════════════════════════════════ */
+.builder-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 0 .25rem;}
+.builder-title{font-size:1.05rem;font-weight:800;}
+.builder-close{font-size:1.1rem;color:var(--mid);width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.builder-close:hover{background:var(--bg);color:var(--fg);}
+.builder-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem;margin-bottom:1.25rem;}
+.builder-card-title{font-size:.85rem;font-weight:700;margin-bottom:.9rem;}
+.builder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;}
+.builder-section-title{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);margin:1.5rem 0 .75rem;}
+.builder-section-sub{font-size:.75rem;color:var(--mid);line-height:1.6;margin-bottom:.9rem;}
+.phase-card{border:1.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.9rem;}
+.phase-card:last-child{margin-bottom:0;}
+.phase-card-hdr{display:flex;align-items:flex-end;gap:.5rem;margin-bottom:.9rem;flex-wrap:wrap;}
+.phase-card-hdr .form-group{margin-bottom:0;}
+.phase-name-group{flex:1;min-width:120px;}
+.phase-color-input{width:2.4rem;height:2.4rem;border:1.5px solid var(--border);border-radius:6px;padding:2px;background:var(--card);cursor:pointer;}
+.icon-btn{width:2.4rem;height:2.4rem;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border);border-radius:6px;color:var(--mid);font-size:.95rem;transition:all .15s;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--fg);color:var(--fg);}
+.icon-btn:disabled{opacity:.35;cursor:default;}
+.icon-btn:disabled:hover{border-color:var(--border);color:var(--mid);}
+.icon-btn.danger:hover{border-color:#C0392B;color:#C0392B;}
+.tmpl-table-wrap{overflow-x:auto;margin-top:.6rem;}
+.tmpl-table{display:grid;grid-template-columns:2.4rem 6.5rem 1fr 4.5rem;gap:.4rem .5rem;align-items:center;min-width:480px;}
+.tmpl-table .form-input{padding:.4rem .5rem;font-size:.78rem;}
+.tmpl-table-hdr{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mid);}
+.tmpl-day-label{font-size:.7rem;font-weight:600;color:var(--mid);}
+.builder-checkbox-row{display:flex;align-items:center;gap:.5rem;margin-top:.9rem;font-size:.78rem;font-weight:600;cursor:pointer;}
+.builder-checkbox-row input{width:15px;height:15px;accent-color:var(--orange);cursor:pointer;}
+.builder-add-btn{font-size:.75rem;font-weight:700;color:var(--orange-strong);padding:.55rem .8rem;border:1.5px dashed var(--border);border-radius:8px;width:100%;text-align:center;transition:all .15s;margin-bottom:1.25rem;}
+.builder-add-btn:hover{border-color:var(--orange-strong);background:var(--orange-dim);}
+/* Entry CTAs (Load preset / Start AI) start a flow, so they use a solid border —
+   the dashed style stays reserved for "+ Add" placeholder actions. */
+.builder-cta-btn{border-style:solid;margin-bottom:0;}
+.builder-error{font-size:.78rem;color:#C0392B;font-weight:600;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.25);border-radius:6px;padding:.6rem .8rem;margin-bottom:1.25rem;}
+.builder-actions{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0 3rem;gap:.75rem;flex-wrap:wrap;}
+.builder-actions-right{display:flex;gap:.6rem;}
+.builder-btn{font-size:.8rem;font-weight:700;padding:.62rem 1.2rem;border-radius:6px;transition:all .15s;}
+.builder-btn-primary{background:var(--orange-strong);color:#fff;}
+.builder-btn-primary:hover{opacity:.88;}
+.builder-btn-secondary{border:1.5px solid var(--border);color:var(--fg);}
+.builder-btn-secondary:hover{border-color:var(--fg);}
+.builder-btn-ghost{font-size:.78rem;color:var(--mid);font-weight:600;padding:.62rem .4rem;}
+.builder-btn-ghost:hover{color:#C0392B;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -479,6 +538,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
     <a href="../" class="topnav-back">← julienmann.ca</a>
 
     <div class="topnav-right">
+      <button class="topnav-link" id="edit-plan-btn" type="button">Edit Plan</button>
       <span class="topnav-alltime hidden" id="topnav-alltime"></span>
       <span class="topnav-race" id="nav-race"></span>
     </div>
@@ -586,7 +646,7 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
   <div class="race-hdr">
     <div class="race-hdr-left">
-      <h1 class="race-name">70.3 Half-Ironman</h1>
+      <h1 class="race-name" id="race-name"></h1>
       <span class="phase-pill" id="phase-pill"></span>
     </div>
     <span class="race-hdr-right" id="race-hdr-right"></span>
@@ -655,6 +715,124 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 
 </main>
 
+<!-- ══════════════════════════════════════════
+     PLAN BUILDER
+══════════════════════════════════════════ -->
+<main id="plan-builder" class="page training-page hidden">
+  <div class="builder-hdr">
+    <h1 class="builder-title">Edit Training Plan</h1>
+    <button class="builder-close" id="builder-cancel-top" type="button" aria-label="Close plan editor">✕</button>
+  </div>
+  <div id="builder-body"></div>
+  <div id="builder-error" class="builder-error hidden" role="alert"></div>
+  <div class="builder-actions" id="builder-actions">
+    <button class="builder-btn builder-btn-ghost" id="builder-reset" type="button">Reset to default plan</button>
+    <div class="builder-actions-right">
+      <button class="builder-btn builder-btn-secondary" id="builder-cancel" type="button">Cancel</button>
+      <button class="builder-btn builder-btn-primary" id="builder-save" type="button">Save &amp; apply</button>
+    </div>
+  </div>
+
+  <!-- AI questionnaire — generates a draft plan, then hands off to the editor above for review -->
+  <div id="ai-builder-body" class="hidden">
+    <div class="builder-card">
+      <div class="builder-card-title">Your Race</div>
+      <div class="builder-grid">
+        <div class="form-group"><label class="form-label">Race type</label>
+          <select class="form-input" id="aiq-race-type">
+            <optgroup label="Triathlon">
+              <option value="70.3" selected>70.3 / Half-Ironman</option>
+              <option value="full">Ironman / Full-distance triathlon</option>
+              <option value="olympic">Olympic / standard triathlon</option>
+              <option value="sprint">Sprint triathlon</option>
+            </optgroup>
+            <optgroup label="Running">
+              <option value="5k">5K</option>
+              <option value="10k">10K</option>
+              <option value="half">Half marathon (21.1K)</option>
+              <option value="marathon">Marathon (42.2K)</option>
+              <option value="50k">50K ultramarathon</option>
+            </optgroup>
+            <option value="custom">Other / custom distance</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Race name</label>
+          <input class="form-input" type="text" id="aiq-race-name" placeholder="e.g. Mont-Tremblant 70.3"></div>
+        <div class="form-group"><label class="form-label">Race date</label>
+          <input class="form-input" type="date" id="aiq-race-date"></div>
+        <div class="form-group"><label class="form-label">Goal time (hours)</label>
+          <input class="form-input" type="number" min="0" id="aiq-goal-hours" value="6"></div>
+        <div class="form-group"><label class="form-label">Goal time (minutes)</label>
+          <input class="form-input" type="number" min="0" max="59" step="5" id="aiq-goal-minutes" value="0"></div>
+        <div class="form-group" id="aiq-swim-group"><label class="form-label">Swim distance</label>
+          <input class="form-input" type="text" id="aiq-swim-dist" placeholder="e.g. 1.9 km" value="1.9 km"></div>
+        <div class="form-group" id="aiq-bike-group"><label class="form-label">Bike distance</label>
+          <input class="form-input" type="text" id="aiq-bike-dist" placeholder="e.g. 90 km" value="90 km"></div>
+        <div class="form-group"><label class="form-label">Run distance</label>
+          <input class="form-input" type="text" id="aiq-run-dist" placeholder="e.g. 21.1 km" value="21.1 km"></div>
+      </div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-card-title">Training Window &amp; Fitness</div>
+      <div class="builder-grid">
+        <div class="form-group"><label class="form-label">Training start date</label>
+          <input class="form-input" type="date" id="aiq-train-start"></div>
+        <div class="form-group"><label class="form-label">Experience level</label>
+          <select class="form-input" id="aiq-experience">
+            <option value="new">New to structured training</option>
+            <option value="some" selected>Some experience (a season or two)</option>
+            <option value="experienced">Experienced (multiple seasons)</option>
+            <option value="competitive">Competitive / race regularly</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Current training volume (hrs/wk)</label>
+          <input class="form-input" type="number" min="0" step="0.5" id="aiq-current-hours" placeholder="e.g. 4"></div>
+      </div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-card-title">Weekly Schedule</div>
+      <div class="builder-grid">
+        <div class="form-group"><label class="form-label">Days available to train</label>
+          <input class="form-input" type="number" min="1" max="7" id="aiq-days-per-week" value="6"></div>
+        <div class="form-group"><label class="form-label">Preferred rest day</label>
+          <select class="form-input" id="aiq-rest-day">
+            <option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option>
+            <option value="3">Thursday</option><option value="4">Friday</option><option value="5" selected>Saturday</option>
+            <option value="6">Sunday</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Preferred long-session day</label>
+          <select class="form-input" id="aiq-long-day">
+            <option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option>
+            <option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option>
+            <option value="6" selected>Sunday</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Max weekday session (min)</label>
+          <input class="form-input" type="number" min="0" step="5" id="aiq-weekday-max" placeholder="e.g. 75"></div>
+        <div class="form-group"><label class="form-label">Max weekend session (min)</label>
+          <input class="form-input" type="number" min="0" step="5" id="aiq-weekend-max" placeholder="e.g. 150"></div>
+      </div>
+    </div>
+
+    <div class="builder-card">
+      <div class="builder-card-title">Anything else?</div>
+      <div class="form-group"><label class="form-label">Injuries or limitations</label>
+        <textarea class="form-input" id="aiq-injuries" rows="2" placeholder="e.g. history of IT band issues, avoid high-impact running early on"></textarea></div>
+      <div class="form-group"><label class="form-label">Additional notes (tune-up races, travel, goals…)</label>
+        <textarea class="form-input" id="aiq-notes" rows="2" placeholder="e.g. Sprint triathlon on Oct 17, 2026 as a tune-up race"></textarea></div>
+    </div>
+
+    <div id="ai-builder-status" class="ai-panel-loading hidden" role="status" aria-live="polite">
+      <em class="ai-panel-icon">✦</em> Designing your plan…
+      <div class="ai-loading-bar-wrap"><div class="ai-loading-bar"></div></div>
+    </div>
+    <div id="ai-builder-error" class="builder-error hidden" role="alert"></div>
+    <div class="builder-actions">
+      <button class="builder-btn builder-btn-secondary" id="ai-builder-back" type="button">Back</button>
+      <button class="builder-btn builder-btn-primary" id="ai-builder-generate" type="button">✦ Generate plan</button>
+    </div>
+  </div>
+</main>
+
 <!-- ── FOOTER ── -->
 <footer>
   <div class="footer-inner">
@@ -671,56 +849,6 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 //  TRAINING PLAN
 // ════════════════════════════════════════════
 
-const TRAIN_START = new Date('2026-06-12T00:00:00');
-const RACE_DATE   = new Date('2027-07-05T00:00:00');
-
-const PHASES = [
-  { id:1, name:'Foundation',    start:'2026-06-12', end:'2026-08-20', color:'#FC4C02', hrs:'5–7 hrs/wk' },
-  { id:2, name:'Base Building', start:'2026-08-21', end:'2026-11-12', color:'#E97316', hrs:'7–9 hrs/wk' },
-  { id:3, name:'Build I',       start:'2026-11-13', end:'2027-02-04', color:'#D97706', hrs:'8–10 hrs/wk' },
-  { id:4, name:'Build II',      start:'2027-02-05', end:'2027-04-29', color:'#B45309', hrs:'9–11 hrs/wk' },
-  { id:5, name:'Peak',          start:'2027-04-30', end:'2027-06-10', color:'#92400E', hrs:'9–10 hrs/wk' },
-  { id:6, name:'Taper',         start:'2027-06-11', end:'2027-07-05', color:'#78350F', hrs:'3–7 hrs/wk' },
-];
-
-const RACE_EVENTS = {
-  '2026-10-17': { type:'race', label:'Sprint Triathlon',  duration:90 },
-  '2027-04-12': { type:'race', label:'Olympic Triathlon', duration:150 },
-  '2027-07-05': { type:'race', label:'70.3 Half-Ironman', duration:360 },
-};
-
-const PRE_RACE_WEEK = {
-  0: ['swim', 'Easy swim + drills', 30],
-  1: ['brick','Opener brick', 45],
-  2: ['swim', 'Activation swim', 20],
-  3: ['run',  'Easy jog + strides', 20],
-  4: ['rest', 'Rest — prep gear', 0],
-  5: ['rest', 'Rest — visualize', 0],
-  6: ['rest', 'Rest Day', 0],
-};
-
-const SPRINT_TRI_WEEK_MON  = new Date('2026-10-12T00:00:00');
-const OLYMPIC_TRI_WEEK_MON = new Date('2027-04-07T00:00:00');
-const PRE_RACE_WEEK_MON    = new Date('2027-06-30T00:00:00');
-
-const SPORT_CFG = {
-  rest:  { color:'#9CA3AF', dim:'rgba(156,163,175,.13)', label:'Rest',  badge:'REST'  },
-  swim:  { color:'#00B4D8', dim:'rgba(0,180,216,.12)',   label:'Swim',  badge:'SWIM'  },
-  run:   { color:'#FC4C02', dim:'rgba(252,76,2,.12)',    label:'Run',   badge:'RUN'   },
-  bike:  { color:'#4A90D9', dim:'rgba(74,144,217,.12)',  label:'Bike',  badge:'BIKE'  },
-  brick: { color:'#8B5CF6', dim:'rgba(139,92,246,.12)', label:'Brick', badge:'BRICK' },
-  race:  { color:'#FC4C02', dim:'rgba(252,76,2,.18)',    label:'Race',  badge:'RACE'  },
-};
-
-const SPRINT_TRI_TMPL = [
-  ['rest','Rest Day',0],['swim','Easy swim',30],['bike','Easy spin',30],
-  ['run','Easy run + strides',25],['rest','Rest Day',0],['race','Sprint Triathlon',90],['rest','Recovery',0],
-];
-const OLYMPIC_TRI_TMPL = [
-  ['rest','Rest Day',0],['swim','Easy swim',30],['bike','Easy spin',30],
-  ['run','Easy run + strides',20],['rest','Rest Day',0],['race','Olympic Triathlon',150],['rest','Recovery',0],
-];
-
 // ── HTML escape helper (prevents XSS in innerHTML interpolation) ─
 function esc(s) {
   return String(s)
@@ -734,6 +862,188 @@ function startOfDay(d) { const x=new Date(d); x.setHours(0,0,0,0); return x; }
 function addDays(d,n)  { const x=startOfDay(d); x.setDate(x.getDate()+n); return x; }
 function mondayOf(d)   { const x=startOfDay(d); const dow=(x.getDay()+6)%7; x.setDate(x.getDate()-dow); return x; }
 function dayOfWeek(d)  { return (startOfDay(d).getDay()+6)%7; }
+// Whole days from YYYY-MM-DD string a to string b (b − a).
+function daysBetween(a, b) { return Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 86400000); }
+
+const SPORT_CFG = {
+  rest:  { color:'#9CA3AF', dim:'rgba(156,163,175,.13)', label:'Rest',  badge:'REST'  },
+  swim:  { color:'#00B4D8', dim:'rgba(0,180,216,.12)',   label:'Swim',  badge:'SWIM'  },
+  run:   { color:'#FC4C02', dim:'rgba(252,76,2,.12)',    label:'Run',   badge:'RUN'   },
+  bike:  { color:'#4A90D9', dim:'rgba(74,144,217,.12)',  label:'Bike',  badge:'BIKE'  },
+  brick: { color:'#8B5CF6', dim:'rgba(139,92,246,.12)', label:'Brick', badge:'BRICK' },
+  race:  { color:'#FC4C02', dim:'rgba(252,76,2,.18)',    label:'Race',  badge:'RACE'  },
+};
+
+// ── Plan storage — each browser keeps its own training plan ─────
+// A plan is: race info + an ordered list of phases (each with a weekly
+// template + optional recovery-week template) + extra "tune-up" race
+// events (each optionally overriding their week's template). Dates for
+// phases/race events are derived from trainStart + phase lengths, with
+// the final phase stretching to meet raceDate exactly.
+const PLAN_KEY = 'jm_plan_v1';
+
+// Default plan: Julien's 70.3 build (Jun 12 2026 → Jul 5 2027).
+// Seeds first-time visitors and is the "Reset to default" target.
+const DEFAULT_PLAN = {
+  raceName: '70.3 Half-Ironman',
+  raceDate: '2027-07-05',
+  raceDuration: 360,
+  raceDistances: { swim:'1.9 km', bike:'90 km', run:'21.1 km' },
+  trainStart: '2026-06-12',
+  phases: [
+    {
+      name:'Foundation', weeks:10, hrs:'5–7 hrs/wk', color:'#FC4C02',
+      focus:'Swim 3× / Bike 2× / Run 2× · Establish the base',
+      recoveryEvery:4,
+      template: [
+        ['rest','Rest Day',0],['swim','Technique swim',45],['run','Easy run',40],
+        ['swim','Endurance swim',45],['bike','Easy spin',50],
+        ['bike','Long ride',80],['run','Recovery run',35],
+      ],
+      recoveryTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',30],['run','Easy run',30],
+        ['rest','Rest Day',0],['bike','Easy spin',35],
+        ['run','Easy long run',55],['rest','Rest Day',0],
+      ],
+    },
+    {
+      name:'Base Building', weeks:12, hrs:'7–9 hrs/wk', color:'#E97316',
+      focus:'Build aerobic endurance and frequency',
+      recoveryEvery:4,
+      template: [
+        ['rest','Rest Day',0],['swim','CSS intervals',55],['run','Tempo run',50],
+        ['swim','Swim + easy bike',75],['run','Easy run',40],
+        ['bike','Long ride',110],['brick','Bike + Run brick',90],
+      ],
+      recoveryTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',35],
+        ['rest','Rest Day',0],['bike','Easy spin',40],['bike','Moderate ride',75],['run','Short run',30],
+      ],
+    },
+    {
+      name:'Build I', weeks:12, hrs:'8–10 hrs/wk', color:'#D97706',
+      focus:'Sweet-spot & threshold work, longer rides',
+      recoveryEvery:4,
+      template: [
+        ['rest','Rest Day',0],['bike','Sweet spot intervals',70],['run','Tempo + strength',60],
+        ['swim','CSS intervals',60],['run','Easy run',40],['bike','Long ride',160],
+        ['run','Long run 18km',110],
+      ],
+      recoveryTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',40],
+        ['swim','CSS intervals',55],['rest','Rest Day',0],
+        ['bike','Easy ride',90],['run','Easy long run',70],
+      ],
+    },
+    {
+      name:'Build II', weeks:12, hrs:'9–11 hrs/wk', color:'#B45309',
+      focus:'Race-pace specificity, longest rides and runs',
+      recoveryEvery:4,
+      template: [
+        ['rest','Rest Day',0],['brick','Bike intervals + short run',85],['swim','Race-pace swim',80],
+        ['run','Race-pace run',60],['swim','Easy technique swim',50],['bike','Long race-pace ride',180],
+        ['run','Long run 20km',120],
+      ],
+      recoveryTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',40],
+        ['rest','Rest Day',0],['swim','Easy swim',40],['bike','Easy ride',90],['run','Easy run',50],
+      ],
+    },
+    {
+      name:'Peak', weeks:6, hrs:'9–10 hrs/wk', color:'#92400E',
+      focus:'Sharpen race-pace fitness, peak volume',
+      recoveryEvery:4,
+      template: [
+        ['rest','Rest Day',0],['swim','Race-pace swim',55],['bike','Quality ride',75],
+        ['run','Race-pace run',60],['swim','Easy swim',45],
+        ['bike','Long ride 90km',150],['run','Long run',100],
+      ],
+      recoveryTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',35],
+        ['swim','Easy swim',40],['rest','Rest Day',0],['bike','Easy ride',75],['run','Easy run',40],
+      ],
+    },
+    {
+      name:'Taper', weeks:4, hrs:'3–7 hrs/wk', color:'#78350F',
+      focus:'Reduce volume, stay sharp for race day',
+      recoveryEvery:0,
+      template: [
+        ['rest','Rest Day',0],['swim','Short swim 1800m',45],['bike','Easy ride',60],
+        ['run','Easy run 10km',60],['swim','Easy swim',35],['bike','Easy spin',30],['run','Short run 6km',40],
+      ],
+      recoveryTemplate: null,
+    },
+  ],
+  raceEvents: [
+    {
+      date:'2026-10-17', label:'Sprint Triathlon', duration:90,
+      weekTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',30],['bike','Easy spin',30],
+        ['run','Easy run + strides',25],['rest','Rest Day',0],['race','Sprint Triathlon',90],['rest','Recovery',0],
+      ],
+    },
+    {
+      date:'2027-04-12', label:'Olympic Triathlon', duration:150,
+      weekTemplate: [
+        ['rest','Rest Day',0],['swim','Easy swim',30],['bike','Easy spin',30],
+        ['run','Easy run + strides',20],['rest','Rest Day',0],['race','Olympic Triathlon',150],['rest','Recovery',0],
+      ],
+    },
+  ],
+};
+
+function loadRawPlan() {
+  try {
+    const raw = localStorage.getItem(PLAN_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return JSON.parse(JSON.stringify(DEFAULT_PLAN));
+}
+
+function savePlan(plan) {
+  localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
+}
+
+// Expands a stored plan into the date-resolved structures the dashboard renders from
+function computePlan(plan) {
+  const trainStart = startOfDay(new Date(plan.trainStart + 'T00:00:00'));
+  const raceDate   = startOfDay(new Date(plan.raceDate   + 'T00:00:00'));
+
+  let cursor = trainStart;
+  const phases = plan.phases.map((p, i) => {
+    const isLast = i === plan.phases.length - 1;
+    const start  = trnDateStr(cursor);
+    const end    = isLast ? trnDateStr(raceDate) : trnDateStr(addDays(cursor, p.weeks * 7 - 1));
+    cursor = addDays(new Date(end + 'T00:00:00'), 1);
+    return { id: i + 1, ...p, start, end };
+  });
+
+  const raceEvents = {};
+  for (const e of plan.raceEvents) raceEvents[e.date] = { type:'race', label:e.label, duration:e.duration };
+  raceEvents[trnDateStr(raceDate)] = { type:'race', label:plan.raceName, duration:plan.raceDuration };
+
+  const raceWeekOverrides = plan.raceEvents.filter(e => e.weekTemplate).map(e => ({
+    mon: mondayOf(new Date(e.date + 'T00:00:00')),
+    template: e.weekTemplate,
+  }));
+
+  return {
+    trainStart, raceDate, phases, raceEvents, raceWeekOverrides,
+    totalWeeks: plan.phases.reduce((s, p) => s + p.weeks, 0),
+    raceName: plan.raceName, raceDuration: plan.raceDuration, raceDistances: plan.raceDistances,
+  };
+}
+
+const PLAN                = computePlan(loadRawPlan());
+const TRAIN_START         = PLAN.trainStart;
+const RACE_DATE           = PLAN.raceDate;
+const PHASES              = PLAN.phases;
+const RACE_EVENTS         = PLAN.raceEvents;
+const RACE_WEEK_OVERRIDES = PLAN.raceWeekOverrides;
+const RACE_NAME           = PLAN.raceName;
+const RACE_DURATION       = PLAN.raceDuration;
+const RACE_DISTANCES      = PLAN.raceDistances;
+const TOTAL_WEEKS         = PLAN.totalWeeks;
 
 function getPhaseForDate(d) {
   const ds = trnDateStr(d);
@@ -742,81 +1052,8 @@ function getPhaseForDate(d) {
 }
 
 function getWeekInPhase(d, phase) {
-  const psMon = mondayOf(startOfDay(new Date(phase.start)));
+  const psMon = mondayOf(new Date(phase.start + 'T00:00:00'));
   return Math.floor((startOfDay(d) - psMon) / (7*86400000)) + 1;
-}
-
-function weekTemplate(phaseId, weekInPhase, isRecovery) {
-  const alt = weekInPhase % 2 === 0;
-  if (phaseId === 1) {
-    if (isRecovery) return [
-      ['rest','Rest Day',0],['swim','Easy swim',30],['run','Easy run',30],
-      ['rest','Rest Day',0],['bike','Easy spin',35],
-      alt ? ['run','Easy long run',55] : ['bike','Easy ride',60],['rest','Rest Day',0],
-    ];
-    return [
-      ['rest','Rest Day',0],['swim','Technique swim',45],['run','Easy run',40],
-      ['swim','Endurance swim',45],['bike','Easy spin',50],
-      alt ? ['run','Long run',75] : ['bike','Long ride',80],
-      alt ? ['bike','Easy spin',35] : ['run','Recovery run',35],
-    ];
-  }
-  if (phaseId === 2) {
-    if (isRecovery) return [
-      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',35],
-      ['rest','Rest Day',0],['bike','Easy spin',40],['bike','Moderate ride',75],['run','Short run',30],
-    ];
-    return [
-      ['rest','Rest Day',0],['swim','CSS intervals',55],['run','Tempo run',50],
-      ['swim','Swim + easy bike',75],['run','Easy run',40],
-      ['bike','Long ride', alt ? 130 : 110],['brick','Bike + Run brick',90],
-    ];
-  }
-  if (phaseId === 3) {
-    if (isRecovery) return [
-      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',40],
-      ['swim','CSS intervals',55],['rest','Rest Day',0],
-      ['bike','Easy ride',90],['run','Easy long run',70],
-    ];
-    return [
-      ['rest','Rest Day',0],['bike','Sweet spot intervals',70],['run','Tempo + strength',60],
-      ['swim','CSS intervals',60],['run','Easy run',40],['bike','Long ride',160],
-      alt ? ['brick','Long brick',110] : ['run','Long run 18km',110],
-    ];
-  }
-  if (phaseId === 4) {
-    if (isRecovery) return [
-      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',40],
-      ['rest','Rest Day',0],['swim','Easy swim',40],['bike','Easy ride',90],['run','Easy run',50],
-    ];
-    return [
-      ['rest','Rest Day',0],['brick','Bike intervals + short run',85],['swim','Race-pace swim',80],
-      ['run','Race-pace run',60],['swim','Easy technique swim',50],['bike','Long race-pace ride',180],
-      alt ? ['brick','Race-sim brick',130] : ['run','Long run 20km',120],
-    ];
-  }
-  if (phaseId === 5) {
-    if (isRecovery) return [
-      ['rest','Rest Day',0],['swim','Easy swim',40],['run','Easy run',35],
-      ['swim','Easy swim',40],['rest','Rest Day',0],['bike','Easy ride',75],['run','Easy run',40],
-    ];
-    return [
-      ['rest','Rest Day',0],['swim','Race-pace swim',55],['bike','Quality ride',75],
-      ['run','Race-pace run',60],['swim','Easy swim',45],
-      ['bike', weekInPhase <= 3 ? 'Long ride 90km' : 'Moderate ride', weekInPhase <= 3 ? 150 : 90],
-      alt ? ['brick','Confidence brick',110] : ['run','Long run',100],
-    ];
-  }
-  // Phase 6 Taper
-  if (weekInPhase <= 1) return [
-    ['rest','Rest Day',0],['swim','Taper swim 2000m',50],['bike','Easy spin',45],
-    ['run','Easy run 12km',70],['swim','Easy swim',40],['run','Moderate run 8km',50],['run','Easy run 5km',30],
-  ];
-  if (weekInPhase <= 2) return [
-    ['rest','Rest Day',0],['swim','Short swim 1800m',45],['bike','Easy ride',60],
-    ['run','Easy run 10km',60],['swim','Easy swim',35],['bike','Easy spin',30],['run','Short run 6km',40],
-  ];
-  return Array(7).fill(['rest','Rest Day',0]);
 }
 
 function getBaseActivity(d) {
@@ -828,28 +1065,18 @@ function getBaseActivity(d) {
     const e = RACE_EVENTS[ds];
     return { type:e.type, label:e.label, duration:e.duration };
   }
-  const preRaceMon = startOfDay(PRE_RACE_WEEK_MON);
-  if (dd >= preRaceMon && dd < RACE_DATE) {
-    const dow = dayOfWeek(dd);
-    const [type,label,duration] = PRE_RACE_WEEK[dow] || ['rest','Rest Day',0];
-    return { type, label, duration };
-  }
-  const stMon = startOfDay(SPRINT_TRI_WEEK_MON);
-  if (dd >= stMon && dd < addDays(stMon,7)) {
-    const [type,label,duration] = SPRINT_TRI_TMPL[dayOfWeek(dd)];
-    return { type, label, duration };
-  }
-  const otMon = startOfDay(OLYMPIC_TRI_WEEK_MON);
-  if (dd >= otMon && dd < addDays(otMon,7)) {
-    const [type,label,duration] = OLYMPIC_TRI_TMPL[dayOfWeek(dd)];
-    return { type, label, duration };
+  for (const ov of RACE_WEEK_OVERRIDES) {
+    if (dd >= ov.mon && dd < addDays(ov.mon, 7)) {
+      const [type,label,duration] = ov.template[dayOfWeek(dd)];
+      return { type, label, duration };
+    }
   }
   const phase = getPhaseForDate(dd);
   if (!phase) return null;
-  const wip  = getWeekInPhase(dd, phase);
-  const isRec = (wip % 4 === 0);
-  const dow  = dayOfWeek(dd);
-  const tmpl = weekTemplate(phase.id, wip, isRec);
+  const wip   = getWeekInPhase(dd, phase);
+  const isRec = phase.recoveryEvery > 0 && (wip % phase.recoveryEvery === 0);
+  const dow   = dayOfWeek(dd);
+  const tmpl  = (isRec && phase.recoveryTemplate) ? phase.recoveryTemplate : phase.template;
   const [type,label,duration] = tmpl[dow] || ['rest','Rest Day',0];
   return { type, label, duration };
 }
@@ -1071,24 +1298,82 @@ function adaptPlan() {
 
 const AI_OPT_KEY = 'jm_ai_opt_v1';
 
+// Bump whenever systemPrompt/response schema changes so stale cached
+// results (generated under an older prompt) don't get reused.
+const AI_PROMPT_VERSION = 3;
+
 function getCachedOpt() {
   try { return JSON.parse(localStorage.getItem(AI_OPT_KEY)); } catch { return null; }
 }
 function saveCachedOpt(data) { localStorage.setItem(AI_OPT_KEY, JSON.stringify(data)); }
 
+const AI_REQUEST_KEY = 'jm_ai_request_v1';
+function getAiRequest() { return localStorage.getItem(AI_REQUEST_KEY) || ''; }
+function saveAiRequest(v) { localStorage.setItem(AI_REQUEST_KEY, v.trim()); }
+
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 function applyAiResult(result) {
   gAiOverrides = {};
-  gAiSummary   = Array.isArray(result.changes) ? result.changes : [];
+  gAiQuestion  = (typeof result.question === 'string' && result.question.trim()) ? result.question.trim() : null;
+
+  const todayStr = trnDateStr(today);
+  const raceStr  = trnDateStr(RACE_DATE);
+
+  // Broad sport-avoidance ranges (e.g. "no biking until Aug 25") — applied first so
+  // individual day-specific changes below can still override a single day if needed
+  const ranges = Array.isArray(result.ranges) ? result.ranges : [];
+  gAiRanges = [];
+  for (const r of ranges) {
+    if (!r.start || !r.end || !DATE_RE.test(r.start) || !DATE_RE.test(r.end)) continue;
+    const start = r.start < todayStr ? todayStr : r.start;
+    const end   = r.end   > raceStr  ? raceStr  : r.end;
+    if (start > end) continue;
+
+    const avoid       = (Array.isArray(r.avoid) ? r.avoid : [r.avoid]).filter(Boolean);
+    const replacement = r.replacement || 'rest';
+    const reason      = r.reason || '';
+
+    let count = 0;
+    for (let d = new Date(start + 'T00:00:00'); trnDateStr(d) <= end; d = addDays(d, 1)) {
+      const pl = getBaseActivity(d);
+      if (!pl || pl.type === 'race' || !avoid.includes(pl.type)) continue;
+      gAiOverrides[trnDateStr(d)] = {
+        type: 'ai',
+        session: {
+          type: replacement,
+          label: replacement === 'rest' ? 'Rest Day' : `${sportStyle(replacement).label} (sub for ${pl.label})`,
+          duration: replacement === 'rest' ? 0 : pl.duration,
+        },
+        reason,
+      };
+      count++;
+    }
+    if (count > 0) gAiRanges.push({ start, end, avoid, replacement, reason, count });
+  }
+
+  // Individual day changes — take precedence over ranges for the same date
+  const changes = Array.isArray(result.changes) ? result.changes : [];
+  // Reject malformed dates and dates outside the plan (today through race day)
+  gAiSummary = changes.filter(c => c.date && DATE_RE.test(c.date) && c.date >= todayStr && c.date <= raceStr);
+
   for (const c of gAiSummary) {
-    if (!c.date || !DATE_RE.test(c.date)) continue; // reject malformed dates
     gAiOverrides[c.date] = {
       type: 'ai',
       session: { type: c.type || 'rest', label: c.label || 'Rest Day', duration: c.duration || 0 },
       reason: c.reason || '',
     };
   }
+}
+
+// Format a completed activity's stats for the Claude prompt context
+function fmtActStats(a) {
+  const km   = (a.distance / 1000).toFixed(1);
+  const dur  = fmtActDur(a.moving_time);
+  const pace = a.average_speed > 0 ? ' ' + fmtPace(a.average_speed, a.type) : '';
+  const hr   = a.average_heartrate ? ` HR ${Math.round(a.average_heartrate)}` : '';
+  const w    = a.average_watts     ? ` ${Math.round(a.average_watts)}W`        : '';
+  return `${km}km ${dur}${pace}${hr}${w}`;
 }
 
 // Build a compact plain-text context block for the Claude prompt
@@ -1106,25 +1391,24 @@ function buildPlanContext() {
 
   lines.push(`\n-- PAST ${AI_WINDOW_DAYS} DAYS --`);
   for (let i = AI_WINDOW_DAYS; i >= 1; i--) {
-    const d   = addDays(today, -i);
-    const ds  = trnDateStr(d);
-    const pl  = getBaseActivity(d);
-    if (!pl) continue;
-    const acts      = getStravaActsForDate(d);
-    const mTypes    = pl.type !== 'rest' ? (SPORT_MATCH_TYPES[pl.type] || []) : [];
-    const done      = acts.find(a => mTypes.includes(a.type));
+    const d    = addDays(today, -i);
+    const ds   = trnDateStr(d);
+    const pl   = getBaseActivity(d);
+    const acts = getStravaActsForDate(d);
+
+    // Pre-training (or post-race) — no planned session, but report any activity done
+    // so the AI still has real fitness/fatigue signals to work from.
+    if (!pl) {
+      if (acts.length === 0) { lines.push(`${ds}: no activity`); continue; }
+      for (const a of acts) lines.push(`${ds}: unplanned ${a.type} → DONE ${fmtActStats(a)}`);
+      continue;
+    }
+
+    const mTypes = pl.type !== 'rest' ? (SPORT_MATCH_TYPES[pl.type] || []) : [];
+    const done   = acts.find(a => mTypes.includes(a.type));
     if (pl.type === 'rest' && !done) { lines.push(`${ds}: rest`); continue; }
     let row = `${ds}: planned ${pl.type} ${pl.duration}min "${pl.label}"`;
-    if (done) {
-      const km   = (done.distance / 1000).toFixed(1);
-      const dur  = fmtActDur(done.moving_time);
-      const pace = done.average_speed > 0 ? ' ' + fmtPace(done.average_speed, done.type) : '';
-      const hr   = done.average_heartrate ? ` HR ${Math.round(done.average_heartrate)}` : '';
-      const w    = done.average_watts     ? ` ${Math.round(done.average_watts)}W`        : '';
-      row += ` → DONE ${km}km ${dur}${pace}${hr}${w}`;
-    } else {
-      row += ' → MISSED';
-    }
+    row += done ? ` → DONE ${fmtActStats(done)}` : ' → MISSED';
     lines.push(row);
   }
 
@@ -1138,6 +1422,23 @@ function buildPlanContext() {
       ? `${ds}: rest`
       : `${ds}: ${pl.type} ${pl.duration}min "${pl.label}"`);
   }
+
+  const todayStr = trnDateStr(today);
+  lines.push(`\n-- PLAN OVERVIEW (today through race day) --`);
+  for (const p of PHASES) {
+    if (p.end < todayStr) continue;
+    lines.push(`${p.start} to ${p.end}: Phase ${p.id} ${p.name} (${p.hrs})`);
+  }
+  for (const [ds, e] of Object.entries(RACE_EVENTS)) {
+    if (ds < todayStr) continue;
+    lines.push(`${ds}: ${e.label}${ds === trnDateStr(RACE_DATE) ? ' (RACE DAY)' : ''}`);
+  }
+
+  const userRequest = getAiRequest();
+  if (userRequest) lines.push(`\n-- ATHLETE REQUEST --\n${userRequest}`);
+
+  if (gAiFollowUp) lines.push(`\n-- FOLLOW-UP --\n${gAiFollowUp}`);
+
   return lines.join('\n');
 }
 
@@ -1145,16 +1446,48 @@ const CLAUDE_MODEL_KEY = 'jm_claude_model_v1';
 function getSavedModel() { return localStorage.getItem(CLAUDE_MODEL_KEY) || ''; }
 function saveModel(m)    { localStorage.setItem(CLAUDE_MODEL_KEY, m); }
 
-async function aiOptimizePlan() {
+// Build the model-candidate list: the last working model first (if still in the
+// fallback set), then the remaining fallbacks in priority order.
+function aiModelCandidates(fallbacks) {
+  const saved = getSavedModel();
+  return saved && fallbacks.includes(saved)
+    ? [saved, ...fallbacks.filter(m => m !== saved)]
+    : fallbacks.slice();
+}
+
+// POST to the worker /ai proxy, trying each candidate model in turn. Advances to the
+// next model only on a 404 (model unavailable); persists the first one that works.
+// Returns the parsed response JSON, or throws with the last error.
+async function aiFetch({ candidates, system, messages, maxTokens }) {
+  let res = { ok: false }, lastErr;
+  for (const candidate of candidates) {
+    res = await fetch(WORKER_URL + '/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: candidate, max_tokens: maxTokens, system, messages }),
+    });
+    if (res.ok) { if (candidate !== getSavedModel()) saveModel(candidate); break; }
+    const errBody = await res.json().catch(() => ({}));
+    lastErr = `HTTP ${res.status}: ${errBody.error?.message || JSON.stringify(errBody)}`;
+    console.warn(`Model ${candidate} failed:`, lastErr);
+    if (res.status !== 404) break;
+  }
+  if (!res.ok) throw new Error(lastErr || 'Request failed');
+  return res.json();
+}
+
+async function aiOptimizePlan(force = false) {
   const panelEl = document.getElementById('ai-panel');
   if (!panelEl) return;
 
   const lastAct = gActivities?.[0];
   if (!lastAct) return;
 
-  // Serve from cache if the last activity hasn't changed
+  const userRequest = getAiRequest();
+
+  // Serve from cache if the last activity, athlete request, and prompt version haven't changed
   const cached = getCachedOpt();
-  if (cached?.activityId === lastAct.id) {
+  if (!force && cached?.activityId === lastAct.id && cached?.promptVersion === AI_PROMPT_VERSION && (cached?.request || '') === userRequest) {
     if (!gAiSummary.length) { applyAiResult(cached); renderWeekStrip(); renderCalendar(); }
     renderAiPanel(cached.summary);
     return;
@@ -1167,15 +1500,22 @@ async function aiOptimizePlan() {
 `You are an expert triathlon coach. Analyze the athlete's recent training and propose concrete adjustments to their upcoming sessions.
 
 Rules:
-- Only propose changes to sessions in UPCOMING 14 DAYS
-- Propose 2–5 changes maximum; skip rest days unless a forced rest is warranted
+- You may propose changes for any date from today through race day (see PLAN OVERVIEW for the phase/race structure beyond the next 14 days)
+- Use "changes" for up to 5 individual day-specific tweaks based on near-term fitness/fatigue, or a one-off date the athlete mentioned
+- Use "ranges" when the athlete needs to avoid a sport across many days for an extended period — e.g. "I can't bike until August 25th" due to injury, illness, travel, or no equipment access. Each range entry replaces every base-plan session of a type listed in "avoid" within start..end (inclusive, both within today..race day) with a "replacement" session of the same duration (or "rest" if no good substitute fits). Don't enumerate these days individually in "changes"
+- Routine fatigue/fitness adjustments should stay within the next 14 days, where you have day-by-day detail. Only reach further out — basing the session's type and duration on that date's phase in PLAN OVERVIEW — when there's a specific reason, e.g. an athlete request about a future date (a trip, an event, a goal race)
+- Skip rest days in "changes" unless a forced rest is warranted
 - Prioritise recovery if you see fatigue signals (pace notably slower than recent, HR notably higher)
 - Add load if fitness signals are strong (pace improving, HR controlled)
-- Keep race events (type "race") unchanged
-- Keep changes realistic: don't increase any single session by more than 20%
+- Keep race events (type "race") unchanged — never include a race date in a range or as a change
+- Keep changes realistic: don't increase any single session's duration by more than 20%
+- If an ATHLETE REQUEST is included, prioritise addressing it directly (within the rules above) — it overrides the default focus on fatigue/fitness signals
+- If a FOLLOW-UP section is included, it answers a question you previously asked — use it to refine your changes/ranges and do not ask the same question again
+- Only ask a clarifying question if you genuinely cannot make a good decision without it (e.g. an injury's severity/location is unclear, or an athlete request implies a constraint you can't resolve, like unspecified dates). This should be rare. In the normal case, leave "question" as an empty string and just make the changes
+- If you do ask a question, you may still propose your best-guess changes/ranges in the same response
 
 Respond ONLY with a valid JSON object — no markdown, no explanation outside the JSON:
-{"summary":"1–2 sentence coaching note","changes":[{"date":"YYYY-MM-DD","type":"run|swim|bike|brick|rest","label":"session name","duration":minutes,"reason":"why"}]}`;
+{"summary":"1–2 sentence coaching note","changes":[{"date":"YYYY-MM-DD","type":"run|swim|bike|brick|rest","label":"session name","duration":minutes,"reason":"why"}],"ranges":[{"start":"YYYY-MM-DD","end":"YYYY-MM-DD","avoid":["run|swim|bike|brick"],"replacement":"run|swim|bike|brick|rest","reason":"why"}],"question":"a short clarifying question for the athlete, or an empty string if none is needed"}`;
 
   try {
     const FALLBACKS = [
@@ -1184,39 +1524,21 @@ Respond ONLY with a valid JSON object — no markdown, no explanation outside th
       'claude-3-5-haiku-20241022',
       'claude-3-haiku-20240307',
     ];
-    const saved = getSavedModel();
-    const candidates = saved ? [saved, ...FALLBACKS.filter(m => m !== saved)] : FALLBACKS;
-
-    const planContext = buildPlanContext();
-    let res = { ok: false }, lastErr;
-    for (const candidate of candidates) {
-      res = await fetch(WORKER_URL + '/ai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: candidate, max_tokens: 1024,
-          system: systemPrompt,
-          messages: [{ role: 'user', content: planContext }],
-        }),
-      });
-      if (res.ok) { if (candidate !== getSavedModel()) saveModel(candidate); break; }
-      const errBody = await res.json().catch(() => ({}));
-      lastErr = `HTTP ${res.status}: ${errBody.error?.message || JSON.stringify(errBody)}`;
-      console.warn(`Model ${candidate} failed:`, lastErr);
-      if (res.status !== 404) break;
-    }
-
-    if (!res.ok) throw new Error(lastErr);
-
-    const data    = await res.json();
+    const data = await aiFetch({
+      candidates: aiModelCandidates(FALLBACKS),
+      system: systemPrompt,
+      messages: [{ role: 'user', content: buildPlanContext() }],
+      maxTokens: 2048,
+    });
     const text    = data.content?.[0]?.text || '';
     const jsonStr = text.match(/\{[\s\S]*\}/)?.[0];
     if (!jsonStr) throw new Error('No JSON in response');
     const result = JSON.parse(jsonStr);
 
-    const toCache = { activityId: lastAct.id, timestamp: Date.now(), ...result };
+    const toCache = { activityId: lastAct.id, timestamp: Date.now(), request: userRequest, promptVersion: AI_PROMPT_VERSION, ...result };
     saveCachedOpt(toCache);
     applyAiResult(result);
+    gAiFollowUp = null;
     renderAiPanel(result.summary);
     renderWeekStrip();
     renderCalendar();
@@ -1226,7 +1548,7 @@ Respond ONLY with a valid JSON object — no markdown, no explanation outside th
     panelEl.innerHTML = `<div class="ai-panel-inner"><div class="ai-panel-error">
       <div>✦ AI coaching unavailable</div>
       <div style="font-size:.7rem;margin-top:.35rem;font-weight:400;">${esc(e.message)}</div>
-      <button id="ai-retry-btn" style="margin-top:.6rem;font-size:.7rem;color:var(--orange);font-weight:600;text-decoration:underline;background:none;border:none;cursor:pointer;padding:0;">Retry</button>
+      <button id="ai-retry-btn" style="margin-top:.6rem;font-size:.7rem;color:var(--orange-strong);font-weight:600;text-decoration:underline;background:none;border:none;cursor:pointer;padding:0;">Retry</button>
     </div></div>`;
     document.getElementById('ai-retry-btn')?.addEventListener('click', () => {
       localStorage.removeItem(CLAUDE_MODEL_KEY);
@@ -1239,8 +1561,11 @@ Respond ONLY with a valid JSON object — no markdown, no explanation outside th
 function renderAiPanel(summary) {
   const panelEl = document.getElementById('ai-panel');
   if (!panelEl) return;
-  if (!gAiSummary.length) { panelEl.classList.add('hidden'); return; }
   panelEl.classList.remove('hidden');
+
+  const rangeDays  = gAiRanges.reduce((s, r) => s + r.count, 0);
+  const totalDays  = gAiSummary.length + rangeDays;
+  const hasChanges = totalDays > 0;
 
   const items = gAiSummary.map(c => {
     const sc  = sportStyle(c.type);
@@ -1254,38 +1579,85 @@ function renderAiPanel(summary) {
     </div>`;
   }).join('');
 
+  const rangeItems = gAiRanges.map(r => {
+    const sc = sportStyle(r.replacement);
+    const startLabel = fmtTrnDate(new Date(r.start + 'T00:00:00'), {month:'short', day:'numeric'});
+    const endLabel   = fmtTrnDate(new Date(r.end   + 'T00:00:00'), {month:'short', day:'numeric'});
+    const fromLabel  = r.avoid.map(t => sportStyle(t).label).join('/');
+    return `<div class="ai-change-item">
+      <span class="ai-change-date">${startLabel} – ${endLabel}</span>
+      <span class="ai-change-badge" style="color:${sc.color};background:${sc.dim};">${sc.badge}</span>
+      <span class="ai-change-label">${esc(fromLabel)} → ${esc(sc.label)} · ${r.count} session${r.count !== 1 ? 's' : ''}</span>
+      <span class="ai-change-reason">${esc(r.reason)}</span>
+    </div>`;
+  }).join('');
+
+  const metaText = hasChanges
+    ? `${totalDays} day${totalDays !== 1 ? 's' : ''} adjusted in your plan`
+    : 'No changes suggested';
+
   panelEl.innerHTML = `<div class="ai-panel-inner">
     <div class="ai-panel-hdr" id="ai-panel-hdr">
       <div class="ai-panel-title-row">
         <em class="ai-panel-icon">✦</em>
         <span class="ai-panel-title">AI Coaching</span>
-        <span class="ai-panel-meta">${gAiSummary.length} change${gAiSummary.length !== 1 ? 's' : ''} applied to your plan</span>
+        <span class="ai-panel-meta">${metaText}</span>
       </div>
-      <button class="ai-panel-toggle" id="ai-panel-toggle" aria-label="Show coaching changes" aria-expanded="false">▾</button>
+      ${hasChanges ? `<button class="ai-panel-toggle" id="ai-panel-toggle" aria-label="Show coaching changes" aria-expanded="false">▾</button>` : ''}
     </div>
     ${summary ? `<div class="ai-panel-summary">${esc(summary)}</div>` : ''}
-    <div class="ai-panel-changes hidden" id="ai-panel-changes">
-      ${items}
+    ${gAiQuestion ? `<div class="ai-question">
+      <div class="ai-question-label">Quick question from your coach</div>
+      <div class="ai-question-text">${esc(gAiQuestion)}</div>
+      <div class="ai-ask-row">
+        <textarea id="ai-answer-input" class="ai-ask-input" rows="1" placeholder="Type your answer…" aria-label="Your answer to the coach's question"></textarea>
+        <button class="ai-ask-btn" id="ai-answer-btn">Send</button>
+      </div>
+    </div>` : ''}
+    ${hasChanges ? `<div class="ai-panel-changes hidden" id="ai-panel-changes">
+      ${rangeItems}${items}
       <button class="ai-reset-btn" id="ai-reset-btn">Reset AI changes</button>
+    </div>` : ''}
+    <div class="ai-ask">
+      <label class="ai-ask-label" for="ai-ask-input">Ask the coach</label>
+      <div class="ai-ask-row">
+        <textarea id="ai-ask-input" class="ai-ask-input" rows="1" placeholder="e.g. my knee's sore, ease off running this week">${esc(getAiRequest())}</textarea>
+        <button class="ai-ask-btn" id="ai-ask-btn">Update plan</button>
+      </div>
     </div>
   </div>`;
 
-  document.getElementById('ai-panel-toggle').addEventListener('click', () => {
-    const body = document.getElementById('ai-panel-changes');
-    const isNowHidden = body.classList.toggle('hidden');
-    const btn = document.getElementById('ai-panel-toggle');
-    btn.textContent = isNowHidden ? '▾' : '▴';
-    btn.setAttribute('aria-expanded', isNowHidden ? 'false' : 'true');
-    btn.setAttribute('aria-label', isNowHidden ? 'Show coaching changes' : 'Hide coaching changes');
+  if (hasChanges) {
+    document.getElementById('ai-panel-toggle').addEventListener('click', () => {
+      const body = document.getElementById('ai-panel-changes');
+      const isNowHidden = body.classList.toggle('hidden');
+      const btn = document.getElementById('ai-panel-toggle');
+      btn.textContent = isNowHidden ? '▾' : '▴';
+      btn.setAttribute('aria-expanded', isNowHidden ? 'false' : 'true');
+      btn.setAttribute('aria-label', isNowHidden ? 'Show coaching changes' : 'Hide coaching changes');
+    });
+
+    document.getElementById('ai-reset-btn').addEventListener('click', () => {
+      localStorage.removeItem(AI_OPT_KEY);
+      gAiOverrides = {};
+      gAiSummary   = [];
+      gAiRanges    = [];
+      renderWeekStrip();
+      renderCalendar();
+      renderAiPanel('');
+    });
+  }
+
+  document.getElementById('ai-ask-btn').addEventListener('click', () => {
+    saveAiRequest(document.getElementById('ai-ask-input').value);
+    aiOptimizePlan(true);
   });
 
-  document.getElementById('ai-reset-btn').addEventListener('click', () => {
-    localStorage.removeItem(AI_OPT_KEY);
-    gAiOverrides = {};
-    gAiSummary   = [];
-    panelEl.classList.add('hidden');
-    renderWeekStrip();
-    renderCalendar();
+  document.getElementById('ai-answer-btn')?.addEventListener('click', () => {
+    const answer = document.getElementById('ai-answer-input').value.trim();
+    if (!answer) return;
+    gAiFollowUp = `Coach asked: "${gAiQuestion}"\nAthlete answered: "${answer}"`;
+    aiOptimizePlan(true);
   });
 }
 
@@ -1296,12 +1668,16 @@ let calMonth   = today.getMonth();
 let gOverrides   = {}; // rule-based — built by adaptPlan()
 let gAiOverrides = {}; // ai-based — built by aiOptimizePlan()
 let gAiSummary   = []; // coaching notes for the panel
+let gAiQuestion  = null; // clarifying question from the coach, if any
+let gAiFollowUp  = null; // athlete's answer to gAiQuestion, sent with the next request
+let gAiRanges    = []; // broad sport-avoidance ranges (e.g. "no biking until Aug 25")
 
 // ── Training render ──────────────────────────────────────────────
 function renderNav() {
   const d = daysUntil(RACE_DATE);
   document.getElementById('nav-race').textContent =
     d > 0 ? `🏁 Race in ${d} days` : d === 0 ? '🏁 RACE DAY' : '🏁 Race complete';
+  document.getElementById('race-name').textContent = RACE_NAME;
 }
 
 function renderRaceHeader() {
@@ -1318,7 +1694,7 @@ function renderRaceHeader() {
     pill.style.background = `${phase.color}18`;
     pill.style.color = phase.color;
     const overallWeek = Math.floor((today - mondayOf(TRAIN_START)) / (7*86400000)) + 1;
-    right.textContent = `Week ${Math.min(overallWeek,55)} of 55 · ${phase.hrs}`;
+    right.textContent = `Week ${Math.min(overallWeek,TOTAL_WEEKS)} of ${TOTAL_WEEKS} · ${phase.hrs}`;
   } else if (today >= RACE_DATE) {
     pill.textContent = 'Race Complete!';
     pill.style.background = 'rgba(252,76,2,.12)';
@@ -1357,11 +1733,13 @@ function renderHero() {
         ${dur ? `<span class="preview-dur">${dur}</span>` : ''}
       </div>`;
     }
+    const p1 = PHASES[0];
+    const rangeLbl = `${fmtTrnDate(new Date(p1.start+'T00:00:00'), {month:'short',day:'numeric'})} – ${fmtTrnDate(new Date(p1.end+'T00:00:00'), {month:'short',day:'numeric',year:'numeric'})}`;
     el.innerHTML = `
       <div class="pretrain-card">
         <div class="pretrain-phase-eyebrow">Phase 1</div>
-        <div class="pretrain-phase-name">Foundation</div>
-        <div class="pretrain-phase-sub">5–7 hrs/wk · Jun 12 – Aug 20, 2026<br>Swim 3× / Bike 2× / Run 2× · Establish the base</div>
+        <div class="pretrain-phase-name">${esc(p1.name)}</div>
+        <div class="pretrain-phase-sub">${esc(p1.hrs)} · ${rangeLbl}${p1.focus ? `<br>${esc(p1.focus)}` : ''}</div>
         <div class="pretrain-week-label">Week 1 Preview</div>
         <div class="pretrain-week-preview">${previewRows}</div>
       </div>`;
@@ -1371,15 +1749,19 @@ function renderHero() {
   wrap?.classList.remove('pretrain-mode');
 
   if (trnDateStr(today) === trnDateStr(RACE_DATE)) {
+    const rd = RACE_DISTANCES || {};
+    const distMeta = ['swim','bike','run']
+      .filter(k => rd[k])
+      .map(k => `<span>${esc(rd[k])} ${k}</span>`).join('');
     el.innerHTML = `<div class="active-card" style="border:2px solid var(--orange);">
       <div>
         <div class="active-eyebrow">Today</div>
-        <div class="active-badge" style="color:var(--orange);background:var(--orange-dim);">RACE DAY</div>
-        <div class="active-session">70.3 Half-Ironman</div>
-        <div class="active-meta"><span>1.9 km swim</span><span>90 km bike</span><span>21.1 km run</span></div>
+        <div class="active-badge" style="color:var(--orange-strong);background:var(--orange-dim);">RACE DAY</div>
+        <div class="active-session">${esc(RACE_NAME)}</div>
+        <div class="active-meta">${distMeta}</div>
       </div>
       <div class="active-right">
-        <div class="active-duration" style="color:var(--orange);">~6h</div>
+        <div class="active-duration" style="color:var(--orange);">~${fmtTrnDur(RACE_DURATION)}</div>
         <div class="active-dur-label">Target</div>
       </div>
     </div>`;
@@ -2419,6 +2801,706 @@ document.getElementById('setup-btn').addEventListener('click', () => {
     return;
   }
   startOAuth();
+});
+
+// ════════════════════════════════════════════
+//  PLAN BUILDER
+// ════════════════════════════════════════════
+
+const DOW_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const BUILDER_VIEWS = ['training','strava-content','strava-setup','strava-loading'];
+let DRAFT_PLAN = null;
+let builderPrevHidden = null;
+
+function emptyTemplate() {
+  return Array.from({length:7}, () => ['rest','Rest Day',0]);
+}
+
+function emptyPhase() {
+  return {
+    name:'New Phase', weeks:4, hrs:'', color:'#6D6D6D', focus:'',
+    recoveryEvery:0, template:emptyTemplate(), recoveryTemplate:null,
+  };
+}
+
+function emptyRaceEvent() {
+  return { date:DRAFT_PLAN.trainStart, label:'New Event', duration:60, weekTemplate:null };
+}
+
+function openPlanBuilder() {
+  builderPrevHidden = BUILDER_VIEWS.map(id => document.getElementById(id).classList.contains('hidden'));
+  BUILDER_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
+  DRAFT_PLAN = JSON.parse(JSON.stringify(loadRawPlan()));
+  document.getElementById('builder-error').classList.add('hidden');
+  document.getElementById('plan-builder').classList.remove('hidden');
+  renderPlanBuilder();
+  window.scrollTo(0, 0);
+}
+
+function closePlanBuilder() {
+  document.getElementById('plan-builder').classList.add('hidden');
+  BUILDER_VIEWS.forEach((id, i) => {
+    document.getElementById(id).classList.toggle('hidden', builderPrevHidden ? builderPrevHidden[i] : id !== 'training');
+  });
+}
+
+function swapAdjacent(arr, i, j) {
+  if (j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+}
+
+// Pre-escaped <option> data for the sport selector — the label set is fixed, so build it
+// once rather than re-deriving it for all 7 rows on every template render.
+const SPORT_OPT_DATA = Object.entries(SPORT_CFG).map(([k, v]) => ({ k, label: esc(v.label) }));
+
+function templateEditorHtml(scope, idx, key, tmpl) {
+  const sportOpts = type => SPORT_OPT_DATA
+    .map(o => `<option value="${o.k}" ${o.k === type ? 'selected' : ''}>${o.label}</option>`).join('');
+  const rows = tmpl.map((day, d) => {
+    const [type, label, duration] = day;
+    return `
+      <span class="tmpl-day-label">${DOW_LABELS[d]}</span>
+      <select class="form-input" data-tmpl="${key}" data-scope="${scope}" data-idx="${idx}" data-day="${d}" data-col="type">${sportOpts(type)}</select>
+      <input class="form-input" type="text" data-tmpl="${key}" data-scope="${scope}" data-idx="${idx}" data-day="${d}" data-col="label" value="${esc(label)}">
+      <input class="form-input" type="number" min="0" step="5" data-tmpl="${key}" data-scope="${scope}" data-idx="${idx}" data-day="${d}" data-col="duration" value="${duration}">`;
+  }).join('');
+  return `
+    <div class="tmpl-table">
+      <span></span><span class="tmpl-table-hdr">Type</span><span class="tmpl-table-hdr">Label</span><span class="tmpl-table-hdr">Min</span>
+      ${rows}
+    </div>`;
+}
+
+function raceInfoCardHtml(p) {
+  return `
+    <div class="builder-card">
+      <div class="builder-card-title">Race Info</div>
+      <div class="builder-grid">
+        <div class="form-group"><label class="form-label">Race name</label>
+          <input class="form-input" type="text" data-field="raceName" value="${esc(p.raceName)}"></div>
+        <div class="form-group"><label class="form-label">Race date</label>
+          <input class="form-input" type="date" data-field="raceDate" value="${esc(p.raceDate)}"></div>
+        <div class="form-group"><label class="form-label">Training start date</label>
+          <input class="form-input" type="date" data-field="trainStart" value="${esc(p.trainStart)}"></div>
+        <div class="form-group"><label class="form-label">Race duration (minutes)</label>
+          <input class="form-input" type="number" min="0" step="5" data-field="raceDuration" value="${p.raceDuration}"></div>
+        <div class="form-group"><label class="form-label">Swim distance</label>
+          <input class="form-input" type="text" placeholder="e.g. 1.9 km" data-field="raceDistances.swim" value="${esc(p.raceDistances.swim || '')}"></div>
+        <div class="form-group"><label class="form-label">Bike distance</label>
+          <input class="form-input" type="text" placeholder="e.g. 90 km" data-field="raceDistances.bike" value="${esc(p.raceDistances.bike || '')}"></div>
+        <div class="form-group"><label class="form-label">Run distance</label>
+          <input class="form-input" type="text" placeholder="e.g. 21.1 km" data-field="raceDistances.run" value="${esc(p.raceDistances.run || '')}"></div>
+      </div>
+    </div>`;
+}
+
+function phaseCardHtml(ph, i, total) {
+  const recChecked = !!ph.recoveryTemplate;
+  return `
+    <div class="phase-card">
+      <div class="phase-card-hdr">
+        <input class="phase-color-input" type="color" data-field="color" data-phase-idx="${i}" value="${esc(ph.color)}" aria-label="Phase ${i+1} color">
+        <div class="form-group phase-name-group"><label class="form-label">Phase ${i+1} name</label>
+          <input class="form-input" type="text" data-field="name" data-phase-idx="${i}" value="${esc(ph.name)}"></div>
+        <div class="form-group" style="width:6rem;"><label class="form-label">Weeks</label>
+          <input class="form-input" type="number" min="1" data-field="weeks" data-phase-idx="${i}" value="${ph.weeks}"></div>
+        <button class="icon-btn" type="button" data-action="phase-up" data-phase-idx="${i}" ${i === 0 ? 'disabled' : ''} aria-label="Move phase ${i+1} up">↑</button>
+        <button class="icon-btn" type="button" data-action="phase-down" data-phase-idx="${i}" ${i === total - 1 ? 'disabled' : ''} aria-label="Move phase ${i+1} down">↓</button>
+        <button class="icon-btn danger" type="button" data-action="phase-remove" data-phase-idx="${i}" ${total <= 1 ? 'disabled' : ''} aria-label="Remove phase ${i+1}">✕</button>
+      </div>
+      <div class="builder-grid">
+        <div class="form-group"><label class="form-label">Hours/week label</label>
+          <input class="form-input" type="text" placeholder="e.g. 5–7 hrs/wk" data-field="hrs" data-phase-idx="${i}" value="${esc(ph.hrs)}"></div>
+        <div class="form-group" style="grid-column:span 2;"><label class="form-label">Focus</label>
+          <input class="form-input" type="text" placeholder="e.g. Build aerobic endurance" data-field="focus" data-phase-idx="${i}" value="${esc(ph.focus || '')}"></div>
+        <div class="form-group"><label class="form-label">Recovery week every N weeks</label>
+          <input class="form-input" type="number" min="0" placeholder="0 = none" data-field="recoveryEvery" data-phase-idx="${i}" value="${ph.recoveryEvery || 0}"></div>
+      </div>
+      <div class="tmpl-table-wrap">${templateEditorHtml('phase', i, 'template', ph.template)}</div>
+      <label class="builder-checkbox-row">
+        <input type="checkbox" data-action="toggle-recovery" data-phase-idx="${i}" ${recChecked ? 'checked' : ''}>
+        Use a different schedule on recovery weeks
+      </label>
+      ${recChecked ? `<div class="tmpl-table-wrap">${templateEditorHtml('phase', i, 'recoveryTemplate', ph.recoveryTemplate)}</div>` : ''}
+    </div>`;
+}
+
+function raceEventCardHtml(e, i) {
+  const tplChecked = !!e.weekTemplate;
+  return `
+    <div class="phase-card">
+      <div class="phase-card-hdr">
+        <div class="form-group" style="width:9.5rem;"><label class="form-label">Date</label>
+          <input class="form-input" type="date" data-field="date" data-event-idx="${i}" value="${esc(e.date)}"></div>
+        <div class="form-group phase-name-group"><label class="form-label">Label</label>
+          <input class="form-input" type="text" data-field="label" data-event-idx="${i}" value="${esc(e.label)}"></div>
+        <div class="form-group" style="width:7rem;"><label class="form-label">Duration (min)</label>
+          <input class="form-input" type="number" min="0" step="5" data-field="duration" data-event-idx="${i}" value="${e.duration}"></div>
+        <button class="icon-btn danger" type="button" data-action="event-remove" data-event-idx="${i}" aria-label="Remove race event ${i+1}">✕</button>
+      </div>
+      <label class="builder-checkbox-row">
+        <input type="checkbox" data-action="toggle-week-template" data-event-idx="${i}" ${tplChecked ? 'checked' : ''}>
+        Override that week's schedule
+      </label>
+      ${tplChecked ? `<div class="tmpl-table-wrap">${templateEditorHtml('event', i, 'weekTemplate', e.weekTemplate)}</div>` : ''}
+    </div>`;
+}
+
+function renderPlanBuilder() {
+  const p = DRAFT_PLAN;
+  document.getElementById('builder-body').innerHTML = `
+    <div class="builder-card">
+      <div class="builder-card-title">Start from a preset plan</div>
+      <p class="builder-section-sub">Pick a ready-made plan for a common race distance. It starts today and runs through to race day. Review and tweak everything below before saving.</p>
+      <div class="form-group"><label class="form-label">Race distance</label>
+        <select class="form-input" id="preset-select">
+          <option value="">Choose a distance…</option>
+          ${PRESET_ORDER.map(id => `<option value="${id}">${esc(PRESET_SPECS[id].label)}</option>`).join('')}
+        </select></div>
+      <button class="builder-add-btn builder-cta-btn" id="load-preset-btn" type="button">Load preset plan</button>
+    </div>
+    <div class="builder-card">
+      <div class="builder-card-title">✦ Build a plan with AI</div>
+      <p class="builder-section-sub">Answer a few questions about your race, schedule, and fitness, and AI will draft a complete periodized plan. Review and adjust everything below before saving.</p>
+      <button class="builder-add-btn builder-cta-btn" id="open-ai-builder-btn" type="button">Start AI questionnaire</button>
+    </div>
+    ${raceInfoCardHtml(p)}
+    <div class="builder-section-title">Training Phases</div>
+    ${p.phases.map((ph, i) => phaseCardHtml(ph, i, p.phases.length)).join('')}
+    <button class="builder-add-btn" id="add-phase-btn" type="button">+ Add Phase</button>
+    <div class="builder-section-title">Race Events</div>
+    <p class="builder-section-sub">Optional tune-up races during training (e.g. a sprint or olympic-distance event). Each can override its week's schedule.</p>
+    ${p.raceEvents.map((e, i) => raceEventCardHtml(e, i)).join('')}
+    <button class="builder-add-btn" id="add-event-btn" type="button">+ Add Race Event</button>
+  `;
+  attachBuilderListeners();
+}
+
+function attachBuilderListeners() {
+  const body = document.getElementById('builder-body');
+
+  body.querySelectorAll('[data-field]').forEach(el => {
+    el.addEventListener('input', () => {
+      const field = el.dataset.field;
+      const val = el.type === 'number' ? (parseFloat(el.value) || 0) : el.value;
+      if (el.dataset.phaseIdx !== undefined) {
+        DRAFT_PLAN.phases[+el.dataset.phaseIdx][field] = val;
+      } else if (el.dataset.eventIdx !== undefined) {
+        DRAFT_PLAN.raceEvents[+el.dataset.eventIdx][field] = val;
+      } else if (field.includes('.')) {
+        const [obj, key] = field.split('.');
+        DRAFT_PLAN[obj][key] = val;
+      } else {
+        DRAFT_PLAN[field] = val;
+      }
+    });
+  });
+
+  body.querySelectorAll('[data-tmpl]').forEach(el => {
+    el.addEventListener('input', () => {
+      const { scope, idx, tmpl, day, col } = el.dataset;
+      const target = scope === 'event' ? DRAFT_PLAN.raceEvents[+idx] : DRAFT_PLAN.phases[+idx];
+      const colIdx = { type:0, label:1, duration:2 }[col];
+      target[tmpl][+day][colIdx] = col === 'duration' ? (parseInt(el.value, 10) || 0) : el.value;
+    });
+  });
+
+  body.querySelectorAll('[data-action]').forEach(el => {
+    el.addEventListener('click', () => {
+      const a  = el.dataset.action;
+      const pi = el.dataset.phaseIdx !== undefined ? +el.dataset.phaseIdx : null;
+      const ei = el.dataset.eventIdx !== undefined ? +el.dataset.eventIdx : null;
+      if (a === 'phase-up')   swapAdjacent(DRAFT_PLAN.phases, pi, pi - 1);
+      if (a === 'phase-down') swapAdjacent(DRAFT_PLAN.phases, pi, pi + 1);
+      if (a === 'phase-remove' && DRAFT_PLAN.phases.length > 1) DRAFT_PLAN.phases.splice(pi, 1);
+      if (a === 'toggle-recovery') {
+        const ph = DRAFT_PLAN.phases[pi];
+        if (ph.recoveryTemplate) {
+          ph.recoveryTemplate = null;
+        } else {
+          ph.recoveryTemplate = JSON.parse(JSON.stringify(ph.template));
+          if (!ph.recoveryEvery) ph.recoveryEvery = 4;
+        }
+      }
+      if (a === 'event-remove') DRAFT_PLAN.raceEvents.splice(ei, 1);
+      if (a === 'toggle-week-template') {
+        const ev = DRAFT_PLAN.raceEvents[ei];
+        ev.weekTemplate = ev.weekTemplate ? null : emptyTemplate();
+      }
+      renderPlanBuilder();
+    });
+  });
+
+  document.getElementById('add-phase-btn').addEventListener('click', () => {
+    DRAFT_PLAN.phases.push(emptyPhase());
+    renderPlanBuilder();
+  });
+  document.getElementById('add-event-btn').addEventListener('click', () => {
+    DRAFT_PLAN.raceEvents.push(emptyRaceEvent());
+    renderPlanBuilder();
+  });
+
+  document.getElementById('open-ai-builder-btn').addEventListener('click', openAiBuilder);
+
+  document.getElementById('load-preset-btn').addEventListener('click', () => {
+    const id = document.getElementById('preset-select').value;
+    if (id) applyPreset(id);
+  });
+}
+
+function validatePlan(p) {
+  if (!p.raceName.trim()) return 'Please enter a race name.';
+  if (!DATE_RE.test(p.trainStart) || !DATE_RE.test(p.raceDate)) return 'Please enter valid training start and race dates.';
+  if (p.raceDate <= p.trainStart) return 'Race date must be after the training start date.';
+  if (!p.phases.length) return 'Add at least one training phase.';
+  if (p.phases.some(ph => !(ph.weeks >= 1))) return 'Each phase must be at least 1 week long.';
+  // computePlan pins only the final phase to race day; if the earlier phases already
+  // fill (or overflow) the window, the taper collapses to nothing.
+  if (p.phases.length > 1) {
+    const nonLastDays = p.phases.slice(0, -1).reduce((s, ph) => s + ph.weeks * 7, 0);
+    if (nonLastDays >= daysBetween(p.trainStart, p.raceDate)) return 'Your phases are longer than the time until race day. Reduce the total phase weeks so the final phase still fits before your race.';
+  }
+  if (p.raceEvents.some(e => !DATE_RE.test(e.date))) return 'Each race event needs a valid date.';
+  return null;
+}
+
+// ════════════════════════════════════════════
+//  PRESET PLANS — ready-made plans for common races
+// ════════════════════════════════════════════
+
+// Template-cell helpers keep the preset definitions readable (Mon→Sun, 7 cells per week).
+const pRun  = (label, min) => ['run',   label, min];
+const pSwim = (label, min) => ['swim',  label, min];
+const pBike = (label, min) => ['bike',  label, min];
+const pBrk  = (label, min) => ['brick', label, min];
+const pRest = () => ['rest', 'Rest Day', 0];
+const pWeek = (...days) => days;
+
+// id → { label, raceName, raceDuration (goal minutes), raceDistances, phases }.
+// Dates are stamped at apply time (see buildPreset), so each preset starts "today".
+const PRESET_SPECS = {
+  '70.3': {
+    label:'70.3 / Half-Ironman triathlon', raceName:'70.3 Half-Ironman', raceDuration:360,
+    raceDistances:{ swim:'1.9 km', bike:'90 km', run:'21.1 km' },
+    phases:[
+      { name:'Base', weeks:8, hrs:'6–8 hrs/wk', color:'#FC4C02', focus:'Aerobic base across all three sports', recoveryEvery:4,
+        template: pWeek(pRest(), pSwim('Technique swim',45), pRun('Easy run',45), pBike('Endurance ride',75), pSwim('Endurance swim',45), pBike('Long ride',90), pRun('Long run',60)),
+        recoveryTemplate: pWeek(pRest(), pSwim('Easy swim',30), pRun('Easy run',35), pRest(), pBike('Easy spin',45), pBike('Moderate ride',60), pRun('Easy run',40)) },
+      { name:'Build', weeks:8, hrs:'8–10 hrs/wk', color:'#D97706', focus:'Threshold work and race-specific volume', recoveryEvery:4,
+        template: pWeek(pRest(), pBike('Sweet-spot intervals',75), pRun('Tempo run',55), pSwim('CSS intervals',60), pRun('Easy run',45), pBike('Long ride',150), pBrk('Bike + run brick',90)),
+        recoveryTemplate: pWeek(pRest(), pSwim('Easy swim',40), pRun('Easy run',40), pRest(), pBike('Easy ride',90), pRun('Easy long run',60), pRest()) },
+      { name:'Peak', weeks:2, hrs:'9–11 hrs/wk', color:'#92400E', focus:'Sharpen at race pace, peak volume', recoveryEvery:0,
+        template: pWeek(pRest(), pSwim('Race-pace swim',55), pBike('Quality ride',80), pRun('Race-pace run',60), pSwim('Easy swim',45), pBike('Long ride',150), pRun('Long run',100)), recoveryTemplate:null },
+      { name:'Taper', weeks:2, hrs:'4–6 hrs/wk', color:'#78350F', focus:'Reduce volume, stay sharp', recoveryEvery:0,
+        template: pWeek(pRest(), pSwim('Short swim',40), pBike('Easy ride',60), pRun('Easy run',50), pSwim('Easy swim',30), pBike('Easy spin',40), pRun('Short run',35)), recoveryTemplate:null },
+    ],
+  },
+  full: {
+    label:'Full Ironman triathlon', raceName:'Ironman', raceDuration:720,
+    raceDistances:{ swim:'3.8 km', bike:'180 km', run:'42.2 km' },
+    phases:[
+      { name:'Base', weeks:8, hrs:'8–11 hrs/wk', color:'#FC4C02', focus:'Build a deep aerobic base', recoveryEvery:4,
+        template: pWeek(pRest(), pSwim('Technique swim',50), pRun('Easy run',50), pBike('Endurance ride',90), pSwim('Endurance swim',50), pBike('Long ride',120), pRun('Long run',75)),
+        recoveryTemplate: pWeek(pRest(), pSwim('Easy swim',35), pRun('Easy run',40), pRest(), pBike('Easy ride',75), pBike('Moderate ride',90), pRun('Easy run',45)) },
+      { name:'Build', weeks:10, hrs:'11–14 hrs/wk', color:'#D97706', focus:'Long-course volume and muscular endurance', recoveryEvery:4,
+        template: pWeek(pRest(), pBike('Sweet-spot ride',90), pRun('Tempo run',70), pSwim('Endurance swim',70), pRun('Easy run',60), pBike('Long ride',210), pBrk('Long brick',150)),
+        recoveryTemplate: pWeek(pRest(), pSwim('Easy swim',45), pRun('Easy run',45), pRest(), pBike('Easy ride',120), pRun('Easy long run',75), pRest()) },
+      { name:'Peak', weeks:3, hrs:'13–16 hrs/wk', color:'#92400E', focus:'Peak Ironman-specific volume', recoveryEvery:0,
+        template: pWeek(pRest(), pSwim('Race-pace swim',60), pBike('Quality ride',120), pRun('Race-pace run',90), pSwim('Easy swim',50), pBike('Long ride',300), pRun('Long run',150)), recoveryTemplate:null },
+      { name:'Taper', weeks:3, hrs:'6–9 hrs/wk', color:'#78350F', focus:'Shed fatigue, hold fitness', recoveryEvery:0,
+        template: pWeek(pRest(), pSwim('Short swim',45), pBike('Easy ride',75), pRun('Easy run',60), pSwim('Easy swim',35), pBike('Easy spin',45), pRun('Short run',40)), recoveryTemplate:null },
+    ],
+  },
+  '5k': {
+    label:'5K run', raceName:'5K Race', raceDuration:25, raceDistances:{ swim:'', bike:'', run:'5 km' },
+    phases:[
+      { name:'Foundation', weeks:4, hrs:'2–3 hrs/wk', color:'#FC4C02', focus:'Build an easy aerobic base', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',30), pRun('Intervals 6×400m',32), pRest(), pRun('Easy run',25), pRun('Long run',45), pRest()), recoveryTemplate:null },
+      { name:'Sharpen', weeks:3, hrs:'3–4 hrs/wk', color:'#D97706', focus:'Add 5K-pace speed', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',35), pRun('5K-pace intervals',35), pRun('Easy run',25), pRest(), pRun('Tempo run',35), pRun('Long run',50)), recoveryTemplate:null },
+      { name:'Taper', weeks:1, hrs:'2 hrs/wk', color:'#78350F', focus:'Freshen up for race day', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',25), pRun('Strides',25), pRest(), pRun('Easy run',20), pRun('Race-pace tune-up',25), pRest()), recoveryTemplate:null },
+    ],
+  },
+  '10k': {
+    label:'10K run', raceName:'10K Race', raceDuration:55, raceDistances:{ swim:'', bike:'', run:'10 km' },
+    phases:[
+      { name:'Base', weeks:4, hrs:'3–4 hrs/wk', color:'#FC4C02', focus:'Aerobic base and run frequency', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',35), pRun('Intervals 5×800m',38), pRest(), pRun('Easy run',30), pRun('Long run',55), pRest()), recoveryTemplate:null },
+      { name:'Build', weeks:4, hrs:'4–5 hrs/wk', color:'#D97706', focus:'Threshold and 10K-pace work', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',40), pRun('Tempo run',42), pRun('Easy run',30), pRest(), pRun('10K-pace intervals',42), pRun('Long run',70)), recoveryTemplate:null },
+      { name:'Taper', weeks:2, hrs:'2–3 hrs/wk', color:'#78350F', focus:'Sharpen and recover', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',30), pRun('Strides',28), pRest(), pRun('Easy run',25), pRun('Race-pace tune-up',32), pRest()), recoveryTemplate:null },
+    ],
+  },
+  '21k': {
+    label:'Half marathon (21.1K)', raceName:'Half Marathon', raceDuration:120, raceDistances:{ swim:'', bike:'', run:'21.1 km' },
+    phases:[
+      { name:'Base', weeks:4, hrs:'3–5 hrs/wk', color:'#FC4C02', focus:'Aerobic base and long-run habit', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',40), pRun('Intervals',42), pRest(), pRun('Easy run',35), pRun('Long run',70), pRun('Recovery run',30)), recoveryTemplate:null },
+      { name:'Build', weeks:5, hrs:'4–6 hrs/wk', color:'#D97706', focus:'Tempo strength and rising long runs', recoveryEvery:4,
+        template: pWeek(pRest(), pRun('Easy run',45), pRun('Tempo run',48), pRun('Easy run',35), pRest(), pRun('Intervals',45), pRun('Long run',95)),
+        recoveryTemplate: pWeek(pRest(), pRun('Easy run',35), pRun('Easy run',30), pRest(), pRun('Easy run',30), pRun('Long run',65), pRest()) },
+      { name:'Peak', weeks:2, hrs:'5–6 hrs/wk', color:'#92400E', focus:'Half-marathon race-pace work', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',45), pRun('Race-pace run',55), pRun('Easy run',35), pRest(), pRun('Tempo run',45), pRun('Long run',110)), recoveryTemplate:null },
+      { name:'Taper', weeks:1, hrs:'3 hrs/wk', color:'#78350F', focus:'Freshen up for race day', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',30), pRun('Strides',30), pRest(), pRun('Easy run',25), pRun('Race-pace tune-up',35), pRest()), recoveryTemplate:null },
+    ],
+  },
+  '42k': {
+    label:'Marathon (42.2K)', raceName:'Marathon', raceDuration:240, raceDistances:{ swim:'', bike:'', run:'42.2 km' },
+    phases:[
+      { name:'Base', weeks:5, hrs:'4–6 hrs/wk', color:'#FC4C02', focus:'Aerobic base and mileage', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',45), pRun('Easy run',40), pRun('Intervals',45), pRest(), pRun('Long run',80), pRun('Recovery run',30)), recoveryTemplate:null },
+      { name:'Build', weeks:6, hrs:'5–7 hrs/wk', color:'#D97706', focus:'Marathon-pace work and long runs', recoveryEvery:4,
+        template: pWeek(pRest(), pRun('Easy run',50), pRun('Tempo run',50), pRun('Easy run',40), pRest(), pRun('Marathon-pace run',50), pRun('Long run',120)),
+        recoveryTemplate: pWeek(pRest(), pRun('Easy run',40), pRun('Easy run',35), pRest(), pRun('Easy run',35), pRun('Long run',80), pRest()) },
+      { name:'Peak', weeks:3, hrs:'6–8 hrs/wk', color:'#92400E', focus:'Peak long runs at goal pace', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',50), pRun('Race-pace run',60), pRun('Easy run',45), pRest(), pRun('Tempo run',45), pRun('Long run',150)), recoveryTemplate:null },
+      { name:'Taper', weeks:2, hrs:'3–5 hrs/wk', color:'#78350F', focus:'Reduce volume, stay sharp', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',35), pRun('Strides',30), pRest(), pRun('Easy run',30), pRun('Marathon-pace tune-up',40), pRest()), recoveryTemplate:null },
+    ],
+  },
+  '50k': {
+    label:'50K ultramarathon', raceName:'50K Ultramarathon', raceDuration:360, raceDistances:{ swim:'', bike:'', run:'50 km' },
+    phases:[
+      { name:'Base', weeks:6, hrs:'5–7 hrs/wk', color:'#FC4C02', focus:'Time on feet and aerobic base', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',45), pRun('Hill repeats',50), pRun('Easy run',40), pRest(), pRun('Long run',90), pRun('Recovery run',40)), recoveryTemplate:null },
+      { name:'Build', weeks:7, hrs:'6–9 hrs/wk', color:'#D97706', focus:'Back-to-back long runs', recoveryEvery:4,
+        template: pWeek(pRest(), pRun('Easy run',50), pRun('Tempo run',50), pRun('Easy run',45), pRest(), pRun('Long run',130), pRun('Back-to-back long run',80)),
+        recoveryTemplate: pWeek(pRest(), pRun('Easy run',40), pRun('Easy run',40), pRest(), pRun('Easy run',35), pRun('Long run',90), pRun('Easy run',45)) },
+      { name:'Peak', weeks:3, hrs:'8–11 hrs/wk', color:'#92400E', focus:'Peak ultra-specific volume', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',50), pRun('Race-pace run',60), pRun('Easy run',45), pRest(), pRun('Long run',180), pRun('Back-to-back long run',100)), recoveryTemplate:null },
+      { name:'Taper', weeks:2, hrs:'4–6 hrs/wk', color:'#78350F', focus:'Shed fatigue before race day', recoveryEvery:0,
+        template: pWeek(pRest(), pRun('Easy run',40), pRun('Strides',30), pRest(), pRun('Easy run',30), pRun('Long run',60), pRest()), recoveryTemplate:null },
+    ],
+  },
+};
+
+const PRESET_ORDER = ['70.3', 'full', '5k', '10k', '21k', '42k', '50k'];
+
+// Expand a preset spec into a full plan object rooted at today (matching DEFAULT_PLAN's shape).
+function buildPreset(id) {
+  const spec = PRESET_SPECS[id];
+  if (!spec) return null;
+  const totalWeeks = spec.phases.reduce((s, p) => s + p.weeks, 0);
+  return {
+    raceName: spec.raceName,
+    raceDate: trnDateStr(addDays(today, totalWeeks * 7)),
+    raceDuration: spec.raceDuration,
+    raceDistances: { ...spec.raceDistances },
+    trainStart: trnDateStr(today),
+    phases: JSON.parse(JSON.stringify(spec.phases)),
+    raceEvents: [],
+  };
+}
+
+// Load a preset into the draft and re-render the builder so the user can review/tweak it.
+function applyPreset(id) {
+  const plan = buildPreset(id);
+  if (!plan) return;
+  DRAFT_PLAN = plan;
+  document.getElementById('builder-error').classList.add('hidden');
+  renderPlanBuilder();
+  window.scrollTo(0, 0);
+}
+
+// ════════════════════════════════════════════
+//  AI PLAN BUILDER — questionnaire → generated plan
+// ════════════════════════════════════════════
+
+const DOW_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+const RACE_TYPE_PRESETS = {
+  sprint:   { name:'Sprint Triathlon', distances:{swim:'750 m',  bike:'20 km',  run:'5 km'},    hours:1,  minutes:15 },
+  olympic:  { name:'Olympic Triathlon', distances:{swim:'1.5 km', bike:'40 km',  run:'10 km'},   hours:2,  minutes:30 },
+  '70.3':   { name:'70.3 Half-Ironman', distances:{swim:'1.9 km', bike:'90 km',  run:'21.1 km'}, hours:6,  minutes:0  },
+  full:     { name:'Ironman',           distances:{swim:'3.8 km', bike:'180 km', run:'42.2 km'}, hours:12, minutes:0  },
+  '5k':     { name:'5K Race',           distances:{swim:'',       bike:'',       run:'5 km'},     hours:0,  minutes:25 },
+  '10k':    { name:'10K Race',          distances:{swim:'',       bike:'',       run:'10 km'},    hours:0,  minutes:55 },
+  half:     { name:'Half Marathon',     distances:{swim:'',       bike:'',       run:'21.1 km'}, hours:2,  minutes:0  },
+  marathon: { name:'Marathon',          distances:{swim:'',       bike:'',       run:'42.2 km'}, hours:4,  minutes:30 },
+  '50k':    { name:'50K Ultramarathon', distances:{swim:'',       bike:'',       run:'50 km'},    hours:6,  minutes:0  },
+  custom:   { name:'',                  distances:{swim:'',       bike:'',       run:''},        hours:0,  minutes:0  },
+};
+
+// Running races have no swim/bike legs — hide those inputs to keep the form focused.
+// 'custom' keeps them visible since a custom race may be multi-sport.
+function syncAiSportFields(typeVal) {
+  const preset = RACE_TYPE_PRESETS[typeVal];
+  const runOnly = !!preset && typeVal !== 'custom' && !preset.distances.swim && !preset.distances.bike;
+  document.getElementById('aiq-swim-group').classList.toggle('hidden', runOnly);
+  document.getElementById('aiq-bike-group').classList.toggle('hidden', runOnly);
+}
+
+// The default-selected option is 70.3, and the HTML field defaults mirror its preset,
+// so treat those starting values as preset-owned (overwritable) until the user edits them.
+let lastAppliedPreset = RACE_TYPE_PRESETS['70.3'];
+
+document.getElementById('aiq-race-type').addEventListener('change', (e) => {
+  const preset = RACE_TYPE_PRESETS[e.target.value];
+  if (!preset) return;
+  // Only overwrite a field the user hasn't customized — i.e. it's empty or still holds
+  // the previously-applied preset's value — so manual edits survive a race-type change.
+  const fill = (id, prevVal, nextVal) => {
+    const el = document.getElementById(id);
+    if (el.value.trim() === '' || el.value.trim() === String(prevVal)) el.value = nextVal;
+  };
+  fill('aiq-swim-dist',    lastAppliedPreset.distances.swim, preset.distances.swim);
+  fill('aiq-bike-dist',    lastAppliedPreset.distances.bike, preset.distances.bike);
+  fill('aiq-run-dist',     lastAppliedPreset.distances.run,  preset.distances.run);
+  fill('aiq-goal-hours',   lastAppliedPreset.hours,          preset.hours);
+  fill('aiq-goal-minutes', lastAppliedPreset.minutes,        preset.minutes);
+  const nameEl = document.getElementById('aiq-race-name');
+  if (preset.name) nameEl.placeholder = preset.name;
+  lastAppliedPreset = preset;
+  syncAiSportFields(e.target.value);
+});
+
+function openAiBuilder() {
+  document.getElementById('builder-body').classList.add('hidden');
+  document.getElementById('builder-error').classList.add('hidden');
+  document.getElementById('builder-actions').classList.add('hidden');
+  document.getElementById('ai-builder-error').classList.add('hidden');
+  document.getElementById('ai-builder-status').classList.add('hidden');
+  document.getElementById('ai-builder-body').classList.remove('hidden');
+
+  const startEl = document.getElementById('aiq-train-start');
+  if (!startEl.value) startEl.value = trnDateStr(today);
+  const dateEl = document.getElementById('aiq-race-date');
+  if (!dateEl.value) dateEl.value = trnDateStr(addDays(today, 168));
+
+  syncAiSportFields(document.getElementById('aiq-race-type').value);
+  window.scrollTo(0, 0);
+}
+
+function closeAiBuilder() {
+  document.getElementById('ai-builder-body').classList.add('hidden');
+  document.getElementById('builder-body').classList.remove('hidden');
+  document.getElementById('builder-actions').classList.remove('hidden');
+}
+
+function aiqVal(id) { return document.getElementById(id).value.trim(); }
+
+const AI_EXPERIENCE_LABELS = {
+  new:'New to structured endurance training', some:'Some experience (a season or two)',
+  experienced:'Experienced (multiple seasons)', competitive:'Competitive — races regularly',
+};
+
+function buildAiQuestionnaireContext() {
+  const trainStart = aiqVal('aiq-train-start');
+  const raceDate   = aiqVal('aiq-race-date');
+  const totalWeeks = Math.max(1, Math.round(daysBetween(trainStart, raceDate) / 7));
+  const goalMin    = (parseInt(aiqVal('aiq-goal-hours'), 10) || 0) * 60 + (parseInt(aiqVal('aiq-goal-minutes'), 10) || 0);
+
+  // The visible <option> text is the canonical race-type label — read it rather than mirror it in a map.
+  const raceTypeLabel = document.getElementById('aiq-race-type').selectedOptions[0]?.text || 'Other';
+
+  // Swim/bike are hidden for running races — treat hidden legs as not applicable so a stale
+  // triathlon value (entered before switching to a run race) can't leak into the prompt.
+  const legVal = (groupId, inputId) =>
+    document.getElementById(groupId).classList.contains('hidden') ? '' : aiqVal(inputId);
+  const swim = legVal('aiq-swim-group', 'aiq-swim-dist');
+  const bike = legVal('aiq-bike-group', 'aiq-bike-dist');
+
+  const lines = [];
+  lines.push(`Race type: ${raceTypeLabel}`);
+  lines.push(`Race name: ${aiqVal('aiq-race-name') || '(pick a sensible name based on the race type)'}`);
+  lines.push(`Race date: ${raceDate}`);
+  lines.push(`Goal finish time: ${goalMin > 0 ? goalMin + ' minutes' : '(no specific time goal — just finish strong)'}`);
+  lines.push(`Distances — swim: ${swim || 'n/a'}, bike: ${bike || 'n/a'}, run: ${aiqVal('aiq-run-dist') || 'n/a'}`);
+  lines.push(`Training start date: ${trainStart}`);
+  lines.push(`Total training window: ~${totalWeeks} weeks`);
+  lines.push(`Experience level: ${AI_EXPERIENCE_LABELS[aiqVal('aiq-experience')] || 'unspecified'}`);
+  lines.push(`Current training volume: ~${aiqVal('aiq-current-hours') || 'unspecified'} hrs/week`);
+  lines.push(`Days available to train per week: ${aiqVal('aiq-days-per-week') || 'unspecified'}`);
+  lines.push(`Preferred rest day: ${DOW_FULL[+aiqVal('aiq-rest-day')] ?? 'no preference'}`);
+  lines.push(`Preferred long-session day: ${DOW_FULL[+aiqVal('aiq-long-day')] ?? 'no preference'}`);
+  lines.push(`Max weekday session length: ${aiqVal('aiq-weekday-max') || 'unspecified'} minutes`);
+  lines.push(`Max weekend session length: ${aiqVal('aiq-weekend-max') || 'unspecified'} minutes`);
+  const injuries = aiqVal('aiq-injuries');
+  if (injuries) lines.push(`Injuries / limitations: ${injuries}`);
+  const notes = aiqVal('aiq-notes');
+  if (notes) lines.push(`Additional notes / tune-up races: ${notes}`);
+
+  return { context: lines.join('\n'), totalWeeks };
+}
+
+const AI_PLAN_SYSTEM_PROMPT =
+`You are an expert multi-sport endurance coach who designs periodized training plans.
+
+Using the athlete's questionnaire answers, design a complete training plan from their training start date through race day.
+
+Respond ONLY with a single valid JSON object — no markdown formatting, no commentary before or after — matching exactly this schema:
+
+{"raceName":"string","raceDate":"YYYY-MM-DD","raceDuration":integer minutes (goal finish time),"raceDistances":{"swim":"e.g. '1.9 km' or ''","bike":"e.g. '90 km' or ''","run":"e.g. '21.1 km' or ''"},"trainStart":"YYYY-MM-DD","phases":[{"name":"string (e.g. 'Foundation','Base Building','Build','Peak','Taper')","weeks":integer >= 1,"hrs":"string, e.g. '5-7 hrs/wk'","color":"#RRGGBB","focus":"short string describing this phase's emphasis","recoveryEvery":integer >= 0 (0 = every week uses 'template'; otherwise every Nth week of the phase uses 'recoveryTemplate' instead),"template":[[type,label,durationMinutes], ... exactly 7 entries, Monday through Sunday],"recoveryTemplate": same shape as "template", or null if recoveryEvery is 0}],"raceEvents":[{"date":"YYYY-MM-DD","label":"string","duration":integer minutes,"weekTemplate": same shape as "template" or null}]}
+
+Hard rules:
+- "type" must be one of: "rest", "swim", "run", "bike", "brick", "race". "duration" is 0 for rest days.
+- Each template/recoveryTemplate/weekTemplate array has exactly 7 entries ordered Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.
+- phases[].weeks should sum to approximately {totalWeeks} weeks (the athlete's full training window). The final phase will be stretched or compressed slightly to land exactly on race day, so being off by 1-2 weeks is fine.
+- Use 3-6 phases following standard periodization for the race distance and timeline (e.g. base/foundation -> build -> peak -> taper). A short timeline (under ~10 weeks) may use only 2-3 phases. The final phase must be a taper with recoveryEvery: 0 and reduced weekly volume.
+- Gradually build weekly volume across phases; respect the athlete's stated current training volume as the realistic starting point.
+- Respect the athlete's available training days per week, preferred rest day, preferred long-session day, and max session durations on weekdays vs weekends.
+- Respect any stated injuries/limitations — substitute or reduce affected sports as needed.
+- raceEvents: only include tune-up races the athlete explicitly mentioned in their notes, each with a date strictly between trainStart and raceDate. For each, set "weekTemplate" to a lighter week with a "race" session on the event's day (label = the event name, duration = the event's expected duration), or null to use that week's normal phase template. If no tune-up races were mentioned, return an empty array.
+- raceDistances: only fill swim/bike/run for triathlon-style races; use "" for any leg that doesn't apply (e.g. a running race has swim:"" and bike:"").
+- Give each phase a distinct hex color, progressing from a brighter/cooler tone in early phases to a warmer/darker tone near race day (e.g. "#FC4C02","#E97316","#D97706","#B45309","#92400E","#78350F" — pick a subset/variation appropriate to the number of phases).
+- If the athlete didn't give a race name, invent a sensible one from the race type/distance.`;
+
+function sanitizeTemplate(tmpl) {
+  if (!Array.isArray(tmpl) || tmpl.length !== 7) return null;
+  return tmpl.map(day => {
+    if (!Array.isArray(day) || day.length < 3) return ['rest', 'Rest Day', 0];
+    const type     = SPORT_CFG[day[0]] ? day[0] : 'rest';
+    const label    = typeof day[1] === 'string' && day[1].trim() ? day[1].trim() : SPORT_CFG[type].label;
+    const duration = Number.isFinite(+day[2]) ? Math.max(0, Math.round(+day[2])) : 0;
+    return [type, label, duration];
+  });
+}
+
+// Coerces the AI's JSON into a plan matching DEFAULT_PLAN's shape, applying sensible
+// defaults for malformed fields. Throws only when the plan is unusable.
+function sanitizeAiPlan(raw) {
+  if (!raw || typeof raw !== 'object') throw new Error('response was not a valid plan object');
+  if (typeof raw.raceName !== 'string' || !raw.raceName.trim()) throw new Error('missing race name');
+  if (!DATE_RE.test(raw.raceDate))    throw new Error('invalid race date');
+  if (!DATE_RE.test(raw.trainStart))  throw new Error('invalid training start date');
+  if (raw.raceDate <= raw.trainStart) throw new Error('race date must be after training start');
+  if (!Array.isArray(raw.phases) || !raw.phases.length) throw new Error('no training phases');
+
+  const phases = raw.phases.map((ph, i) => {
+    const tmpl = sanitizeTemplate(ph?.template);
+    if (!tmpl) throw new Error(`phase ${i + 1} has an invalid weekly template`);
+    let recoveryEvery = Math.max(0, Math.round(+ph.recoveryEvery) || 0);
+    // A recovery cadence is meaningless without a distinct recovery template — if the
+    // model gave one but no (valid) template, drop the cadence so the builder UI stays consistent.
+    const recoveryTemplate = recoveryEvery > 0 ? sanitizeTemplate(ph.recoveryTemplate) : null;
+    if (recoveryEvery > 0 && !recoveryTemplate) recoveryEvery = 0;
+    return {
+      name: typeof ph.name === 'string' && ph.name.trim() ? ph.name.trim() : `Phase ${i + 1}`,
+      weeks: Math.max(1, Math.round(+ph.weeks) || 1),
+      hrs: typeof ph.hrs === 'string' ? ph.hrs : '',
+      color: /^#[0-9a-fA-F]{6}$/.test(ph.color) ? ph.color : '#6D6D6D',
+      focus: typeof ph.focus === 'string' ? ph.focus : '',
+      recoveryEvery,
+      template: tmpl,
+      recoveryTemplate,
+    };
+  });
+
+  const raceEvents = (Array.isArray(raw.raceEvents) ? raw.raceEvents : [])
+    .filter(e => e && DATE_RE.test(e.date) && e.date > raw.trainStart && e.date < raw.raceDate)
+    .map(e => ({
+      date: e.date,
+      label: typeof e.label === 'string' && e.label.trim() ? e.label.trim() : 'Tune-up Race',
+      duration: Math.max(0, Math.round(+e.duration) || 0),
+      weekTemplate: e.weekTemplate ? sanitizeTemplate(e.weekTemplate) : null,
+    }));
+
+  const rd = raw.raceDistances || {};
+  const plan = {
+    raceName: raw.raceName.trim(),
+    raceDate: raw.raceDate,
+    raceDuration: Math.max(0, Math.round(+raw.raceDuration) || 0),
+    raceDistances: {
+      swim: typeof rd.swim === 'string' ? rd.swim : '',
+      bike: typeof rd.bike === 'string' ? rd.bike : '',
+      run:  typeof rd.run  === 'string' ? rd.run  : '',
+    },
+    trainStart: raw.trainStart,
+    phases,
+    raceEvents,
+  };
+
+  // Gate the coerced plan through the same validator the manual Save path uses, so the
+  // phase-overrun invariant (and any future rule) lives in exactly one place.
+  const err = validatePlan(plan);
+  if (err) throw new Error(err);
+  return plan;
+}
+
+// Generating a full multi-phase plan needs more output budget than the daily
+// coaching tweaks, so claude-3-haiku (4096-token output cap) is excluded here.
+const AI_PLAN_FALLBACKS = ['claude-sonnet-4-6', 'claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022'];
+
+async function generateAiPlan() {
+  const btn      = document.getElementById('ai-builder-generate');
+  const errEl    = document.getElementById('ai-builder-error');
+  const statusEl = document.getElementById('ai-builder-status');
+  errEl.classList.add('hidden');
+
+  const trainStart = aiqVal('aiq-train-start');
+  const raceDate   = aiqVal('aiq-race-date');
+  if (!DATE_RE.test(trainStart) || !DATE_RE.test(raceDate) || raceDate <= trainStart) {
+    errEl.textContent = 'Please enter a valid training start date and race date (the race date must be after the training start date).';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const { context, totalWeeks } = buildAiQuestionnaireContext();
+  const systemPrompt = AI_PLAN_SYSTEM_PROMPT.replace('{totalWeeks}', totalWeeks);
+
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  statusEl.classList.remove('hidden');
+
+  try {
+    const data = await aiFetch({
+      candidates: aiModelCandidates(AI_PLAN_FALLBACKS),
+      system: systemPrompt,
+      messages: [{ role: 'user', content: context }],
+      maxTokens: 8192,
+    });
+    if (data.stop_reason === 'max_tokens') {
+      throw new Error('the plan was too long to finish generating — try a shorter race or fewer phases');
+    }
+    const text    = data.content?.[0]?.text || '';
+    const jsonStr = text.match(/\{[\s\S]*\}/)?.[0];
+    if (!jsonStr) throw new Error('No JSON in response');
+
+    const plan = sanitizeAiPlan(JSON.parse(jsonStr));
+    DRAFT_PLAN = plan;
+    closeAiBuilder();
+    renderPlanBuilder();
+    window.scrollTo(0, 0);
+
+  } catch (e) {
+    console.error('AI plan generation:', e);
+    errEl.textContent = `Couldn't generate a plan: ${e.message}. Please try again.`;
+    errEl.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✦ Generate plan';
+    statusEl.classList.add('hidden');
+  }
+}
+
+document.getElementById('ai-builder-back').addEventListener('click', closeAiBuilder);
+document.getElementById('ai-builder-generate').addEventListener('click', generateAiPlan);
+
+document.getElementById('edit-plan-btn').addEventListener('click', openPlanBuilder);
+document.getElementById('builder-cancel-top').addEventListener('click', closePlanBuilder);
+document.getElementById('builder-cancel').addEventListener('click', closePlanBuilder);
+
+document.getElementById('builder-reset').addEventListener('click', () => {
+  if (!confirm('Reset to the default training plan? This discards your customizations.')) return;
+  localStorage.removeItem(PLAN_KEY);
+  localStorage.removeItem(AI_OPT_KEY);
+  location.reload();
+});
+
+document.getElementById('builder-save').addEventListener('click', () => {
+  const errEl = document.getElementById('builder-error');
+  const err   = validatePlan(DRAFT_PLAN);
+  if (err) {
+    errEl.textContent = err;
+    errEl.classList.remove('hidden');
+    return;
+  }
+  savePlan(DRAFT_PLAN);
+  localStorage.removeItem(AI_OPT_KEY);
+  location.reload();
 });
 
 // ════════════════════════════════════════════

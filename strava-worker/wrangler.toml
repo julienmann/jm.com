@@ -3,6 +3,6 @@ main            = "index.js"
 compatibility_date = "2025-01-01"
 
 [vars]
-# Lock the worker to your dashboard's origin so no other site can call it.
-# Change this to match wherever the dashboard is hosted.
-ALLOWED_ORIGIN = "https://julienmann.ca"
+# Comma-separated list of origins allowed to call this worker.
+# Add local dev origins here as needed.
+ALLOWED_ORIGIN = "https://julienmann.ca,http://localhost:8080"
