@@ -529,6 +529,17 @@ footer{border-top:1px solid var(--border);background:var(--card);}
 .builder-checkbox-row input{width:15px;height:15px;accent-color:var(--orange);cursor:pointer;}
 .builder-add-btn{font-size:.75rem;font-weight:700;color:var(--orange-strong);padding:.55rem .8rem;border:1.5px dashed var(--border);border-radius:8px;width:100%;text-align:center;transition:all .15s;margin-bottom:1.25rem;}
 .builder-add-btn:hover{border-color:var(--orange-strong);background:var(--orange-dim);}
+.bldr-simple-list{border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1rem;}
+.bldr-simple-row{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-bottom:1px solid var(--border);}
+.bldr-simple-row:last-child{border-bottom:none;}
+.bldr-simple-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.bldr-simple-name{flex:1;font-size:.8rem;font-weight:600;color:var(--fg);}
+.bldr-simple-meta{font-size:.75rem;color:var(--mid);white-space:nowrap;}
+.bldr-simple-meta--empty{padding:.1rem 0;}
+.bldr-simple-rm{font-size:.75rem;color:var(--mid);padding:.1rem .2rem;border-radius:4px;line-height:1;transition:color .12s;}
+.bldr-simple-rm:hover{color:#C0392B;}
+.bldr-back-link{font-size:.75rem;font-weight:600;color:var(--mid);padding:.3rem 0;display:inline-flex;align-items:center;gap:.3rem;transition:color .12s;margin-bottom:.75rem;}
+.bldr-back-link:hover{color:var(--fg);}
 /* Entry CTAs (Load preset / Start AI) start a flow, so they use a solid border —
    the dashed style stays reserved for "+ Add" placeholder actions. */
 .builder-cta-btn{border-style:solid;margin-bottom:0;}
@@ -3212,7 +3223,7 @@ function openBuilderCreate() {
 
 function openBuilderEdit() {
   document.getElementById('builder-actions').classList.remove('hidden');
-  renderPlanBuilder();
+  renderPlanBuilderSimple();
 }
 
 function closePlanBuilder() {
@@ -3324,9 +3335,46 @@ function raceEventCardHtml(e, i) {
     </div>`;
 }
 
+function renderPlanBuilderSimple() {
+  const p = DRAFT_PLAN;
+  const phaseRows = p.phases.map((ph, i) => `
+    <div class="bldr-simple-row">
+      <span class="bldr-simple-dot" style="background:${esc(ph.color)};"></span>
+      <span class="bldr-simple-name">${esc(ph.name)}</span>
+      <span class="bldr-simple-meta">${ph.weeks} wk${ph.weeks !== 1 ? 's' : ''}</span>
+      <button class="bldr-simple-rm" type="button" data-action="phase-remove" data-phase-idx="${i}" ${p.phases.length <= 1 ? 'disabled' : ''} aria-label="Remove phase">×</button>
+    </div>`).join('');
+  const eventRows = p.raceEvents.length ? p.raceEvents.map((e, i) => `
+    <div class="bldr-simple-row">
+      <span class="bldr-simple-name">${e.label ? esc(e.label) : '<em>Untitled</em>'}</span>
+      <span class="bldr-simple-meta">${esc(e.date)}</span>
+      <button class="bldr-simple-rm" type="button" data-action="event-remove" data-event-idx="${i}" aria-label="Remove event">×</button>
+    </div>`).join('') : '<div class="bldr-simple-row"><span class="bldr-simple-meta bldr-simple-meta--empty">No tune-up races</span></div>';
+  document.getElementById('builder-body').innerHTML = `
+    <div class="builder-grid" style="margin-bottom:1.25rem">
+      <div class="form-group"><label class="form-label">Race name</label>
+        <input class="form-input" type="text" data-field="raceName" value="${esc(p.raceName)}"></div>
+      <div class="form-group"><label class="form-label">Race date</label>
+        <input class="form-input" type="date" data-field="raceDate" value="${esc(p.raceDate)}"></div>
+      <div class="form-group"><label class="form-label">Training start</label>
+        <input class="form-input" type="date" data-field="trainStart" value="${esc(p.trainStart)}"></div>
+    </div>
+    <div class="builder-section-title">Training Phases</div>
+    <div class="bldr-simple-list">${phaseRows}</div>
+    <button class="builder-add-btn" id="add-phase-btn" type="button">+ Add Phase</button>
+    <div class="builder-section-title">Tune-up Races</div>
+    <div class="bldr-simple-list">${eventRows}</div>
+    <button class="builder-add-btn" id="add-event-btn" type="button">+ Add Race Event</button>
+    <button class="builder-add-btn builder-cta-btn" id="bldr-advanced-btn" type="button">Advanced edit →</button>
+  `;
+  attachBuilderListeners(renderPlanBuilderSimple);
+  document.getElementById('bldr-advanced-btn').addEventListener('click', renderPlanBuilder);
+}
+
 function renderPlanBuilder() {
   const p = DRAFT_PLAN;
   document.getElementById('builder-body').innerHTML = `
+    <button class="bldr-back-link" id="bldr-back-btn" type="button">← Overview</button>
     ${raceInfoCardHtml(p)}
     <div class="builder-section-title">Training Phases</div>
     ${p.phases.map((ph, i) => phaseCardHtml(ph, i, p.phases.length)).join('')}
@@ -3336,10 +3384,11 @@ function renderPlanBuilder() {
     ${p.raceEvents.map((e, i) => raceEventCardHtml(e, i)).join('')}
     <button class="builder-add-btn" id="add-event-btn" type="button">+ Add Race Event</button>
   `;
-  attachBuilderListeners();
+  attachBuilderListeners(renderPlanBuilder);
+  document.getElementById('bldr-back-btn').addEventListener('click', renderPlanBuilderSimple);
 }
 
-function attachBuilderListeners() {
+function attachBuilderListeners(rerenderFn) {
   const body = document.getElementById('builder-body');
 
   body.querySelectorAll('[data-field]').forEach(el => {
@@ -3390,19 +3439,18 @@ function attachBuilderListeners() {
         const ev = DRAFT_PLAN.raceEvents[ei];
         ev.weekTemplate = ev.weekTemplate ? null : emptyTemplate();
       }
-      renderPlanBuilder();
+      rerenderFn();
     });
   });
 
-  document.getElementById('add-phase-btn').addEventListener('click', () => {
+  body.querySelector('#add-phase-btn').addEventListener('click', () => {
     DRAFT_PLAN.phases.push(emptyPhase());
-    renderPlanBuilder();
+    rerenderFn();
   });
-  document.getElementById('add-event-btn').addEventListener('click', () => {
+  body.querySelector('#add-event-btn').addEventListener('click', () => {
     DRAFT_PLAN.raceEvents.push(emptyRaceEvent());
-    renderPlanBuilder();
+    rerenderFn();
   });
-
 }
 
 function validatePlan(p) {
@@ -3559,7 +3607,7 @@ function applyPreset(id) {
   DRAFT_PLAN = plan;
   document.getElementById('builder-error').classList.add('hidden');
   document.getElementById('builder-actions').classList.remove('hidden');
-  renderPlanBuilder();
+  renderPlanBuilderSimple();
   window.scrollTo(0, 0);
 }
 
@@ -3937,7 +3985,7 @@ async function generateAiPlan() {
     const plan = sanitizeAiPlan(JSON.parse(jsonStr));
     DRAFT_PLAN = plan;
     closeAiBuilder();
-    renderPlanBuilder();
+    renderPlanBuilderSimple();
     window.scrollTo(0, 0);
 
   } catch (e) {
