@@ -227,6 +227,50 @@ a{color:inherit;text-decoration:none;}
   stroke:currentColor;stroke-width:1.5;fill:none;
 }
 
+.now-toggle{
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--fg);
+  opacity:.6;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:.4rem 0;
+  margin-top:2rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  transition:opacity .22s,color .22s;
+}
+.now-toggle:hover{opacity:1;color:var(--accent);}
+.now-toggle svg{
+  width:9px;height:9px;
+  stroke:currentColor;stroke-width:1.5;fill:none;
+  transition:transform .25s;
+}
+.now-toggle.open svg{transform:rotate(180deg);}
+
+.now-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .35s ease;
+}
+.now-panel.open{max-height:600px;}
+.now-panel-inner{
+  padding-top:1.2rem;
+  font-size:clamp(.9rem,1.2vw,1.02rem);
+  line-height:1.65;
+  color:var(--fg);
+  max-width:64ch;
+}
+.now-panel-inner ul{
+  margin:0;
+  padding-left:1.2em;
+}
+.now-panel-inner li{margin-bottom:.5em;}
+
 /* ── CONTACT ── */
 .contact{
   padding:5rem 2.5rem 7rem;
@@ -453,6 +497,21 @@ footer{border-top:1px solid var(--rule);}
 <section class="about">
   <p class="section-mark reveal" data-i18n="about.label">About</p>
   <p class="about-body reveal" data-delay="1" data-i18n="hero.bio">I'm a cégep student at the crossroads of sciences, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. Outside of academics, I invest my time in climbing, mountain biking, sailing, mountaineering and reading, disciplines that have taught me focus, resilience and how to perform under pressure. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.</p>
+
+  <button type="button" class="now-toggle reveal" data-delay="2" id="now-toggle" aria-expanded="false" aria-controls="now-panel">
+    <span data-i18n="now.toggle">What I'm working on now</span>
+    <svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg>
+  </button>
+  <div class="now-panel" id="now-panel">
+    <div class="now-panel-inner">
+      <ul data-i18n="now.list">
+        <li>Working as a sailing instructor</li>
+        <li>Building an AI-powered training app</li>
+        <li>Upgrading my mountaineering skills to climb Mont Blanc</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="about-links reveal" data-delay="2">
     <a href="https://creative.julienmann.ca" class="about-link" data-i18n="link.photo">
       Photography
@@ -562,6 +621,17 @@ const revealObserver = new IntersectionObserver(entries=>{
 },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
 revealEls.forEach(el=>revealObserver.observe(el));
 
+/* ── NOW PANEL ── */
+const nowToggle = document.getElementById('now-toggle');
+const nowPanel = document.getElementById('now-panel');
+if(nowToggle && nowPanel){
+  nowToggle.addEventListener('click', ()=>{
+    const open = nowPanel.classList.toggle('open');
+    nowToggle.classList.toggle('open', open);
+    nowToggle.setAttribute('aria-expanded', open);
+  });
+}
+
 /* ── CONTACT FORM ── */
 function escapeHtml(str){
   return str.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -626,6 +696,8 @@ const translations = {
     'hero.bio':"I'm a cégep student at the crossroads of sciences, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. Outside of academics, I invest my time in climbing, mountain biking, sailing, mountaineering and reading, disciplines that have taught me focus, resilience and how to perform under pressure. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.",
     'link.photo':'Photography',
     'link.dev':'Web Dev',
+    'now.toggle':"What I'm working on now",
+    'now.list':'<li>Working as a sailing instructor</li><li>Building an AI-powered training app</li><li>Upgrading my mountaineering skills to climb Mont Blanc</li>',
     'contact.hed':'Say Hello.',
     'contact.sub':'All messages answered personally.',
     'contact.intro':"Whether you've got a website to build, a story to capture, or just want to talk shop, I'd love to hear from you.",
@@ -649,6 +721,8 @@ const translations = {
     'hero.bio':"Je suis étudiant au cégep à la croisée des sciences, de la littérature et des arts, une combinaison qui reflète mon désir sincère de comprendre le monde sous différents angles. En dehors des études, je consacre mon temps à l'escalade, au vélo de montagne, à la voile, à l'alpinisme et à la lecture, des disciplines qui m'ont appris la concentration, la résilience et la capacité à performer sous pression. La photographie et la réalisation accompagnent tout cela, portées par un intérêt pour la narration et une habitude d'observer attentivement mon environnement. J'apporte cette même curiosité et cette même détermination à tout ce que j'entreprends.",
     'link.photo':'Photographie',
     'link.dev':'Dev Web',
+    'now.toggle':'Sur quoi je travaille en ce moment',
+    'now.list':"<li>Moniteur de voile</li><li>Développement d'une application d'entraînement propulsée par l'IA</li><li>Perfectionnement de mes compétences en alpinisme pour gravir le Mont Blanc</li>",
     'contact.hed':'Écrivez-<br>moi.',
     'contact.sub':'Tous les messages reçoivent une réponse personnelle.',
     'contact.intro':"Un site à bâtir, une histoire à raconter, ou simplement l'envie de jaser : écrivez-moi.",
