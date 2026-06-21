@@ -56,6 +56,16 @@ body{
 ::selection{background:var(--accent);color:var(--bg);}
 a{color:inherit;text-decoration:none;}
 
+/* ── SHARED UI TEXT LINKS ── */
+.about-link,.now-toggle,.confirm-reset,.footer-links a{
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  padding:.4rem 0;
+  transition:color .22s;
+}
+
 /* ── FIXED UI ── */
 #lang-toggle,.contact-anchor{
   position:fixed;top:1.1rem;z-index:500;
@@ -218,16 +228,10 @@ a{color:inherit;text-decoration:none;}
 }
 
 .about-link{
-  font-size:.7rem;
-  font-weight:500;
-  letter-spacing:.2em;
-  text-transform:uppercase;
   color:var(--fg);
-  transition:color .22s;
   display:inline-flex;
   align-items:center;
   gap:.5rem;
-  padding:.4rem 0;
 }
 .about-link:hover{color:var(--accent);}
 .about-link svg{
@@ -236,16 +240,11 @@ a{color:inherit;text-decoration:none;}
 }
 
 .now-toggle{
-  font-size:.7rem;
-  font-weight:500;
-  letter-spacing:.2em;
-  text-transform:uppercase;
   color:var(--fg);
   opacity:.6;
   background:none;
   border:none;
   cursor:pointer;
-  padding:.4rem 0;
   margin-top:2rem;
   display:inline-flex;
   align-items:center;
@@ -324,6 +323,7 @@ a{color:inherit;text-decoration:none;}
   margin-bottom:1.5rem;
 }
 .form-group{margin-bottom:1.5rem;}
+.form-row .form-group{margin-bottom:0;}
 .form-label{
   display:block;
   font-size:.6rem;
@@ -406,14 +406,9 @@ a{color:inherit;text-decoration:none;}
   display:inline-block;
   margin-top:1.6rem;
   font-family:var(--sans);
-  font-size:.7rem;
-  font-weight:500;
-  letter-spacing:.2em;
-  text-transform:uppercase;
   color:var(--mid);
-  background:none;border:none;padding:.4rem 0;
+  background:none;border:none;
   cursor:pointer;
-  transition:color .22s;
 }
 .confirm-reset:hover{color:var(--accent);}
 
@@ -430,8 +425,8 @@ footer{border-top:1px solid var(--rule);}
 }
 .footer-links{display:flex;gap:1.6rem;list-style:none;}
 .footer-links a{
-  font-size:.7rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--mid);transition:color .22s;padding:.4rem 0;
+  letter-spacing:.16em;
+  color:var(--mid);
 }
 .footer-links a:hover{color:var(--fg);}
 
@@ -539,11 +534,11 @@ footer{border-top:1px solid var(--rule);}
     <input type="hidden" name="subject" value="New message — julienmann.ca">
     <input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="display:none;">
     <div class="form-row">
-      <div class="form-group" style="margin-bottom:0">
+      <div class="form-group">
         <label class="form-label" for="first_name" data-i18n="form.fname">First Name</label>
         <input class="form-input" id="first_name" type="text" name="first_name" placeholder="Jane" data-i18n-placeholder="form.fname.ph" required>
       </div>
-      <div class="form-group" style="margin-bottom:0">
+      <div class="form-group">
         <label class="form-label" for="last_name" data-i18n="form.lname">Last Name</label>
         <input class="form-input" id="last_name" type="text" name="last_name" placeholder="Smith" data-i18n-placeholder="form.lname.ph" required>
       </div>
@@ -599,12 +594,15 @@ if(!reduceMotion){
 /* ── HERO PARALLAX ── */
 const heroBgImg = document.querySelector('.hero-bg img');
 if(heroBgImg && !reduceMotion){
+  let viewportH = window.innerHeight;
+  window.addEventListener('resize',()=>{viewportH = window.innerHeight;},{passive:true});
+
   let pTicking = false;
   window.addEventListener('scroll',()=>{
     if(pTicking) return;
     pTicking = true;
     requestAnimationFrame(()=>{
-      const p = Math.min(window.scrollY / window.innerHeight, 1);
+      const p = Math.min(window.scrollY / viewportH, 1);
       heroBgImg.style.setProperty('--hero-y', `${p * 45}px`);
       pTicking = false;
     });
