@@ -1,0 +1,15 @@
+# Julien Mann
+
+> Julien Mann is a photographer, web developer, and cégep student based in Montréal, Québec. This site is his personal portfolio and contact page.
+
+Julien works at the intersection of sciences, literature, and the arts. Outside academics he climbs, mountain bikes, sails, and mountaineers — disciplines he credits for the focus and resilience he brings to photography, filmmaking, and web development.
+
+## Pages
+
+- [Homepage](https://julienmann.ca/): About, current projects, and contact form.
+- [Photography](https://creative.julienmann.ca): Portfolio of portrait, event, and commercial photography.
+- [Web Development](https://dev.julienmann.ca): Web development work and projects.
+
+## Contact
+
+- Contact form: https://julienmann.ca/#contact (messages answered personally, usually within 24 hours).
