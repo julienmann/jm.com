@@ -356,7 +356,7 @@ a{color:inherit;text-decoration:none;}
   display:flex;
   align-items:center;
   gap:2rem;
-  margin-top:2.5rem;
+  margin-top:0;
   flex-wrap:wrap;
 }
 
@@ -373,6 +373,15 @@ a{color:inherit;text-decoration:none;}
 .form-submit:disabled{opacity:.45;}
 
 .form-note{
+  font-size:.62rem;
+  font-weight:500;
+  letter-spacing:.04em;
+  color:var(--mid);
+}
+
+.form-disclaimer{
+  margin-top:2rem;
+  margin-bottom:0.75rem;
   font-size:.62rem;
   font-weight:500;
   letter-spacing:.04em;
@@ -499,7 +508,7 @@ footer{border-top:1px solid var(--rule);}
 <!-- ABOUT -->
 <section class="about">
   <p class="section-mark reveal" data-i18n="about.label">About</p>
-  <p class="about-body reveal" data-delay="1" data-i18n="hero.bio">I'm a cégep student at the crossroads of sciences, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. Outside of academics, I invest my time in climbing, mountain biking, sailing, mountaineering and reading, disciplines that have taught me focus, resilience and how to perform under pressure. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.</p>
+  <p class="about-body reveal" data-delay="1" data-i18n="hero.bio">I'm a cégep student in Sciences, lettres et arts, drawn to the crossroads of science, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. I spend my summers coaching a youth race team as a sailing instructor, work that demands focus, resilience and calm under pressure. Away from the water I climb, mountain bike and read. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.</p>
 
   <button type="button" class="now-toggle reveal" data-delay="2" id="now-toggle" aria-expanded="false" aria-controls="now-panel">
     <span data-i18n="now.toggle">What I'm working on now</span>
@@ -530,8 +539,7 @@ footer{border-top:1px solid var(--rule);}
 <!-- CONTACT -->
 <section class="contact" id="contact">
   <h2 class="contact-hed reveal" data-i18n="contact.hed">Say Hello.</h2>
-  <p class="contact-sub reveal" data-delay="1" data-i18n="contact.sub">All messages answered personally.</p>
-  <p class="contact-intro reveal" data-delay="2" data-i18n="contact.intro">Whether you've got a website to build, a story to capture, or just want to talk shop, I'd love to hear from you.</p>
+  <p class="contact-intro reveal" data-delay="1" data-i18n="contact.intro">Whether you've got a website to build, a story to capture, or just want to talk shop, I'd love to hear from you.</p>
   <form id="contact-form" class="reveal" data-delay="3">
     <input type="hidden" name="access_key" value="3da1f7ac-99e9-49bd-8aa1-c3b621510613">
     <input type="hidden" name="subject" value="New message — julienmann.ca">
@@ -554,9 +562,9 @@ footer{border-top:1px solid var(--rule);}
       <label class="form-label" for="message" data-i18n="form.msg">Message</label>
       <textarea class="form-textarea" id="message" name="message" placeholder="What are you working on?" data-i18n-placeholder="form.msg.ph" required></textarea>
     </div>
+    <p class="form-disclaimer" data-i18n="form.disclaimer">By clicking send, you agree to receive emails from Julien Mann.</p>
     <div class="form-footer">
       <button class="form-submit" type="submit" data-i18n="form.submit">Send</button>
-      <span class="form-note" data-i18n="form.note">Usually within 24 hours.</span>
     </div>
   </form>
   <div id="form-confirm">
@@ -696,20 +704,19 @@ const translations = {
     'btn.contact':'Contact',
     'tagline':'I take photos and make websites. Based in Montréal.',
     'about.label':'About',
-    'hero.bio':"I'm a cégep student at the crossroads of sciences, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. Outside of academics, I invest my time in climbing, mountain biking, sailing, mountaineering and reading, disciplines that have taught me focus, resilience and how to perform under pressure. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.",
+    'hero.bio':"I'm a cégep student in Sciences, lettres et arts, drawn to the crossroads of science, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. I spend my summers coaching a youth race team as a sailing instructor, work that demands focus, resilience and calm under pressure. Away from the water I climb, mountain bike and read. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.",
     'link.photo':'Photography',
     'link.dev':'Web Dev',
     'now.toggle':"What I'm working on now",
     'now.list':'<li>Working as a sailing instructor</li><li>Building an AI-powered training app</li><li>Upgrading my mountaineering skills to climb Mont Blanc</li>',
     'contact.hed':'Say Hello.',
-    'contact.sub':'All messages answered personally.',
     'contact.intro':"Whether you've got a website to build, a story to capture, or just want to talk shop, I'd love to hear from you.",
     'form.fname':'First Name','form.fname.ph':'Jane',
     'form.lname':'Last Name','form.lname.ph':'Smith',
     'form.email':'Email',
     'form.msg':'Message','form.msg.ph':'What are you working on?',
     'form.submit':'Send',
-    'form.note':'Usually within 24 hours.',
+    'form.disclaimer':'By clicking send, you agree to receive emails from Julien Mann.',
     'form.error':'Error. Try again.',
     'confirm.title':'Got<br>it.',
     'confirm.greeting':'Thanks,<br>{name}.',
@@ -721,20 +728,19 @@ const translations = {
     'btn.contact':'Contact',
     'tagline':'Je prends des photos et je fais des sites. Basé à Montréal.',
     'about.label':'À propos',
-    'hero.bio':"Je suis étudiant au cégep à la croisée des sciences, de la littérature et des arts, une combinaison qui reflète mon désir sincère de comprendre le monde sous différents angles. En dehors des études, je consacre mon temps à l'escalade, au vélo de montagne, à la voile, à l'alpinisme et à la lecture, des disciplines qui m'ont appris la concentration, la résilience et la capacité à performer sous pression. La photographie et la réalisation accompagnent tout cela, portées par un intérêt pour la narration et une habitude d'observer attentivement mon environnement. J'apporte cette même curiosité et cette même détermination à tout ce que j'entreprends.",
+    'hero.bio':"Je suis étudiant au cégep en Sciences, lettres et arts, attiré par la croisée des sciences, de la littérature et des arts, une combinaison qui reflète mon désir sincère de comprendre le monde sous différents angles. Je passe mes étés à entraîner une équipe de course comme instructeur de voile, un travail qui exige concentration, résilience et sang-froid sous pression. Hors de l'eau, je fais de l'escalade, du vélo de montagne et de la lecture. La photographie et la réalisation accompagnent tout cela, portées par un intérêt pour la narration et une habitude d'observer attentivement mon environnement. J'apporte cette même curiosité et cette même détermination à tout ce que j'entreprends.",
     'link.photo':'Photographie',
     'link.dev':'Dev Web',
     'now.toggle':'Sur quoi je travaille en ce moment',
     'now.list':"<li>Moniteur de voile</li><li>Développement d'une application d'entraînement propulsée par l'IA</li><li>Perfectionnement de mes compétences en alpinisme pour gravir le Mont Blanc</li>",
     'contact.hed':'Écrivez-<br>moi.',
-    'contact.sub':'Tous les messages reçoivent une réponse personnelle.',
     'contact.intro':"Un site à bâtir, une histoire à raconter, ou simplement l'envie de jaser : écrivez-moi.",
     'form.fname':'Prénom','form.fname.ph':'Marie',
     'form.lname':'Nom','form.lname.ph':'Dupont',
     'form.email':'Courriel',
     'form.msg':'Message','form.msg.ph':'Sur quoi travaillez-vous ?',
     'form.submit':'Envoyer',
-    'form.note':'Réponse habituelle sous 24 heures.',
+    'form.disclaimer':'En cliquant sur envoyer, vous acceptez de recevoir des courriels de Julien Mann.',
     'form.error':'Erreur. Réessayez.',
     'confirm.title':'Bien<br>reçu.',
     'confirm.greeting':'Merci,<br>{name}.',
