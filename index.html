@@ -179,25 +179,6 @@ a{color:inherit;text-decoration:none;}
   position:relative;z-index:3;
 }
 
-.hero-meta{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  gap:.4rem;
-  will-change:opacity;
-  position:relative;z-index:3;
-}
-
-.hero-tagline{
-  font-family:var(--sans);
-  font-style:italic;
-  font-weight:300;
-  font-size:clamp(.82rem,1.1vw,.98rem);
-  color:var(--fg);
-  letter-spacing:.02em;
-}
-
 /* ── ABOUT ── */
 .about{
   padding:8.5rem 2.5rem 4.5rem;
@@ -492,9 +473,6 @@ footer{border-top:1px solid var(--rule);}
     <span class="hero-line"><span class="hero-name-inner">MANN</span></span>
   </h1>
   <div class="hero-rule" id="hero-rule"></div>
-  <div class="hero-meta" id="hero-meta">
-    <span class="hero-tagline" data-i18n="tagline">I take photos and make websites. Based in Montréal.</span>
-  </div>
 </section>
 
 <!-- ABOUT -->
@@ -586,12 +564,10 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 if(!reduceMotion){
   gsap.set('.hero-name-inner',{opacity:0,scale:1.3,filter:'blur(14px)'});
   gsap.set('#hero-rule',{scaleX:0});
-  gsap.set('#hero-meta',{opacity:0,y:8});
 
   gsap.timeline({delay:0.15,defaults:{ease:'power3.out'}})
     .to('.hero-name-inner',{opacity:1,scale:1,filter:'blur(0px)',duration:1.3,stagger:0.12})
-    .to('#hero-rule',{scaleX:1,duration:0.9,ease:'power3.inOut'},'-=0.6')
-    .to('#hero-meta',{opacity:1,y:0,duration:0.65},'-=0.4');
+    .to('#hero-rule',{scaleX:1,duration:0.9,ease:'power3.inOut'},'-=0.6');
 }
 
 /* ── HERO PARALLAX ── */
@@ -694,7 +670,6 @@ document.getElementById('confirm-reset').addEventListener('click', resetContactF
 const translations = {
   en:{
     'btn.contact':'Contact',
-    'tagline':'I take photos and make websites. Based in Montréal.',
     'about.label':'About',
     'hero.bio':"I'm a cégep student in Sciences, lettres et arts, drawn to the crossroads of science, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. I spend my summers coaching a youth race team as a sailing instructor, work that demands focus, resilience and calm under pressure. Away from the water I climb, mountain bike and read. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.",
     'link.photo':'Photography',
@@ -718,7 +693,6 @@ const translations = {
   },
   fr:{
     'btn.contact':'Contact',
-    'tagline':'Je prends des photos et je fais des sites. Basé à Montréal.',
     'about.label':'À propos',
     'hero.bio':"Je suis étudiant au cégep en Sciences, lettres et arts, attiré par la croisée des sciences, de la littérature et des arts, une combinaison qui reflète mon désir sincère de comprendre le monde sous différents angles. Je passe mes étés à entraîner une équipe de course comme instructeur de voile, un travail qui exige concentration, résilience et sang-froid sous pression. Hors de l'eau, je fais de l'escalade, du vélo de montagne et de la lecture. La photographie et la réalisation accompagnent tout cela, portées par un intérêt pour la narration et une habitude d'observer attentivement mon environnement. J'apporte cette même curiosité et cette même détermination à tout ce que j'entreprends.",
     'link.photo':'Photographie',
