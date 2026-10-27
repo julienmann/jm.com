@@ -16,7 +16,7 @@
 <meta name="description" content="Julien Mann — photographer, web developer, and student based in Montréal.">
 <meta property="og:title" content="Julien Mann">
 <meta property="og:description" content="Photographer, web developer, and student based in Montréal.">
-<meta property="og:image" content="hero-og.jpg">
+<meta property="og:image" content="https://julienmann.ca/hero-og.jpg">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://julienmann.ca">
 <meta name="twitter:card" content="summary_large_image">
@@ -46,7 +46,7 @@
 html{scroll-behavior:smooth;}
 :focus{outline:none;}
 :focus-visible{outline:1px solid var(--accent);outline-offset:4px;}
-.skip-link{position:absolute;top:-100px;left:1rem;z-index:9999;padding:.6rem 1rem;background:var(--fg);color:var(--bg);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;font-family:var(--sans);font-weight:500;}
+.skip-link{position:absolute;top:-100px;left:1rem;z-index:9999;padding:.6rem 1rem;background:var(--fg);color:var(--bg);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;font-family:var(--sans);font-weight:500;}
 .skip-link:focus{top:1rem;}
 body{
   background:var(--bg);color:var(--fg);
@@ -73,6 +73,8 @@ a{color:inherit;text-decoration:none;}
   letter-spacing:.24em;text-transform:uppercase;
   color:var(--mid);background:transparent;border:none;
   padding:.7rem .9rem;
+  min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
   transition:color .25s;
 }
 #lang-toggle{left:1.4rem;}
@@ -224,6 +226,7 @@ a{color:inherit;text-decoration:none;}
 
 .now-toggle{
   color:var(--fg);
+  min-height:44px;
   opacity:.6;
   background:none;
   border:none;
@@ -247,7 +250,6 @@ a{color:inherit;text-decoration:none;}
   overflow:hidden;
   transition:max-height .35s ease;
 }
-.now-panel.open{max-height:600px;}
 .now-panel-inner{
   padding-top:1.2rem;
   font-size:clamp(.9rem,1.2vw,1.02rem);
@@ -309,7 +311,7 @@ a{color:inherit;text-decoration:none;}
 .form-row .form-group{margin-bottom:0;}
 .form-label{
   display:block;
-  font-size:.6rem;
+  font-size:.72rem;
   letter-spacing:.22em;
   text-transform:uppercase;
   color:var(--mid);
@@ -343,7 +345,7 @@ a{color:inherit;text-decoration:none;}
 
 .form-submit{
   font-family:var(--sans);
-  font-size:.65rem;font-weight:500;
+  font-size:.72rem;font-weight:500;
   letter-spacing:.22em;text-transform:uppercase;
   background:transparent;color:var(--fg);
   border:1px solid var(--rule-accent);
@@ -356,11 +358,18 @@ a{color:inherit;text-decoration:none;}
 .form-disclaimer{
   margin-top:2rem;
   margin-bottom:0.75rem;
-  font-size:.62rem;
+  font-size:.66rem;
   font-weight:500;
   letter-spacing:.04em;
   color:var(--mid);
 }
+
+.form-status{
+  margin-top:1rem;
+  font-size:.8rem;
+  color:var(--accent);
+}
+.form-status:empty{display:none;}
 
 /* ── CONFIRMATION ── */
 #form-confirm{
@@ -458,7 +467,7 @@ footer{border-top:1px solid var(--rule);}
 <a href="#main-content" class="skip-link">Skip to content</a>
 
 <button id="lang-toggle" aria-label="Passer en français" aria-pressed="false">FR</button>
-<button class="contact-anchor" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" data-i18n="btn.contact" aria-label="Jump to contact">Contact</button>
+<a href="#contact" class="contact-anchor" data-i18n="btn.contact">Contact</a>
 
 <main id="main-content">
 
@@ -477,7 +486,7 @@ footer{border-top:1px solid var(--rule);}
 
 <!-- ABOUT -->
 <section class="about">
-  <p class="section-mark reveal" data-i18n="about.label">About</p>
+  <h2 class="section-mark reveal" data-i18n="about.label">About</h2>
   <p class="about-body reveal" data-delay="1" data-i18n="hero.bio">I'm a cégep student in Sciences, lettres et arts, drawn to the crossroads of science, literature and the arts, a combination that reflects my genuine desire to understand the world from multiple angles. I spend my summers coaching a youth race team as a sailing instructor, work that demands focus, resilience and calm under pressure. Away from the water I climb, mountain bike and read. Photography and filmmaking run alongside all of it, driven by an interest in storytelling and a habit of paying close attention to my surroundings. I bring that same curiosity and dedication to everything I take on.</p>
 
   <button type="button" class="now-toggle reveal" data-delay="2" id="now-toggle" aria-expanded="false" aria-controls="now-panel">
@@ -536,10 +545,11 @@ footer{border-top:1px solid var(--rule);}
     <div class="form-footer">
       <button class="form-submit" type="submit" data-i18n="form.submit">Send</button>
     </div>
+    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
   </form>
-  <div id="form-confirm">
+  <div id="form-confirm" tabindex="-1">
     <div class="confirm-mark">✓</div>
-    <div class="confirm-title">Got<br>it.</div>
+    <h2 class="confirm-title">Got<br>it.</h2>
     <p class="confirm-text" data-i18n="confirm.sub">Thanks for reaching out.<br>I'll be in touch shortly.<br><br>— Julien</p>
     <button class="confirm-reset" type="button" id="confirm-reset" data-i18n="confirm.reset">Send another message</button>
   </div>
@@ -603,12 +613,19 @@ revealEls.forEach(el=>revealObserver.observe(el));
 /* ── NOW PANEL ── */
 const nowToggle = document.getElementById('now-toggle');
 const nowPanel = document.getElementById('now-panel');
+function syncNowPanel(){
+  if(nowPanel && nowPanel.classList.contains('open')){
+    nowPanel.style.maxHeight = nowPanel.scrollHeight + 'px';
+  }
+}
 if(nowToggle && nowPanel){
   nowToggle.addEventListener('click', ()=>{
     const open = nowPanel.classList.toggle('open');
     nowToggle.classList.toggle('open', open);
     nowToggle.setAttribute('aria-expanded', open);
+    nowPanel.style.maxHeight = open ? nowPanel.scrollHeight + 'px' : '0px';
   });
+  window.addEventListener('resize', syncNowPanel, {passive:true});
 }
 
 /* ── CONTACT FORM ── */
@@ -631,15 +648,25 @@ function resetContactForm(){
   const btn = document.querySelector('#contact-form .form-submit');
   btn.disabled = false;
   btn.textContent = translations[currentLang]['form.submit'];
+  document.getElementById('form-status').textContent = '';
   renderConfirmTitle(currentLang);
+  document.getElementById('first_name').focus();
 }
 
 document.getElementById('contact-form').addEventListener('submit',e=>{
   e.preventDefault();
   const formData = new FormData(e.target);
   const btn = e.target.querySelector('.form-submit');
+  const status = document.getElementById('form-status');
+  status.textContent = '';
   btn.disabled = true;
   btn.textContent = '…';
+
+  const fail = () => {
+    status.textContent = translations[currentLang]['form.error'];
+    btn.textContent = translations[currentLang]['form.submit'];
+    btn.disabled = false;
+  };
 
   fetch('https://api.web3forms.com/submit',{
     method:'POST',
@@ -653,15 +680,14 @@ document.getElementById('contact-form').addEventListener('submit',e=>{
       renderConfirmTitle(currentLang);
       document.getElementById('contact').classList.add('is-submitted');
       e.target.reset();
-    } else {
-      btn.textContent = translations[currentLang]['form.error'];
+      btn.textContent = translations[currentLang]['form.submit'];
       btn.disabled = false;
+      document.getElementById('form-confirm').focus();
+    } else {
+      fail();
     }
   })
-  .catch(()=>{
-    btn.textContent = translations[currentLang]['form.error'];
-    btn.disabled = false;
-  });
+  .catch(fail);
 });
 
 document.getElementById('confirm-reset').addEventListener('click', resetContactForm);
@@ -684,12 +710,12 @@ const translations = {
     'form.msg':'Message','form.msg.ph':'What are you working on?',
     'form.submit':'Send',
     'form.disclaimer':'By clicking send, you agree to receive emails from Julien Mann.',
-    'form.error':'Error. Try again.',
+    'form.error':"Couldn't send. Check your connection and try again.",
     'confirm.title':'Got<br>it.',
     'confirm.greeting':'Thanks,<br>{name}.',
     'confirm.sub':"Thanks for reaching out.<br>I'll be in touch shortly.<br><br>— Julien",
     'confirm.reset':'Send another message',
-    'footer.copy':'© 2026 Julien Mann. All rights reserved.',
+    'footer.copy':'© {year} Julien Mann. All rights reserved.',
   },
   fr:{
     'btn.contact':'Contact',
@@ -707,12 +733,12 @@ const translations = {
     'form.msg':'Message','form.msg.ph':'Sur quoi travaillez-vous ?',
     'form.submit':'Envoyer',
     'form.disclaimer':'En cliquant sur envoyer, vous acceptez de recevoir des courriels de Julien Mann.',
-    'form.error':'Erreur. Réessayez.',
+    'form.error':"L'envoi a échoué. Vérifiez votre connexion et réessayez.",
     'confirm.title':'Bien<br>reçu.',
     'confirm.greeting':'Merci,<br>{name}.',
     'confirm.sub':"Merci de m'avoir écrit.<br>Je reviens vers vous très bientôt.<br><br>— Julien",
     'confirm.reset':'Envoyer un autre message',
-    'footer.copy':'© 2026 Julien Mann. Tous droits réservés.',
+    'footer.copy':'© {year} Julien Mann. Tous droits réservés.',
   }
 };
 
@@ -721,7 +747,7 @@ function applyLang(lang){
   const t=translations[lang];
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const k=el.getAttribute('data-i18n');
-    if(t[k]!==undefined) el.innerHTML=t[k];
+    if(t[k]!==undefined) el.innerHTML=t[k].replace('{year}', new Date().getFullYear());
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
     const k=el.getAttribute('data-i18n-placeholder');
@@ -729,17 +755,27 @@ function applyLang(lang){
   });
   document.documentElement.lang=lang;
   renderConfirmTitle(lang);
+  syncNowPanel();
+}
+
+function setLang(lang){
+  currentLang=lang;
+  const btn=document.getElementById('lang-toggle');
+  btn.textContent=lang==='en'?'FR':'EN';
+  btn.classList.toggle('active',lang==='fr');
+  btn.setAttribute('aria-pressed', lang==='fr' ? 'true' : 'false');
+  btn.setAttribute('aria-label', lang==='fr' ? 'Switch to English' : 'Passer en français');
+  applyLang(lang);
+  try{ localStorage.setItem('lang', lang); }catch(err){}
 }
 
 document.getElementById('lang-toggle').addEventListener('click',()=>{
-  currentLang=currentLang==='en'?'fr':'en';
-  const btn=document.getElementById('lang-toggle');
-  btn.textContent=currentLang==='en'?'FR':'EN';
-  btn.classList.toggle('active',currentLang==='fr');
-  btn.setAttribute('aria-pressed', currentLang==='fr' ? 'true' : 'false');
-  btn.setAttribute('aria-label', currentLang==='fr' ? 'Switch to English' : 'Passer en français');
-  applyLang(currentLang);
+  setLang(currentLang==='en'?'fr':'en');
 });
+
+let storedLang=null;
+try{ storedLang=localStorage.getItem('lang'); }catch(err){}
+setLang(storedLang || ((navigator.language||'en').toLowerCase().startsWith('fr') ? 'fr' : 'en'));
 </script>
 </body>
 </html>
